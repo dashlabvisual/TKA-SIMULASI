@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBT Pro - TKA Smart System</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Parser Word (.docx) & Excel (.xlsx) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-subtle: #eef2ff;
+      --bg: #f8fafc;
+      --card-border: #e2e8f0;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #0f172a; }
+    .hidden { display: none !important; }
+    .app-card { background: #fff; border: 1px solid var(--card-border); border-radius: 14px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+    
+    /* Action Cards Dashboard (Gambar 3) */
+    .action-card {
+      border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px;
+      cursor: pointer; transition: all 0.2s ease; background: #fff; height: 100%;
+    }
+    .action-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--primary); }
+    .action-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 12px; }
+
+    /* Rich Editor Bar Opsi Jawaban (Gambar 2) */
+    .option-editor-box {
+      border: 1.5px solid #e2e8f0; border-radius: 12px; background: #fff; overflow: hidden; margin-bottom: 12px; transition: border 0.2s;
+    }
+    .option-editor-box.active-correct { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+    .editor-toolbar {
+      background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; align-items: center; gap: 8px; font-size: 0.85rem;
+    }
+    .editor-toolbar button { background: none; border: none; padding: 2px 6px; font-weight: 600; color: #475569; border-radius: 4px; }
+    .editor-toolbar button:hover { background: #e2e8f0; color: #0f172a; }
+    .option-content-input { border: none; padding: 12px; width: 100%; outline: none; font-size: 0.95rem; }
+
+    .soal-number-btn { width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 600; cursor: pointer; background: #fff; }
+    .soal-number-btn.active { border-color: var(--primary); background: #e0e7ff; color: var(--primary); }
+    .soal-number-btn.answered { background: var(--primary); color: #fff; border-color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav class="navbar bg-white border-bottom sticky-top px-4 py-2">
+  <div class="container-fluid">
+    <span class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2">
+      <i class="bi bi-mortarboard-fill fs-4"></i> CBT Portal Sekolah
+    </span>
+    <button id="btnLogout" class="btn btn-outline-danger btn-sm hidden" onclick="resetViews()">Keluar</button>
+  </div>
+</nav>
+
+<div class="container py-4">
+
+  <!-- ================= VIEW 1: PILIHAN ROLE ================= -->
+  <div id="view-role" class="row justify-content-center pt-4">
+    <div class="col-md-5">
+      <div class="app-card p-4 text-center">
+        <h4 class="fw-bold mb-4">Ujian CBT TKA</h4>
+        <div class="d-grid gap-2">
+          <button class="btn btn-primary btn-lg" onclick="showPesertaLogin()">Portal Peserta Ujian</button>
+          <button class="btn btn-outline-secondary btn-lg" onclick="showView('view-login-admin')">Portal Proktor / Admin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 2: LOGIN PESERTA ================= -->
+  <div id="view-login-peserta" class="row justify-content-center hidden">
+    <div class="col-md-5">
+      <div class="app-card p-4">
+        <h5 class="fw-bold mb-3">Login Peserta</h5>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Username</label>
+          <input id="p_user" class="form-control" placeholder="NISN / Username">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Password</label>
+          <input id="p_pass" type="password" class="form-control" placeholder="Password Akun">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
+          <select id="p_mapel_select" class="form-select"></select>
+        </div>
+        <button class="btn btn-primary w-100" onclick="loginPesertaAction()">Masuk & Kerjakan</button>
+        <button class="btn btn-light w-100 mt-2" onclick="resetViews()">Kembali</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 3: LOGIN ADMIN ================= -->
+  <div id="view-login-admin" class="row justify-content-center hidden">
+    <div class="col-md-4">
+      <div class="app-card p-4">
+        <h5 class="fw-bold mb-3">PIN Pengawas</h5>
+        <input id="adm_pin" type="password" class="form-control mb-3" placeholder="Default: 123456">
+        <button class="btn btn-dark w-100" onclick="loginAdminAction()">Masuk</button>
+        <button class="btn btn-light w-100 mt-2" onclick="resetViews()">Kembali</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 4: DASHBOARD PROKTOR (Gambar 3 UI) ================= -->
+  <div id="view-admin" class="hidden">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold mb-1">Selamat datang, Administrator!</h4>
+        <p class="text-muted small mb-0">Kelola soal, impor dari Word, dan kelola peserta serta nilai ujian.</p>
+      </div>
+      <div>
+        <select id="admin_mapel_filter" class="form-select d-inline-block w-auto me-2" onchange="filterBankSoal()"></select>
+        <button class="btn btn-success" onclick="exportNilaiKeSpreadsheet()"><i class="bi bi-file-earmark-excel me-1"></i> Download Hasil ke Excel</button>
+      </div>
+    </div>
+
+    <!-- 4 Action Cards (Gambar 3) -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="action-card" onclick="openManualModal()">
+          <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
+          <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
+          <small class="text-muted">Isi formulir soal secara rinci.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" onclick="openWordModal()">
+          <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
+          <h6 class="fw-bold mb-1">Import dari Word (.docx)</h6>
+          <small class="text-muted">Upload soal massal dari dokumen Word.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" onclick="document.getElementById('inputPesertaExcel').click()">
+          <div class="action-icon bg-success-subtle text-success"><i class="bi bi-file-earmark-spreadsheet"></i></div>
+          <h6 class="fw-bold mb-1">Import Siswa (.xlsx)</h6>
+          <small class="text-muted">Upload username & password peserta.</small>
+          <input type="file" id="inputPesertaExcel" class="hidden" accept=".xlsx, .xls, .csv" onchange="handlePesertaExcel(event)">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" onclick="tambahMapelPrompt()">
+          <div class="action-icon bg-warning-subtle text-warning"><i class="bi bi-journal-plus"></i></div>
+          <h6 class="fw-bold mb-1">Tambah Mapel Baru</h6>
+          <small class="text-muted">Registrasi jadwal mata pelajaran.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabel Monitoring Soal -->
+    <div class="app-card p-4">
+      <h6 class="fw-bold mb-3">Bank Soal Aktif</h6>
+      <div class="table-responsive">
+        <table class="table align-middle" id="tbl-bank-soal">
+          <thead class="table-light">
+            <tr><th width="5%">#</th><th width="50%">PERTANYAAN</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 5: RUANG UJIAN SISWA ================= -->
+  <div id="view-exam" class="hidden">
+    <div class="app-card p-3 mb-3 d-flex justify-content-between align-items-center">
+      <h5 class="fw-bold mb-0" id="lblMapel"></h5>
+      <span class="badge bg-danger fs-6 p-2" id="lblTimer">00:00</span>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <div class="app-card p-4">
+          <div id="exam-container"></div>
+          <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+            <button class="btn btn-outline-secondary" onclick="navigateSoal(-1)">Sebelumnya</button>
+            <button class="btn btn-outline-secondary" onclick="navigateSoal(1)">Berikutnya</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="app-card p-3">
+          <h6 class="fw-bold mb-3">Nomor Soal</h6>
+          <div id="soal-grid" class="d-flex flex-wrap gap-2 mb-4"></div>
+          <button class="btn btn-danger w-100" onclick="submitExam()">Selesai Ujian</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= VIEW 6: HASIL NILAI ================= -->
+  <div id="view-result" class="row justify-content-center hidden">
+    <div class="col-md-5">
+      <div class="app-card p-5 text-center">
+        <h4 class="fw-bold">Ujian Selesai!</h4>
+        <h1 class="display-3 fw-bold text-success my-3" id="res-score">0</h1>
+        <p>Jawaban berhasil tersimpan.</p>
+        <button class="btn btn-primary w-100" onclick="resetViews()">Kembali</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ================= MODAL 1: IMPORT WORD .DOCX (Gambar 1 UI) ================= -->
+<div class="modal fade" id="modalWordImport" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+          <i class="bi bi-file-earmark-word text-primary fs-4"></i> Import Soal Word (.docx)
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <!-- Step 1 -->
+        <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
+          <div>
+            <h6 class="fw-bold mb-1">1. Download Template Word</h6>
+            <small class="text-muted">Template berupa tabel dengan kolom: NO | SOAL | JENIS | OPSI | JAWABAN | KUNCI</small>
+          </div>
+          <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="downloadTemplateWord()"><i class="bi bi-download me-1"></i> Download Template</button>
+        </div>
+
+        <!-- Info Card -->
+        <div class="p-3 bg-light rounded-3 mb-3 border small">
+          <span class="fw-bold">Keterangan Kolom JENIS & KUNCI:</span>
+          <div class="row mt-2 text-muted">
+            <div class="col-6">1 = PG Biasa &rarr; KUNCI: <code>V</code> pada 1 opsi benar</div>
+            <div class="col-6">2 = PG Kompleks &rarr; KUNCI: <code>V</code> pada semua opsi benar</div>
+            <div class="col-6 mt-1">4 = Benar/Salah &rarr; KUNCI: <code>B</code> atau <code>S</code></div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="p-4 border rounded-3 text-center border-dashed">
+          <h6 class="fw-bold mb-2">2. Upload File Word (.docx)</h6>
+          <p class="text-muted small">Sistem akan otomatis membaca data tabel dan menyimpannya ke database.</p>
+          <input type="file" id="fileWordInput" class="hidden" accept=".docx" onchange="processWordFile(event)">
+          <button class="btn btn-primary" onclick="document.getElementById('fileWordInput').click()"><i class="bi bi-upload me-1"></i> Pilih File .docx</button>
+          <div id="wordStatusText" class="mt-2 small fw-bold text-success"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL 2: FORM INPUT MANUAL (Gambar 2 UI) ================= -->
+<div class="modal fade" id="modalManualSoal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Tambah / Edit Butir Soal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Target Mata Pelajaran</label>
+            <select id="m_target_mapel" class="form-select"></select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Nomor Soal</label>
+            <input id="m_no_soal" type="number" class="form-control" placeholder="1">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small fw-bold">Tipe Soal</label>
+            <select id="m_tipe_soal" class="form-select">
+              <option value="PG">Pilihan Ganda (PG)</option>
+              <option value="BS">Benar/Salah (BS)</option>
+            </select>
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-bold">Pertanyaan</label>
+            <textarea id="m_tanya" class="form-control" rows="3" placeholder="Tuliskan soal..."></textarea>
+          </div>
+        </div>
+
+        <!-- Editor Opsi Jawaban Style Gambar 2 -->
+        <h6 class="fw-bold mb-3 text-uppercase text-muted small">Opsi Jawaban & Kunci (Pilih Radio untuk Kunci)</h6>
+        <div id="option-list-container">
+          <!-- Opsi A -->
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <input type="radio" name="correct_opt" value="A" class="form-check-input mt-0 fs-5">
+            <div class="option-editor-box flex-grow-1">
+              <div class="editor-toolbar">
+                <span class="fw-bold text-primary">A</span>
+                <span class="text-muted">|</span>
+                <button type="button" onclick="formatText('bold')"><b>B</b></button>
+                <button type="button" onclick="formatText('italic')"><i>I</i></button>
+                <button type="button" onclick="formatText('underline')"><u>U</u></button>
+              </div>
+              <input type="text" id="m_opa" class="option-content-input" placeholder="Teks opsi A...">
+            </div>
+          </div>
+          <!-- Opsi B -->
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <input type="radio" name="correct_opt" value="B" class="form-check-input mt-0 fs-5">
+            <div class="option-editor-box flex-grow-1">
+              <div class="editor-toolbar">
+                <span class="fw-bold text-primary">B</span>
+                <span class="text-muted">|</span>
+                <button type="button"><b>B</b></button><button type="button"><i>I</i></button><button type="button"><u>U</u></button>
+              </div>
+              <input type="text" id="m_opb" class="option-content-input" placeholder="Teks opsi B...">
+            </div>
+          </div>
+          <!-- Opsi C -->
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <input type="radio" name="correct_opt" value="C" class="form-check-input mt-0 fs-5">
+            <div class="option-editor-box flex-grow-1">
+              <div class="editor-toolbar">
+                <span class="fw-bold text-primary">C</span>
+                <span class="text-muted">|</span>
+                <button type="button"><b>B</b></button><button type="button"><i>I</i></button><button type="button"><u>U</u></button>
+              </div>
+              <input type="text" id="m_opc" class="option-content-input" placeholder="Teks opsi C...">
+            </div>
+          </div>
+          <!-- Opsi D -->
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <input type="radio" name="correct_opt" value="D" class="form-check-input mt-0 fs-5">
+            <div class="option-editor-box flex-grow-1">
+              <div class="editor-toolbar">
+                <span class="fw-bold text-primary">D</span>
+                <span class="text-muted">|</span>
+                <button type="button"><b>B</b></button><button type="button"><i>I</i></button><button type="button"><u>U</u></button>
+              </div>
+              <input type="text" id="m_opd" class="option-content-input" placeholder="Teks opsi D...">
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3" onclick="simpanManualAction()"><i class="bi bi-save me-1"></i> Simpan Soal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, doc, setDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
+
+  // Konfigurasi Firebase
+  const firebaseConfig = {
+    apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+    authDomain: "GANTI_DENGAN_AUTH_DOMAIN_ANDA",
+    projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+    storageBucket: "GANTI_DENGAN_STORAGE_BUCKET_ANDA",
+    messagingSenderId: "GANTI_DENGAN_SENDER_ID_ANDA",
+    appId: "GANTI_DENGAN_APP_ID_ANDA"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let currentStudent = "";
+  let currentMapel = "";
+  let activeSoalList = [];
+  let currentSoalIndex = 0;
+  let userAnswers = {};
+  let timerInterval = null;
+
+  window.showView = function(viewId) {
+    ['view-role', 'view-login-peserta', 'view-login-admin', 'view-admin', 'view-exam', 'view-result'].forEach(id => {
+      document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById(viewId).classList.remove('hidden');
+  };
+
+  window.resetViews = function() {
+    if (timerInterval) clearInterval(timerInterval);
+    document.getElementById('btnLogout').classList.add('hidden');
+    showView('view-role');
+  };
+
+  // 1. Modals
+  window.openWordModal = () => new bootstrap.Modal(document.getElementById('modalWordImport')).show();
+  window.openManualModal = () => new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
+
+  // 2. Download Template Word
+  window.downloadTemplateWord = function() {
+    const tableHTML = `
+      <table border="1">
+        <tr><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
+        <tr><td>1</td><td>Siapakah Presiden RI pertama?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td>V</td></tr>
+        <tr><td></td><td></td><td></td><td>B</td><td>Moh. Hatta</td><td></td></tr>
+        <tr><td></td><td></td><td></td><td>C</td><td>Soeharto</td><td></td></tr>
+        <tr><td></td><td></td><td></td><td>D</td><td>B.J Habibie</td><td></td></tr>
+      </table>`;
+    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Template_Soal_TKA.doc';
+    a.click();
+  };
+
+  // 3. Import Soal Word (.docx) Parsing
+  window.processWordFile = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      mammoth.convertToHtml({ arrayBuffer: e.target.result })
+        .then(result => {
+          const parser = new DOMParser();
+          const docHTML = parser.parseFromString(result.value, 'text/html');
+          const rows = docHTML.querySelectorAll('tr');
+
+          let targetMapel = document.getElementById('admin_mapel_filter').value;
+          if (!targetMapel) { alert("Pilih Mapel terlebih dahulu di dashboard!"); return; }
+
+          let parsedSoal = [];
+          let currentQ = null;
+
+          for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i].querySelectorAll('td');
+            if (cols.length < 6) continue;
+
+            const no = cols[0].innerText.trim();
+            const soalText = cols[1].innerText.trim();
+            const jenis = cols[2].innerText.trim();
+            const opsi = cols[3].innerText.trim();
+            const teksJawaban = cols[4].innerText.trim();
+            const kunci = cols[5].innerText.trim();
+
+            if (no !== "") {
+              if (currentQ) parsedSoal.push(currentQ);
+              currentQ = {
+                id_soal: parseInt(no) || (parsedSoal.length + 1),
+                mapel: targetMapel,
+                tipe_soal: jenis === '4' ? 'BS' : 'PG',
+                pertanyaan: soalText,
+                opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '',
+                kunci: ''
+              };
+            }
+
+            if (currentQ) {
+              if (opsi.toUpperCase() === 'A') currentQ.opsi_a = teksJawaban;
+              if (opsi.toUpperCase() === 'B') currentQ.opsi_b = teksJawaban;
+              if (opsi.toUpperCase() === 'C') currentQ.opsi_c = teksJawaban;
+              if (opsi.toUpperCase() === 'D') currentQ.opsi_d = teksJawaban;
+              if (kunci.toUpperCase() === 'V') currentQ.kunci = opsi.toUpperCase();
+              if (currentQ.tipe_soal === 'BS' && (kunci.toUpperCase() === 'B' || kunci.toUpperCase() === 'S')) {
+                currentQ.kunci = kunci.toUpperCase() === 'B' ? 'BENAR' : 'SALAH';
+              }
+            }
+          }
+          if (currentQ) parsedSoal.push(currentQ);
+
+          // Upload ke Firestore
+          parsedSoal.forEach(async (item) => {
+            await addDoc(collection(db, "soal"), item);
+          });
+
+          document.getElementById('wordStatusText').innerText = `Berhasil mengimpor ${parsedSoal.length} butir soal!`;
+          setTimeout(() => location.reload(), 1500);
+        });
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  // 4. Import Peserta dari Excel (.xlsx / .csv)
+  window.handlePesertaExcel = function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+      json.forEach(async (row) => {
+        // Mendukung kolom Username/NISN dan Password
+        const username = row.username || row.NISN || row.Username;
+        const password = row.password || row.Password;
+        if (username && password) {
+          await setDoc(doc(db, "users", String(username)), {
+            username: String(username),
+            password: String(password),
+            status: "Aktif"
+          });
+        }
+      });
+      alert(`Berhasil mengimpor ${json.length} data peserta ke sistem!`);
+    };
+    reader.readAsArrayBuffer(file);
+  };
+
+  // 5. Export Rekap Nilai ke Excel (.xlsx)
+  window.exportNilaiKeSpreadsheet = async function() {
+    const snap = await getDocs(collection(db, "hasil"));
+    let dataExport = [];
+    snap.forEach(d => dataExport.push(d.data()));
+
+    if (dataExport.length === 0) { alert("Belum ada data nilai!"); return; }
+
+    const ws = XLSX.utils.json_to_sheet(dataExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Hasil Ujian TKA");
+    XLSX.writeFile(wb, "Rekap_Nilai_TKA.xlsx");
+  };
+
+  // 6. Proktor Dashboard & Mapel Management
+  window.loginAdminAction = function() {
+    if (document.getElementById('adm_pin').value === "123456") {
+      showView('view-admin');
+      document.getElementById('btnLogout').classList.remove('hidden');
+      loadMapelData();
+    } else { alert("PIN Salah!"); }
+  };
+
+  async function loadMapelData() {
+    onSnapshot(collection(db, "mapel"), (snap) => {
+      const sMapel = document.getElementById('admin_mapel_filter');
+      const sTarget = document.getElementById('m_target_mapel');
+      sMapel.innerHTML = ''; sTarget.innerHTML = '';
+      snap.forEach(d => {
+        const m = d.data().nama_mapel;
+        sMapel.innerHTML += `<option value="${m}">${m}</option>`;
+        sTarget.innerHTML += `<option value="${m}">${m}</option>`;
+      });
+      filterBankSoal();
+    });
+  }
+
+  window.filterBankSoal = async function() {
+    const mapel = document.getElementById('admin_mapel_filter').value;
+    if (!mapel) return;
+    const q = query(collection(db, "soal"), where("mapel", "==", mapel));
+    const snap = await getDocs(q);
+    let rows = '';
+    let i = 1;
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      rows += `<tr>
+        <td>${i++}</td>
+        <td>${d.pertanyaan}</td>
+        <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
+        <td><span class="badge bg-success">${d.kunci}</span></td>
+        <td><button class="btn btn-outline-danger btn-sm" onclick="window.hapusSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
+      </tr>`;
+    });
+    document.querySelector('#tbl-bank-soal tbody').innerHTML = rows;
+  };
+
+  window.tambahMapelPrompt = async function() {
+    const nama = prompt("Masukkan Nama Mata Pelajaran:");
+    const durasi = prompt("Durasi Pengerjaan (Menit):", "60");
+    if (nama && durasi) {
+      await addDoc(collection(db, "mapel"), { nama_mapel: nama, durasi: parseInt(durasi), status: "Aktif" });
+      alert("Mapel berhasil dibuat!");
+    }
+  };
+
+  window.hapusSoal = async function(id) {
+    if (confirm("Hapus butir soal ini?")) {
+      await deleteDoc(doc(db, "soal", id));
+      filterBankSoal();
+    }
+  };
+
+  // 7. Simpan Soal Manual (Gambar 2 Logic)
+  window.simpanManualAction = async function() {
+    const mapel = document.getElementById('m_target_mapel').value;
+    const no = parseInt(document.getElementById('m_no_soal').value);
+    const tanya = document.getElementById('m_tanya').value;
+    const kunciRadio = document.querySelector('input[name="correct_opt"]:checked');
+
+    if (!mapel || !no || !tanya || !kunciRadio) {
+      alert("Lengkapi nomor, pertanyaan, dan tandai radio opsi yang benar!");
+      return;
+    }
+
+    await addDoc(collection(db, "soal"), {
+      id_soal: no,
+      mapel: mapel,
+      tipe_soal: document.getElementById('m_tipe_soal').value,
+      pertanyaan: tanya,
+      opsi_a: document.getElementById('m_opa').value,
+      opsi_b: document.getElementById('m_opb').value,
+      opsi_c: document.getElementById('m_opc').value,
+      opsi_d: document.getElementById('m_opd').value,
+      kunci: kunciRadio.value
+    });
+
+    bootstrap.Modal.getInstance(document.getElementById('modalManualSoal')).hide();
+    alert("Soal manual berhasil disimpan!");
+    filterBankSoal();
+  };
+
+  // 8. Alur Pengerjaan Siswa
+  window.showPesertaLogin = async function() {
+    showView('view-login-peserta');
+    const selectElem = document.getElementById('p_mapel_select');
+    selectElem.innerHTML = '';
+    const snap = await getDocs(collection(db, "mapel"));
+    snap.forEach(d => {
+      selectElem.innerHTML += `<option value="${d.data().nama_mapel}">${d.data().nama_mapel} (${d.data().durasi} Menit)</option>`;
+    });
+  };
+
+  window.loginPesertaAction = async function() {
+    const u = document.getElementById('p_user').value.trim();
+    const p = document.getElementById('p_pass').value.trim();
+    const m = document.getElementById('p_mapel_select').value;
+
+    const snap = await getDocs(query(collection(db, "users"), where("username", "==", u), where("password", "==", p)));
+    if (snap.empty) { alert("Username atau Password salah!"); return; }
+
+    const soalSnap = await getDocs(query(collection(db, "soal"), where("mapel", "==", m)));
+    if (soalSnap.empty) { alert("Belum ada soal pada mapel ini!"); return; }
+
+    activeSoalList = [];
+    soalSnap.forEach(d => activeSoalList.push(d.data()));
+    activeSoalList.sort((a, b) => a.id_soal - b.id_soal);
+
+    currentStudent = u; currentMapel = m; currentSoalIndex = 0; userAnswers = {};
+    showView('view-exam');
+    document.getElementById('lblMapel').innerText = m;
+    renderGridNav();
+    renderSingleSoal(0);
+    startTimer(60 * 60);
+  };
+
+  function renderGridNav() {
+    const grid = document.getElementById('soal-grid');
+    grid.innerHTML = '';
+    activeSoalList.forEach((_, idx) => {
+      grid.innerHTML += `<div id="grid-${idx}" class="soal-number-btn ${idx === 0 ? 'active' : ''}" onclick="window.jumpToSoal(${idx})">${idx + 1}</div>`;
+    });
+  }
+
+  window.jumpToSoal = (idx) => { currentSoalIndex = idx; renderSingleSoal(idx); };
+  window.navigateSoal = (dir) => {
+    const t = currentSoalIndex + dir;
+    if (t >= 0 && t < activeSoalList.length) { currentSoalIndex = t; renderSingleSoal(t); }
+  };
+
+  function renderSingleSoal(idx) {
+    const s = activeSoalList[idx];
+    document.querySelectorAll('.soal-number-btn').forEach((el, i) => {
+      el.classList.remove('active');
+      if (userAnswers[activeSoalList[i].id_soal]) el.classList.add('answered');
+      if (i === idx) el.classList.add('active');
+    });
+
+    let html = `<h5>No. ${idx + 1} <span class="badge bg-secondary">${s.tipe_soal}</span></h5><p class="fs-6 mt-3">${s.pertanyaan}</p>`;
+    const saved = userAnswers[s.id_soal] || '';
+
+    ['A', 'B', 'C', 'D'].forEach(opt => {
+      const val = s['opsi_' + opt.toLowerCase()];
+      if (val) {
+        html += `<div class="form-check p-3 border rounded-3 mb-2 ${saved === opt ? 'border-primary bg-light' : ''}">
+          <input class="form-check-input ms-0 me-3" type="radio" name="ans" id="opt_${opt}" value="${opt}" ${saved === opt ? 'checked' : ''} onchange="window.saveAns('${s.id_soal}', '${opt}')">
+          <label class="form-check-label w-100" for="opt_${opt}">${opt}. ${val}</label>
+        </div>`;
+      }
+    });
+    document.getElementById('exam-container').innerHTML = html;
+  }
+
+  window.saveAns = (idSoal, ans) => { userAnswers[idSoal] = ans; renderSingleSoal(currentSoalIndex); };
+
+  function startTimer(sec) {
+    let t = sec;
+    timerInterval = setInterval(() => {
+      let m = parseInt(t / 60, 10); let s = parseInt(t % 60, 10);
+      document.getElementById('lblTimer').innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      if (--t < 0) { clearInterval(timerInterval); submitExam(); }
+    }, 1000);
+  }
+
+  window.submitExam = async function() {
+    if (timerInterval) clearInterval(timerInterval);
+    let benar = 0;
+    activeSoalList.forEach(s => { if (userAnswers[s.id_soal] === s.kunci) benar++; });
+    const skor = Math.round((benar / activeSoalList.length) * 100) || 0;
+
+    await addDoc(collection(db, "hasil"), {
+      username: currentStudent, mapel: currentMapel, skor: skor, benar: benar, total: activeSoalList.length, waktu: new Date().toLocaleString('id-ID')
+    });
+
+    showView('view-result');
+    document.getElementById('res-score').innerText = skor;
+  };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
