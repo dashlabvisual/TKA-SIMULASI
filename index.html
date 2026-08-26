@@ -20,35 +20,30 @@
       --primary-subtle: #eef2ff;
       --bg: #f8fafc;
       --border: #e2e8f0;
-      --sidebar-w: 260px;
+      --sidebar-w: 280px;
     }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #0f172a; margin: 0; }
     .hidden { display: none !important; }
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
-    /* Layout Admin dengan Fitur Hide & See Sidebar */
+    /* Layout Admin */
     .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
       display: flex; flex-direction: column; padding: 20px 14px; flex-shrink: 0;
       transition: all 0.3s ease; z-index: 100;
     }
-    .admin-sidebar.collapsed {
-      margin-left: calc(-1 * var(--sidebar-w));
-    }
+    .admin-sidebar.collapsed { margin-left: calc(-1 * var(--sidebar-w)); }
     .admin-content { flex-grow: 1; padding: 28px; overflow-y: auto; transition: all 0.3s ease; }
     
-    .project-item-btn {
-      padding: 10px 14px; border-radius: 10px; border: 1px solid transparent;
+    .project-item-box {
+      padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 6px; cursor: pointer; transition: all 0.15s ease;
-      font-size: 0.9rem; font-weight: 600; color: #475569;
+      margin-bottom: 8px; background: #fff; transition: all 0.15s ease;
     }
-    .project-item-btn:hover { background-color: var(--primary-subtle); color: var(--primary); }
-    .project-item-btn.active { background-color: var(--primary); color: #ffffff; }
+    .project-item-box.active { border-color: var(--primary); background-color: var(--primary-subtle); }
 
-    /* Action Cards */
     .action-card {
       border: 1px solid var(--border); border-radius: 12px; padding: 18px;
       cursor: pointer; transition: all 0.2s; background: #fff; height: 100%;
@@ -56,7 +51,6 @@
     .action-card:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,0.06); border-color: var(--primary); }
     .action-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 10px; }
 
-    /* Navigasi Soal */
     .grid-no-btn {
       width: 40px; height: 40px; border-radius: 8px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
@@ -90,7 +84,7 @@
   </div>
 </nav>
 
-<!-- ================= VIEW 0: HALAMAN UTAMA PEMILIHAN PERAN ================= -->
+<!-- ================= VIEW 0: PEMILIHAN PERAN ================= -->
 <div id="view-role-selector" class="container py-5">
   <div class="row justify-content-center pt-5">
     <div class="col-md-5">
@@ -99,8 +93,7 @@
           <i class="bi bi-shield-check fs-1"></i>
         </div>
         <h3 class="fw-bold mb-2">Selamat Datang di CBT School</h3>
-        <p class="text-muted small mb-4">Silakan pilih akses masuk sesuai peran Anda di bawah ini:</p>
-
+        <p class="text-muted small mb-4">Silakan pilih akses masuk sesuai peran Anda:</p>
         <div class="d-grid gap-3">
           <button id="btnRoleSiswa" class="btn btn-primary btn-lg py-3 fw-bold">
             <i class="bi bi-person-fill me-2"></i> Masuk Sebagai Siswa
@@ -129,35 +122,27 @@
           <label class="form-label small fw-bold">Pilih Sesi / Project Ujian</label>
           <select id="p_project_select" class="form-select"></select>
         </div>
-
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
           <select id="p_mapel_select" class="form-select"></select>
         </div>
-
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Username / NISN</label>
           <input id="p_user" class="form-control" placeholder="Nomor Peserta Siswa">
         </div>
-
         <div class="text-start mb-4">
           <label class="form-label small fw-bold">Password</label>
           <input id="p_pass" type="password" class="form-control" placeholder="Password Siswa">
         </div>
 
-        <button id="btnLoginSiswa" class="btn btn-primary w-100 py-2 fw-bold mb-3">
-          <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ruang Ujian
-        </button>
-
-        <button id="btnBackToRole" class="btn btn-light btn-sm text-muted w-100">
-          <i class="bi bi-arrow-left me-1"></i> Kembali ke Pilih Peran
-        </button>
+        <button id="btnLoginSiswa" class="btn btn-primary w-100 py-2 fw-bold mb-3">Masuk Ruang Ujian</button>
+        <button id="btnBackToRole" class="btn btn-light btn-sm text-muted w-100"><i class="bi bi-arrow-left me-1"></i> Kembali</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ================= VIEW 2: KONFIRMASI SECURE EXAM ================= -->
+<!-- ================= VIEW 2: KONFIRMASI UJIAN ================= -->
 <div id="view-confirm-exam" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -166,26 +151,22 @@
           <i class="bi bi-shield-exclamation fs-1 text-warning"></i>
           <div>
             <h6 class="fw-bold mb-1">SECURE EXAM MODE AKTIF</h6>
-            <small class="text-dark">Sistem memantau pergerakan layar. Dilarang berpindah tab / keluar layar.</small>
+            <small class="text-dark">Sistem memantau pergerakan layar. Dilarang berpindah tab.</small>
           </div>
         </div>
-
         <div class="p-3 bg-light rounded-3 mb-4">
           <div class="d-flex justify-content-between mb-1"><span>Project:</span><strong id="confProj">-</strong></div>
           <div class="d-flex justify-content-between mb-1"><span>Peserta:</span><strong id="confUser">-</strong></div>
           <div class="d-flex justify-content-between mb-1"><span>Mata Pelajaran:</span><strong id="confMapel">-</strong></div>
           <div class="d-flex justify-content-between"><span>Durasi:</span><strong id="confDurasi">-</strong></div>
         </div>
-
-        <button id="btnStartExam" class="btn btn-danger w-100 py-2 fw-bold">
-          <i class="bi bi-lock-fill me-1"></i> Kunci Layar (Fullscreen) & Mulai Ujian
-        </button>
+        <button id="btnStartExam" class="btn btn-danger w-100 py-2 fw-bold">Kunci Layar (Fullscreen) & Mulai</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ================= VIEW 3: RUANG UJIAN ANTI-CHEAT ================= -->
+<!-- ================= VIEW 3: RUANG UJIAN ================= -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -222,7 +203,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 4: HASIL NILAI ================= -->
+<!-- ================= VIEW 4: HASIL UJIAN ================= -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -231,18 +212,23 @@
         <h4 class="fw-bold">Ujian Selesai!</h4>
         <h1 class="display-3 fw-bold text-success my-3" id="resScore">0</h1>
         <p>Jawaban berhasil terekam ke sistem.</p>
-        <button id="btnBackHome" class="btn btn-primary w-100">Kembali ke Halaman Utama</button>
+        <button id="btnBackHome" class="btn btn-primary w-100">Kembali</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN DENGAN SIDEBAR HIDE/SHOW ================= -->
+<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
-  <!-- SIDEBAR PROYEK (Bisa disembunyikan/dimunculkan) -->
+  <!-- SIDEBAR PROYEK (Dilengkapi Menu Hide & See di Paling Kiri Atas serta Logout di Tiap Item) -->
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-      <span class="fw-bold text-primary small"><i class="bi bi-kanban me-1"></i> DAFTAR PROJECT</span>
+      <div class="d-flex align-items-center gap-2">
+        <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar">
+          <i class="bi bi-list fs-6"></i>
+        </button>
+        <span class="fw-bold text-primary small">PROJECT UJIAN</span>
+      </div>
       <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru"><i class="bi bi-plus"></i></button>
     </div>
     
@@ -258,13 +244,13 @@
   <div class="admin-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
       <div class="d-flex align-items-center gap-3">
-        <!-- Tombol Toggle Hide / See Sidebar -->
-        <button id="btnToggleSidebar" class="btn btn-outline-primary btn-sm" title="Sembunyikan/Tampilkan Menu Project">
+        <!-- Tombol See Sidebar saat tersembunyi -->
+        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu Project">
           <i class="bi bi-list fs-5"></i>
         </button>
         <div>
           <h4 class="fw-bold mb-1">Project: <span id="currentProjectBadge" class="text-primary">-</span></h4>
-          <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai di dalam project ini.</p>
+          <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai ujian.</p>
         </div>
       </div>
       <div>
@@ -275,24 +261,24 @@
 
     <div class="row g-3 mb-4">
       <div class="col-md-3">
-        <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalManualSoal">
+        <div class="action-card" onclick="window.bukaModalTambahSoal()">
           <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
           <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
-          <small class="text-muted">Isi butir soal & gambar.</small>
+          <small class="text-muted">Editor opsi & pilihan dinamis.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Upload .docx (Gambar Otomatis Terbaca).</small>
+          <small class="text-muted">Upload .docx (Gambar Otomatis).</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Upload Excel + Download Template.</small>
+          <small class="text-muted">Upload Excel peserta.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -312,6 +298,7 @@
     </ul>
 
     <div class="tab-content">
+      <!-- Tab 1: Bank Soal (Dengan Tombol Edit & Hapus) -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -323,6 +310,7 @@
         </div>
       </div>
 
+      <!-- Tab 2: Siswa -->
       <div class="tab-pane fade" id="tab-peserta-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -340,13 +328,14 @@
         </div>
       </div>
 
+      <!-- Tab 3: Monitoring (Dilengkapi Progress X/Y Soal Dikerjakan) -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
-          <h6 class="fw-bold mb-3">Status Pengerjaan & Pelanggaran</h6>
+          <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblMonitoring">
               <thead class="table-light">
-                <tr><th>Username</th><th>Mata Pelajaran</th><th>Status</th><th>Pelanggaran Pindah Tab</th><th>Aksi</th></tr>
+                <tr><th>Username</th><th>Mata Pelajaran</th><th>Status</th><th>Progress (Dikerjakan/Total)</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -354,6 +343,7 @@
         </div>
       </div>
 
+      <!-- Tab 4: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Rekap Nilai & Review Jawaban Siswa</h6>
@@ -402,7 +392,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 1: IMPORT SOAL WORD (.DOCX) ================= -->
+<!-- ================= MODAL IMPORT WORD ================= -->
 <div class="modal fade" id="modalWordImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -418,7 +408,6 @@
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
-
         <div class="p-4 border rounded-3 text-center border-dashed">
           <h6 class="fw-bold mb-2">2. Upload File Dokumen Word (.docx)</h6>
           <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc">
@@ -430,7 +419,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 2: IMPORT SISWA & TEMPLATE EXCEL ================= -->
+<!-- ================= MODAL IMPORT SISWA ================= -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -446,7 +435,6 @@
           </div>
           <button id="btnDownloadExcelTpl" class="btn btn-outline-success btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
-
         <div class="p-4 border rounded-3 text-center border-dashed mb-3">
           <h6 class="fw-bold mb-2">2. Upload File Excel Peserta (.xlsx)</h6>
           <input type="file" id="fileExcelSiswaInput" class="hidden" accept=".xlsx, .xls, .csv">
@@ -457,15 +445,16 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT SOAL MANUAL ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (DENGAN TAMBAH OPSI DINAMIS) ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold">Editor Butir Soal</h5>
+        <h5 class="modal-title fw-bold" id="modalSoalTitle">Editor Butir Soal</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
+        <input type="hidden" id="edit_doc_id" value="">
         <div class="row g-3 mb-3">
           <div class="col-md-6">
             <label class="form-label small fw-bold">Mata Pelajaran Target</label>
@@ -494,39 +483,11 @@
         </div>
 
         <div id="sectionOptions">
-          <h6 class="fw-bold mb-3 small text-muted text-uppercase">Opsi Jawaban (Tandai Kunci yang Benar)</h6>
-          <div class="border rounded-3 p-3 mb-2 bg-light">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <input type="checkbox" name="correct_chk" value="A" class="form-check-input mt-0 fs-5">
-              <span class="badge bg-primary">A</span>
-              <input type="text" id="m_opa" class="form-control" placeholder="Teks Opsi A">
-            </div>
-            <input type="text" id="m_imga" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi A (Opsional)">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban & Kunci (Centang Benar)</h6>
+            <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.tambahOpsiDinamis()"><i class="bi bi-plus"></i> Tambah Opsi</button>
           </div>
-          <div class="border rounded-3 p-3 mb-2 bg-light">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <input type="checkbox" name="correct_chk" value="B" class="form-check-input mt-0 fs-5">
-              <span class="badge bg-primary">B</span>
-              <input type="text" id="m_opb" class="form-control" placeholder="Teks Opsi B">
-            </div>
-            <input type="text" id="m_imgb" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi B (Opsional)">
-          </div>
-          <div class="border rounded-3 p-3 mb-2 bg-light">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <input type="checkbox" name="correct_chk" value="C" class="form-check-input mt-0 fs-5">
-              <span class="badge bg-primary">C</span>
-              <input type="text" id="m_opc" class="form-control" placeholder="Teks Opsi C">
-            </div>
-            <input type="text" id="m_imgc" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi C (Opsional)">
-          </div>
-          <div class="border rounded-3 p-3 mb-2 bg-light">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <input type="checkbox" name="correct_chk" value="D" class="form-check-input mt-0 fs-5">
-              <span class="badge bg-primary">D</span>
-              <input type="text" id="m_opd" class="form-control" placeholder="Teks Opsi D">
-            </div>
-            <input type="text" id="m_imgd" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi D (Opsional)">
-          </div>
+          <div id="containerDynamicOptions"></div>
         </div>
 
         <button id="btnSaveManualSoal" class="btn btn-primary w-100 mt-3 py-2 fw-bold">Simpan Butir Soal ke Database</button>
@@ -543,9 +504,8 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
-  // MASUKKAN KONFIGURASI FIREBASE ANDA
   const firebaseConfig = {
-     apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -579,6 +539,49 @@
     showView('view-role-selector');
   }
 
+  // --- DINAMIK OPSI JAWABAN (A, B, C, D, E, dst.) ---
+  window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  window.bukaModalTambahSoal = function() {
+    document.getElementById('edit_doc_id').value = "";
+    document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
+    document.getElementById('m_no').value = "";
+    document.getElementById('m_img').value = "";
+    document.getElementById('m_tanya').value = "";
+    renderDynamicOptions(['A', 'B', 'C', 'D'], {});
+    new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
+  };
+
+  window.tambahOpsiDinamis = function() {
+    const container = document.getElementById('containerDynamicOptions');
+    const count = container.querySelectorAll('.dynamic-option-row').length;
+    if (count >= window.opsiHurufList.length) { alert("Maksimal opsi tercapai!"); return; }
+    const huruf = window.opsiHurufList[count];
+    appendOptionRow(huruf, "", "");
+  };
+
+  function renderDynamicOptions(hurufArr, dataOpsiVal) {
+    const container = document.getElementById('containerDynamicOptions');
+    container.innerHTML = '';
+    hurufArr.forEach(h => {
+      const val = dataOpsiVal['opsi_' + h.toLowerCase()] || "";
+      appendOptionRow(h, val, dataOpsiVal.kunci || "");
+    });
+  }
+
+  function appendOptionRow(huruf, teksVal, kunciStr) {
+    const container = document.getElementById('containerDynamicOptions');
+    const isChecked = kunciStr.includes(huruf) ? 'checked' : '';
+    const row = document.createElement('div');
+    row.className = 'border rounded-3 p-3 mb-2 bg-light dynamic-option-row';
+    row.innerHTML = `
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <input type="checkbox" name="correct_chk" value="${huruf}" class="form-check-input mt-0 fs-5" ${isChecked}>
+        <span class="badge bg-primary">${huruf}</span>
+        <input type="text" id="opt_text_${huruf}" class="form-control option-text-val" placeholder="Teks Opsi ${huruf}" value="${teksVal}">
+      </div>`;
+    container.appendChild(row);
+  }
+
   // --- EVENT BINDINGS ---
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
@@ -599,9 +602,14 @@
     showView('view-role-selector');
   });
 
-  // Fitur Hide & See Sidebar Proyek
-  document.getElementById('btnToggleSidebar').addEventListener('click', () => {
-    document.getElementById('adminSidebar').classList.toggle('collapsed');
+  // Toggle Hide & See Sidebar Proyek
+  document.getElementById('btnHideSidebarTop').addEventListener('click', () => {
+    document.getElementById('adminSidebar').classList.add('collapsed');
+    document.getElementById('btnShowSidebarTop').classList.remove('hidden');
+  });
+  document.getElementById('btnShowSidebarTop').addEventListener('click', () => {
+    document.getElementById('adminSidebar').classList.remove('collapsed');
+    document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
   function executeAdminLogin() {
@@ -621,9 +629,7 @@
   }
 
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
-  document.getElementById('admSecretPin').addEventListener('keyup', (e) => {
-    if (e.key === 'Enter') executeAdminLogin();
-  });
+  document.getElementById('admSecretPin').addEventListener('keyup', (e) => { if (e.key === 'Enter') executeAdminLogin(); });
 
   document.getElementById('btnAdminLogout').addEventListener('click', () => {
     localStorage.removeItem("cbt_admin_logged");
@@ -677,17 +683,13 @@
       <head><title>Template Soal</title></head>
       <body>
         <h3>TEMPLATE BANK SOAL CBT SCHOOL</h3>
-        <p>Anda bisa langsung menyisipkan (paste/insert) gambar ke dalam tabel di bawah ini.</p>
+        <p>Anda bisa langsung menyisipkan gambar ke dalam tabel di bawah ini.</p>
         <table border="1" style="border-collapse:collapse; width:100%;">
           <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
           <tr><td>1</td><td>Siapakah Presiden Indonesia ke-3?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td></td></tr>
           <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
           <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td>V</td></tr>
           <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
-          <tr><td>2</td><td>Pilihlah pulau besar di Indonesia!</td><td>2</td><td>A</td><td>Jawa</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>B</td><td>Sumatera</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>C</td><td>Madagaskar</td><td></td></tr>
-          <tr><td>3</td><td>Matahari terbit dari sebelah barat.</td><td>4</td><td></td><td></td><td>S</td></tr>
         </table>
       </body></html>`;
     const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
@@ -726,6 +728,7 @@
     showView('view-role-selector');
   }
 
+  // Sidebar dengan Tombol Logout per Project
   function loadSidebarProjects() {
     onSnapshot(collection(db, "projects"), (snap) => {
       const listContainer = document.getElementById('sidebarProjectList');
@@ -740,8 +743,11 @@
         const proj = d.data().nama_project;
         const isActive = proj === activeProjectId;
         listContainer.innerHTML += `
-          <div class="project-item-btn ${isActive ? 'active' : ''}" onclick="window.selectProject('${proj}')">
-            <span><i class="bi bi-folder2-open me-2"></i>${proj}</span>
+          <div class="project-item-box ${isActive ? 'border-primary bg-primary-subtle' : ''}">
+            <span class="fw-semibold text-truncate" style="cursor:pointer; max-width:140px;" onclick="window.selectProject('${proj}')" title="${proj}">
+              <i class="bi bi-folder2-open me-1"></i>${proj}
+            </span>
+            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Keluar / Hapus Project" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
           </div>`;
       });
       document.getElementById('currentProjectBadge').innerText = activeProjectId;
@@ -754,6 +760,12 @@
     loadSidebarProjects();
     loadMapelOptionsAdmin();
     loadPesertaAdmin();
+  };
+
+  window.hapusProject = async function(docId, projName) {
+    if (confirm(`Keluar/Hapus project [${projName}] dari daftar?`)) {
+      await deleteDoc(doc(db, "projects", docId));
+    }
   };
 
   function initAdminDashboard() {
@@ -779,24 +791,62 @@
     });
   }
 
+  // Bank Soal dengan Tombol Edit Soal
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
     if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
+    window.cacheBankSoal = window.cacheBankSoal || {};
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
     let rows = ''; let i = 1;
     snap.forEach(docSnap => {
       const d = docSnap.data();
+      window.cacheBankSoal[docSnap.id] = d;
       rows += `<tr>
         <td>${i++}</td>
-        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:60px;" class="rounded border mt-1">' : ''}</td>
+        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
         <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
-        <td><button class="btn btn-outline-danger btn-sm" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
+          <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
+        </td>
       </tr>`;
     });
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
+  };
+
+  window.editSoalManual = function(docId) {
+    const s = window.cacheBankSoal[docId];
+    if (!s) return;
+
+    document.getElementById('edit_doc_id').value = docId;
+    document.getElementById('modalSoalTitle').innerText = "Edit Butir Soal";
+    document.getElementById('m_target_mapel').value = s.mapel;
+    document.getElementById('m_no').value = s.id_soal;
+    document.getElementById('m_tipe').value = s.tipe_soal || 'PG';
+    document.getElementById('m_img').value = s.link_gambar || '';
+    document.getElementById('m_tanya').value = s.pertanyaan || '';
+
+    let opsiVal = {};
+    let hurufAktif = ['A', 'B', 'C', 'D'];
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
+      const huruf = window.opsiHurufList[idx];
+      if (s['opsi_' + h]) {
+        opsiVal['opsi_' + h] = s['opsi_' + h];
+        if (!hurufAktif.includes(huruf)) hurufAktif.push(huruf);
+      }
+    });
+
+    renderDynamicOptions(hurufAktif, { kunci: s.kunci, ...opsiVal });
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
+      const huruf = window.opsiHurufList[idx];
+      const elem = document.getElementById('opt_text_' + huruf);
+      if (elem && s['opsi_' + h]) elem.value = s['opsi_' + h];
+    });
+
+    new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
   };
 
   function loadPesertaAdmin() {
@@ -816,9 +866,7 @@
             <button class="btn btn-sm ${isBlocked ? 'btn-outline-success' : 'btn-outline-warning'} me-1" onclick="window.toggleBlockSiswa('${docSnap.id}', '${u.status || 'Aktif'}')">
               <i class="bi ${isBlocked ? 'bi-unlock' : 'bi-lock'}"></i> ${isBlocked ? 'Buka Blokir' : 'Blokir'}
             </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${docSnap.id}')">
-              <i class="bi bi-trash"></i>
-            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${docSnap.id}')"><i class="bi bi-trash"></i></button>
           </td>
         </tr>`;
       });
@@ -832,30 +880,41 @@
   };
 
   window.hapusSiswa = async function(docId) {
-    if (confirm("Hapus akun siswa ini?")) {
-      await deleteDoc(doc(db, "users", docId));
-    }
+    if (confirm("Hapus akun siswa ini?")) { await deleteDoc(doc(db, "users", docId)); }
   };
 
+  // Live Monitoring dengan Progress Soal (Format X/Y)
   function initMonitoringListener() {
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
-    onSnapshot(qMon, (snap) => {
+    onSnapshot(qMon, async (snap) => {
       let rows = '';
+      // Hitung total soal mapel terkait
+      const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+      let soalCountMap = {};
+      soalSnap.forEach(s => {
+        const m = s.data().mapel;
+        soalCountMap[m] = (soalCountMap[m] || 0) + 1;
+      });
+
       snap.forEach(docSnap => {
         const d = docSnap.data();
         let badge = d.status === 'Melanggar' ? 'bg-warning text-dark' : (d.status === 'Diskualifikasi' ? 'bg-danger' : 'bg-primary');
+        const totalSoalMapel = soalCountMap[d.mapel] || 0;
+        const dikerjakan = d.jawaban ? Object.keys(d.jawaban).length : 0;
+        const progressFormat = `${dikerjakan}/${totalSoalMapel}`;
+
         rows += `<tr>
           <td><strong>${d.username}</strong></td>
           <td>${d.mapel}</td>
           <td><span class="badge ${badge}">${d.status}</span></td>
+          <td><span class="fw-bold text-primary">${progressFormat}</span></td>
           <td><strong class="text-danger">${d.pelanggaran || 0}</strong> Kali</td>
-          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${docSnap.id}')">Reset Pelanggaran</button></td>
+          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${docSnap.id}')">Reset</button></td>
         </tr>`;
       });
-      document.querySelector('#tblMonitoring tbody').innerHTML = rows;
+      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
     });
 
-    // Listener Rekap Nilai dengan Tombol Review & Nama Siswa
     const qHasil = query(collection(db, "hasil"), where("project", "==", activeProjectId));
     onSnapshot(qHasil, async (snap) => {
       let rows = '';
@@ -866,9 +925,8 @@
       snap.forEach(d => {
         const data = d.data();
         const infoSiswa = userMap[data.username] || {};
-        const namaLengkap = infoSiswa.nama || "Siswa (Tidak terdaftar)";
+        const namaLengkap = infoSiswa.nama || "Siswa";
         
-        // Simpan data ke atribut tombol review
         window.allHasilCache = window.allHasilCache || {};
         window.allHasilCache[d.id] = data;
 
@@ -885,16 +943,14 @@
     });
   }
 
-  // Fungsi Membuka Modal Review Jawaban Detail Siswa
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
 
-    document.getElementById('revNamaSiswa').innerText = `${namaSiswa} (${dataHasil.username})` ;
+    document.getElementById('revNamaSiswa').innerText = `${namaSiswa} (${dataHasil.username})`;
     document.getElementById('revMapel').innerText = dataHasil.mapel;
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
-    // Ambil soal mapel tersebut untuk dicocokkan
     const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project), where("mapel", "==", dataHasil.mapel)));
     let soalMap = {};
     soalSnap.forEach(s => { soalMap[s.data().id_soal] = s.data(); });
@@ -921,7 +977,7 @@
         </div>`;
     }
 
-    document.getElementById('revContainerSoal').innerHTML = containerHTML || '<p class="text-muted">Tidak ada rincian jawaban tersimpan.</p>';
+    document.getElementById('revContainerSoal').innerHTML = containerHTML || '<p class="text-muted">Tidak ada rincian jawaban.</p>';
     new bootstrap.Modal(document.getElementById('modalReviewSiswa')).show();
   };
 
@@ -957,7 +1013,7 @@
           });
         }
       });
-      alert(`Berhasil mengimpor ${json.length} data peserta ke project [${activeProjectId}]!`);
+      alert(`Berhasil mengimpor ${json.length} data peserta!`);
       const modalEl = document.getElementById('modalSiswaImport');
       const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modalInst.hide();
@@ -1013,8 +1069,7 @@
               tipe_soal: jenis === '4' ? 'BS' : (jenis === '2' ? 'KOMPLEKS' : 'PG'),
               pertanyaan: soalText,
               link_gambar: extractedImg,
-              opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '',
-              img_a: '', img_b: '', img_c: '', img_d: '',
+              opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '', opsi_e: '',
               kunci: ''
             };
           }
@@ -1023,10 +1078,11 @@
             const optImg = cols[4].querySelector('img');
             const optImgSrc = optImg ? optImg.src : '';
 
-            if (opsi.toUpperCase() === 'A') { cur.opsi_a = jawabanText; cur.img_a = optImgSrc; }
-            if (opsi.toUpperCase() === 'B') { cur.opsi_b = jawabanText; cur.img_b = optImgSrc; }
-            if (opsi.toUpperCase() === 'C') { cur.opsi_c = jawabanText; cur.img_c = optImgSrc; }
-            if (opsi.toUpperCase() === 'D') { cur.opsi_d = jawabanText; cur.img_d = optImgSrc; }
+            const opKey = opsi.toLowerCase();
+            if (['a','b','c','d','e','f','g','h'].includes(opKey)) {
+              cur['opsi_' + opKey] = jawabanText;
+              cur['img_' + opKey] = optImgSrc;
+            }
             
             if (kunci.toUpperCase() === 'V') cur.kunci = cur.kunci ? cur.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
             if (cur.tipe_soal === 'BS' && (kunci.toUpperCase() === 'B' || kunci.toUpperCase() === 'S')) cur.kunci = kunci.toUpperCase() === 'B' ? 'BENAR' : 'SALAH';
@@ -1038,7 +1094,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal beserta gambar!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
@@ -1048,7 +1104,9 @@
     reader.readAsArrayBuffer(file);
   }
 
+  // Simpan / Update Soal Manual (Mendukung Dynamic Options & Edit)
   async function saveManualSoalAction() {
+    const editId = document.getElementById('edit_doc_id').value;
     const targetMapel = document.getElementById('m_target_mapel').value;
     const no = parseInt(document.getElementById('m_no').value);
     const tipe = document.getElementById('m_tipe').value;
@@ -1062,32 +1120,39 @@
       return;
     }
 
-    await addDoc(collection(db, "soal"), {
+    let payload = {
       project: activeProjectId,
       id_soal: no,
       mapel: targetMapel,
       tipe_soal: tipe,
       pertanyaan: tanya,
       link_gambar: linkImg,
-      opsi_a: document.getElementById('m_opa').value.trim(),
-      opsi_b: document.getElementById('m_opb').value.trim(),
-      opsi_c: document.getElementById('m_opc').value.trim(),
-      opsi_d: document.getElementById('m_opd').value.trim(),
-      img_a: document.getElementById('m_imga').value.trim(),
-      img_b: document.getElementById('m_imgb').value.trim(),
-      img_c: document.getElementById('m_imgc').value.trim(),
-      img_d: document.getElementById('m_imgd').value.trim(),
       kunci: checkedBoxes.join(',')
+    };
+
+    // Ambil data dinamis opsi teks
+    const rows = document.querySelectorAll('.dynamic-option-row');
+    rows.forEach((r, idx) => {
+      const huruf = window.opsiHurufList[idx].toLowerCase();
+      const val = r.querySelector('.option-text-val').value.trim();
+      payload['opsi_' + huruf] = val;
     });
 
-    alert("Soal berhasil disimpan!");
+    if (editId) {
+      await updateDoc(doc(db, "soal", editId), payload);
+      alert("Soal berhasil diperbarui!");
+    } else {
+      await addDoc(collection(db, "soal"), payload);
+      alert("Soal baru berhasil disimpan!");
+    }
+
     const modalEl = document.getElementById('modalManualSoal');
     const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
     modalInst.hide();
     renderBankSoalAdmin();
   }
 
-  // Export Nilai ke Excel (Dilengkapi Nama Siswa dan Kelas)
+  // Export Nilai ke Excel (Dengan Nama Siswa Lengkap)
   async function downloadHasilExcel() {
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
@@ -1154,7 +1219,7 @@
 
     const userData = userSnap.docs[0].data();
     if (userData.status === "Diblokir") {
-      alert("AKUN ANDA DIBLOKIR! Silakan hubungi proktor/pengawas ujian.");
+      alert("AKUN ANDA DIBLOKIR!");
       return;
     }
 
@@ -1177,7 +1242,7 @@
     }
 
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", currentMapel)));
-    if (snap.empty) { alert("Belum ada bank soal untuk mata pelajaran ini!"); return; }
+    if (snap.empty) { alert("Belum ada bank soal!"); return; }
 
     activeSoalList = [];
     snap.forEach(d => activeSoalList.push(d.data()));
@@ -1193,7 +1258,8 @@
       username: currentStudent,
       mapel: currentMapel,
       status: "Mengerjakan",
-      pelanggaran: 0
+      pelanggaran: 0,
+      jawaban: {}
     });
 
     showView('view-exam');
@@ -1217,10 +1283,10 @@
     });
 
     if (cheatCount >= 3) {
-      alert("Anda telah melanggar aturan sebanyak 3 kali. Ujian dihentikan otomatis.");
+      alert("Anda telah melanggar aturan sebanyak 3 kali.");
       submitExamAuto();
     } else {
-      alert(`PERINGATAN (${cheatCount}/3): Anda terdeteksi keluar dari layar ujian!`);
+      alert(`PERINGATAN (${cheatCount}/3): Keluar dari layar ujian!`);
     }
   }
 
@@ -1257,13 +1323,14 @@
 
     const saved = userAnswers[s.id_soal];
 
-    ['A', 'B', 'C', 'D'].forEach(opt => {
-      const val = s['opsi_' + opt.toLowerCase()];
-      const imgOpt = s['img_' + opt.toLowerCase()];
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
+      const huruf = window.opsiHurufList[idxOpt];
+      const val = s['opsi_' + h];
+      const imgOpt = s['img_' + h];
       if (val || imgOpt) {
-        const isSel = saved === opt ? 'selected' : '';
-        html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${opt}')">
-          <span class="badge bg-primary">${opt}</span>
+        const isSel = saved === huruf ? 'selected' : '';
+        html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${huruf}')">
+          <span class="badge bg-primary">${huruf}</span>
           <div class="flex-grow-1">
             ${val ? `<div class="fw-semibold">${val}</div>` : ''}
             ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
@@ -1275,7 +1342,12 @@
     document.getElementById('soalContainer').innerHTML = html;
   }
 
-  window.pickAns = (id, val) => { userAnswers[id] = val; renderSoalByIndex(currentSoalIndex); };
+  window.pickAns = async (id, val) => {
+    userAnswers[id] = val;
+    renderSoalByIndex(currentSoalIndex);
+    // Update progress real-time ke monitoring
+    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
+  };
 
   function startTimer(sec) {
     let t = sec;
