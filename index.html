@@ -5,19 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CBT School - Anti Kecurangan System</title>
   
-  <!-- Google Fonts & Bootstrap 5 & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <!-- Parser Word (.docx) & Excel (.xlsx) -->
+  <!-- Parser & Generator Word (.docx) & Excel (.xlsx) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  <script src="https://unpkg.com/docx@8.2.3/build/index.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
     :root {
       --primary: #4f46e5;
-      --primary-dark: #4338ca;
       --primary-subtle: #eef2ff;
       --bg: #f8fafc;
       --border: #e2e8f0;
@@ -26,7 +25,6 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--text); }
     .hidden { display: none !important; }
     
-    /* Layout & Cards */
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
     .action-card {
       border: 1px solid var(--border); border-radius: 14px; padding: 20px;
@@ -35,7 +33,6 @@
     .action-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--primary); }
     .action-icon { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 12px; }
 
-    /* Navigasi Grid Soal Siswa */
     .grid-no-btn {
       width: 42px; height: 42px; border-radius: 10px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
@@ -44,7 +41,6 @@
     .grid-no-btn.active { border-color: var(--primary); background: var(--primary-subtle); color: var(--primary); }
     .grid-no-btn.answered { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-    /* Anti Cheat Floating Badge */
     .badge-cheat-count {
       background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5;
       padding: 6px 14px; border-radius: 50px; font-weight: 700; font-size: 0.85rem;
@@ -54,7 +50,6 @@
       padding: 6px 14px; border-radius: 50px; font-weight: 800; font-size: 1.1rem;
     }
 
-    /* Option Item */
     .option-item {
       border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px;
       cursor: pointer; transition: all 0.2s; background: #fff; margin-bottom: 10px;
@@ -71,7 +66,6 @@
 <!-- Header Navbar -->
 <nav class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
-    <!-- Klik 5x pada logo untuk membuka login Admin/Proktor -->
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" onclick="handleSecretLogoClick()">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
       <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Anti-Kecurangan</small></span>
@@ -124,7 +118,7 @@
     </div>
   </div>
 
-  <!-- ================= VIEW 2: KONFIRMASI SECURE EXAM MODE ================= -->
+  <!-- ================= VIEW 2: KONFIRMASI SECURE EXAM ================= -->
   <div id="view-confirm-exam" class="row justify-content-center pt-3 hidden">
     <div class="col-md-6">
       <div class="cbt-card p-4">
@@ -158,7 +152,6 @@
 
   <!-- ================= VIEW 3: RUANG UJIAN ANTI-CHEAT ================= -->
   <div id="view-exam" class="hidden">
-    <!-- Top Bar Monitoring -->
     <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
       <div>
         <h5 class="fw-bold mb-0" id="examMapelTitle">Mata Pelajaran</h5>
@@ -175,11 +168,9 @@
     </div>
 
     <div class="row g-3">
-      <!-- Area Soal -->
       <div class="col-lg-8">
         <div class="cbt-card p-4">
           <div id="soalContainer"></div>
-
           <div class="d-flex justify-content-between mt-4 pt-3 border-top">
             <button class="btn btn-outline-secondary px-3" onclick="navigateSoal(-1)"><i class="bi bi-chevron-left"></i> Sebelumnya</button>
             <button class="btn btn-outline-secondary px-3" onclick="navigateSoal(1)">Berikutnya <i class="bi bi-chevron-right"></i></button>
@@ -187,7 +178,6 @@
         </div>
       </div>
 
-      <!-- Navigasi Nomor Soal -->
       <div class="col-lg-4">
         <div class="cbt-card p-3">
           <h6 class="fw-bold mb-3"><i class="bi bi-grid-3x3-gap me-1"></i> Nomor Soal</h6>
@@ -232,20 +222,20 @@
       </div>
     </div>
 
-    <!-- 4 Action Cards Sesuai Gambar 3 UI -->
+    <!-- 4 Action Cards -->
     <div class="row g-3 mb-4">
       <div class="col-md-3">
         <div class="action-card" onclick="openManualSoalModal()">
           <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
           <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
-          <small class="text-muted">Editor butir soal interaktif.</small>
+          <small class="text-muted">Editor butir soal & opsi gambar.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" onclick="openWordModal()">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import dari Word (.docx)</h6>
-          <small class="text-muted">Upload soal massal dari Word.</small>
+          <small class="text-muted">Upload soal massal tabel Word.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -273,7 +263,6 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -285,7 +274,6 @@
         </div>
       </div>
 
-      <!-- Tab 2: Live Pemantauan Ujian & Pelanggaran -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Aktivitas & Pelanggaran Siswa</h6>
@@ -300,7 +288,6 @@
         </div>
       </div>
 
-      <!-- Tab 3: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -330,7 +317,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT WORD .DOCX (Gambar 1 UI) ================= -->
+<!-- ================= MODAL IMPORT WORD .DOCX ================= -->
 <div class="modal fade" id="modalWordImport" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -341,16 +328,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <!-- Step 1 Download Template -->
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
             <h6 class="fw-bold mb-1">1. Download Template Word</h6>
-            <small class="text-muted">Template tabel: NO | SOAL | JENIS | OPSI | JAWABAN | KUNCI</small>
+            <small class="text-muted">Template resmi .docx tabel: NO | SOAL | JENIS | OPSI | JAWABAN | KUNCI</small>
           </div>
-          <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="downloadTemplateWord()"><i class="bi bi-download me-1"></i> Download Template</button>
+          <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="downloadTemplateWord()"><i class="bi bi-download me-1"></i> Download .docx</button>
         </div>
 
-        <!-- Keterangan Jenis & Kunci -->
         <div class="p-3 bg-light rounded-3 mb-3 border small">
           <span class="fw-bold">Keterangan Kolom JENIS & KUNCI:</span>
           <div class="row mt-2 text-muted">
@@ -360,7 +345,6 @@
           </div>
         </div>
 
-        <!-- Step 2 Upload File -->
         <div class="p-4 border rounded-3 text-center border-dashed">
           <h6 class="fw-bold mb-2">2. Upload File Word (.docx)</h6>
           <p class="text-muted small">Sistem membaca dan mengimpor butir soal secara otomatis.</p>
@@ -373,16 +357,16 @@
   </div>
 </div>
 
-<!-- ================= MODAL INPUT SOAL MANUAL (Gambar 2 UI) ================= -->
+<!-- ================= MODAL INPUT SOAL MANUAL (DILENGKAPI LINK GAMBAR) ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold">Editor Butir Soal</h5>
+        <h5 class="modal-title fw-bold">Editor Butir Soal Lengkap</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-3">
           <div class="col-md-6">
             <label class="form-label small fw-bold">Mata Pelajaran Target</label>
             <select id="m_target_mapel" class="form-select"></select>
@@ -393,61 +377,80 @@
           </div>
           <div class="col-md-3">
             <label class="form-label small fw-bold">Tipe Soal</label>
-            <select id="m_tipe" class="form-select">
+            <select id="m_tipe" class="form-select" onchange="handleTipeChange()">
               <option value="PG">Pilihan Ganda (PG)</option>
               <option value="KOMPLEKS">PG Kompleks (Multi Kunci)</option>
               <option value="BS">Benar / Salah (BS)</option>
             </select>
           </div>
           <div class="col-12">
+            <label class="form-label small fw-bold">Link URL Gambar Soal (Opsional)</label>
+            <div class="input-group">
+              <span class="input-group-text bg-white"><i class="bi bi-image"></i></span>
+              <input id="m_img" class="form-control" placeholder="https://domain.com/gambar-soal.png">
+            </div>
+          </div>
+          <div class="col-12">
             <label class="form-label small fw-bold">Teks Pertanyaan</label>
-            <textarea id="m_tanya" class="form-control" rows="3" placeholder="Tuliskan butir soal..."></textarea>
+            <textarea id="m_tanya" class="form-control" rows="3" placeholder="Tuliskan butir soal di sini..."></textarea>
           </div>
         </div>
 
-        <h6 class="fw-bold mb-3 small text-muted text-uppercase">Opsi Jawaban (Tandai Kunci Jawaban yang Benar)</h6>
-        <div id="manualOptionsList">
-          <!-- A -->
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <input type="checkbox" name="correct_chk" value="A" class="form-check-input mt-0 fs-5">
-            <div class="border rounded-3 p-2 flex-grow-1 bg-white">
-              <span class="badge bg-primary me-2">A</span>
-              <input type="text" id="m_opa" class="border-0 w-75 outline-none" placeholder="Opsi A...">
+        <div id="sectionOptions">
+          <h6 class="fw-bold mb-3 small text-muted text-uppercase">Opsi Jawaban (Centang Kotak untuk Kunci Jawaban yang Benar)</h6>
+          <!-- Opsi A -->
+          <div class="border rounded-3 p-3 mb-2 bg-light">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <input type="checkbox" name="correct_chk" value="A" class="form-check-input mt-0 fs-5">
+              <span class="badge bg-primary">A</span>
+              <input type="text" id="m_opa" class="form-control" placeholder="Teks Opsi A">
             </div>
+            <input type="text" id="m_imga" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi A (Opsional)">
           </div>
-          <!-- B -->
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <input type="checkbox" name="correct_chk" value="B" class="form-check-input mt-0 fs-5">
-            <div class="border rounded-3 p-2 flex-grow-1 bg-white">
-              <span class="badge bg-primary me-2">B</span>
-              <input type="text" id="m_opb" class="border-0 w-75 outline-none" placeholder="Opsi B...">
+          <!-- Opsi B -->
+          <div class="border rounded-3 p-3 mb-2 bg-light">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <input type="checkbox" name="correct_chk" value="B" class="form-check-input mt-0 fs-5">
+              <span class="badge bg-primary">B</span>
+              <input type="text" id="m_opb" class="form-control" placeholder="Teks Opsi B">
             </div>
+            <input type="text" id="m_imgb" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi B (Opsional)">
           </div>
-          <!-- C -->
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <input type="checkbox" name="correct_chk" value="C" class="form-check-input mt-0 fs-5">
-            <div class="border rounded-3 p-2 flex-grow-1 bg-white">
-              <span class="badge bg-primary me-2">C</span>
-              <input type="text" id="m_opc" class="border-0 w-75 outline-none" placeholder="Opsi C...">
+          <!-- Opsi C -->
+          <div class="border rounded-3 p-3 mb-2 bg-light">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <input type="checkbox" name="correct_chk" value="C" class="form-check-input mt-0 fs-5">
+              <span class="badge bg-primary">C</span>
+              <input type="text" id="m_opc" class="form-control" placeholder="Teks Opsi C">
             </div>
+            <input type="text" id="m_imgc" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi C (Opsional)">
           </div>
-          <!-- D -->
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <input type="checkbox" name="correct_chk" value="D" class="form-check-input mt-0 fs-5">
-            <div class="border rounded-3 p-2 flex-grow-1 bg-white">
-              <span class="badge bg-primary me-2">D</span>
-              <input type="text" id="m_opd" class="border-0 w-75 outline-none" placeholder="Opsi D...">
+          <!-- Opsi D -->
+          <div class="border rounded-3 p-3 mb-2 bg-light">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <input type="checkbox" name="correct_chk" value="D" class="form-check-input mt-0 fs-5">
+              <span class="badge bg-primary">D</span>
+              <input type="text" id="m_opd" class="form-control" placeholder="Teks Opsi D">
             </div>
+            <input type="text" id="m_imgd" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi D (Opsional)">
           </div>
         </div>
 
-        <button class="btn btn-primary w-100 mt-3 py-2 fw-bold" onclick="saveManualSoalAction()">Simpan Butir Soal</button>
+        <div id="sectionBS" class="hidden">
+          <label class="form-label small fw-bold">Kunci Jawaban Benar / Salah</label>
+          <select id="m_kunci_bs" class="form-select">
+            <option value="BENAR">BENAR</option>
+            <option value="SALAH">SALAH</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3 py-2 fw-bold" onclick="saveManualSoalAction()"><i class="bi bi-save me-1"></i> Simpan Butir Soal ke Database</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Firebase Modular SDK -->
+<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
@@ -465,7 +468,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Global State
   let currentStudent = "";
   let currentMapel = "";
   let currentDurasi = 60;
@@ -476,7 +478,6 @@
   let timerInterval = null;
   let isExamActive = false;
 
-  // Secret Click Tracker (5 Klik Buka Login Admin)
   let logoClickCount = 0;
   let logoClickTimer = null;
 
@@ -484,7 +485,6 @@
     logoClickCount++;
     clearTimeout(logoClickTimer);
     logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
-
     if (logoClickCount >= 5) {
       logoClickCount = 0;
       new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
@@ -518,7 +518,6 @@
     loadMapelOptions();
   };
 
-  // 1. Initial Load Mata Pelajaran
   async function loadMapelOptions() {
     const s = document.getElementById('p_mapel_select');
     s.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
@@ -530,7 +529,6 @@
   }
   loadMapelOptions();
 
-  // 2. Alur Peserta Ujian
   window.loginSiswaAction = async function() {
     const u = document.getElementById('p_user').value.trim();
     const p = document.getElementById('p_pass').value.trim();
@@ -554,7 +552,6 @@
   };
 
   window.startSecureExam = async function() {
-    // Request Fullscreen
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
@@ -571,7 +568,6 @@
     cheatCount = 0;
     isExamActive = true;
 
-    // Daftarkan status monitoring peserta
     await setDoc(doc(db, "monitoring", currentStudent), {
       username: currentStudent,
       mapel: currentMapel,
@@ -590,7 +586,6 @@
     startTimer(currentDurasi * 60);
   };
 
-  // Anti-Cheat: Deteksi Tab Switch / Blur
   window.addEventListener('visibilitychange', handleCheatDetection);
   window.addEventListener('blur', handleCheatDetection);
 
@@ -606,7 +601,7 @@
       });
 
       if (cheatCount >= 3) {
-        alert("PERINGATAN KERAS: Anda telah melanggar aturan anti-kecurangan sebanyak 3 kali. Ujian dihentikan otomatis.");
+        alert("PERINGATAN: Anda telah melanggar aturan anti-kecurangan sebanyak 3 kali. Ujian dihentikan otomatis.");
         submitExamAuto();
       } else {
         alert(`PERINGATAN (${cheatCount}/3): Anda terdeteksi keluar dari layar ujian/pindah tab!`);
@@ -641,8 +636,7 @@
       <span class="badge bg-secondary">${s.tipe_soal}</span>
     </div>`;
 
-    if (s.wacana) html += `<div class="alert alert-light border mb-3">${s.wacana}</div>`;
-    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="img-fluid rounded" style="max-height:220px;"></div>`;
+    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="img-fluid rounded border" style="max-height:220px;"></div>`;
     html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
 
     const saved = userAnswers[s.id_soal];
@@ -650,11 +644,15 @@
     if (s.tipe_soal === 'PG') {
       ['A', 'B', 'C', 'D'].forEach(opt => {
         const val = s['opsi_' + opt.toLowerCase()];
-        if (val) {
+        const imgOpt = s['img_' + opt.toLowerCase()];
+        if (val || imgOpt) {
           const isSel = saved === opt ? 'selected' : '';
           html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${opt}')">
             <span class="badge bg-primary">${opt}</span>
-            <span class="fw-semibold">${val}</span>
+            <div class="flex-grow-1">
+              ${val ? `<div class="fw-semibold">${val}</div>` : ''}
+              ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
+            </div>
           </div>`;
         }
       });
@@ -662,12 +660,16 @@
       const savedArr = Array.isArray(saved) ? saved : [];
       ['A', 'B', 'C', 'D'].forEach(opt => {
         const val = s['opsi_' + opt.toLowerCase()];
-        if (val) {
+        const imgOpt = s['img_' + opt.toLowerCase()];
+        if (val || imgOpt) {
           const isSel = savedArr.includes(opt) ? 'selected' : '';
           html += `<div class="option-item ${isSel}" onclick="window.pickAnsKompleks('${s.id_soal}', '${opt}')">
             <input type="checkbox" class="form-check-input" ${isSel ? 'checked' : ''}>
             <span class="badge bg-primary">${opt}</span>
-            <span class="fw-semibold">${val}</span>
+            <div class="flex-grow-1">
+              ${val ? `<div class="fw-semibold">${val}</div>` : ''}
+              ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
+            </div>
           </div>`;
         }
       });
@@ -711,9 +713,9 @@
     activeSoalList.forEach(s => {
       const ans = userAnswers[s.id_soal];
       if (s.tipe_soal === 'KOMPLEKS') {
-        const kArr = s.kunci.split(',').map(x => x.trim()).sort().join(',');
+        const kArr = (s.kunci || '').split(',').map(x => x.trim()).sort().join(',');
         const uArr = Array.isArray(ans) ? ans.sort().join(',') : '';
-        if (kArr === uArr) benar++;
+        if (kArr && kArr === uArr) benar++;
       } else {
         if (ans === s.kunci) benar++;
       }
@@ -738,7 +740,6 @@
     document.getElementById('resTotal').innerText = activeSoalList.length;
   }
 
-  // 3. Modul Proktor / Admin Dashboard
   function initAdminDashboard() {
     onSnapshot(collection(db, "mapel"), (snap) => {
       const sMapel = document.getElementById('adminMapelFilter');
@@ -752,7 +753,6 @@
       renderBankSoalAdmin();
     });
 
-    // Live Monitoring Listener
     onSnapshot(collection(db, "monitoring"), (snap) => {
       let rows = '';
       snap.forEach(docSnap => {
@@ -773,7 +773,6 @@
       document.querySelector('#tblMonitoring tbody').innerHTML = rows;
     });
 
-    // Hasil Nilai
     onSnapshot(collection(db, "hasil"), (snap) => {
       let rows = '';
       snap.forEach(d => {
@@ -799,7 +798,7 @@
       const d = docSnap.data();
       rows += `<tr>
         <td>${i++}</td>
-        <td>${d.pertanyaan}</td>
+        <td>${d.pertanyaan} ${d.link_gambar ? '<i class="bi bi-image text-primary"></i>' : ''}</td>
         <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td><button class="btn btn-outline-danger btn-sm" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
@@ -829,24 +828,101 @@
   window.openWordModal = () => new bootstrap.Modal(document.getElementById('modalWordImport')).show();
   window.openManualSoalModal = () => new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
 
-  // 4. Download Template Word
-  window.downloadTemplateWord = function() {
-    const tableHTML = `
-      <table border="1">
-        <tr><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
-        <tr><td>1</td><td>Siapakah Presiden Indonesia pada tahun 1999?</td><td>1</td><td>A</td><td>Soekarno</td><td></td></tr>
-        <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
-        <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td>V</td></tr>
-        <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
-      </table>`;
-    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
-    const a = document.createElement('a');
+  window.handleTipeChange = function() {
+    const t = document.getElementById('m_tipe').value;
+    if (t === 'BS') {
+      document.getElementById('sectionOptions').classList.add('hidden');
+      document.getElementById('sectionBS').classList.remove('hidden');
+    } else {
+      document.getElementById('sectionOptions').classList.remove('hidden');
+      document.getElementById('sectionBS').classList.add('hidden');
+    }
+  };
+
+  // GENERATOR TEMPLATE .DOCX ASLI (DOCX.JS)
+  window.downloadTemplateWord = async function() {
+    const { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType } = docx;
+
+    const createCell = (text, widthPct = 20) => new TableCell({
+      width: { size: widthPct, type: WidthType.PERCENTAGE },
+      children: [new Paragraph(text)]
+    });
+
+    const docxFile = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({ text: "TEMPLATE BANK SOAL CBT SCHOOL", heading: "Heading1" }),
+          new Table({
+            rows: [
+              new TableRow({
+                children: [
+                  createCell("NO", 5), createCell("SOAL", 45), createCell("JENIS", 10),
+                  createCell("OPSI", 10), createCell("JAWABAN", 20), createCell("KUNCI", 10)
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell("1"), createCell("Siapakah Presiden Indonesia ke-3?"),
+                  createCell("1"), createCell("A"), createCell("Soekarno"), createCell("")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell(""), createCell(""), createCell(""),
+                  createCell("B"), createCell("Soeharto"), createCell("")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell(""), createCell(""), createCell(""),
+                  createCell("C"), createCell("B. J. Habibie"), createCell("V")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell(""), createCell(""), createCell(""),
+                  createCell("D"), createCell("Abdurrahman Wahid"), createCell("")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell("2"), createCell("Pilihlah pulau besar di Indonesia!"),
+                  createCell("2"), createCell("A"), createCell("Jawa"), createCell("V")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell(""), createCell(""), createCell(""),
+                  createCell("B"), createCell("Sumatera"), createCell("V")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell(""), createCell(""), createCell(""),
+                  createCell("C"), createCell("Madagaskar"), createCell("")
+                ]
+              }),
+              new TableRow({
+                children: [
+                  createCell("3"), createCell("Matahari terbit dari sebelah barat."),
+                  createCell("4"), createCell(""), createCell(""), createCell("S")
+                ]
+              })
+            ]
+          })
+        ]
+      }]
+    });
+
+    const blob = await Packer.toBlob(docxFile);
+    const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = 'Template_Soal_CBT.doc';
+    a.download = "Template_Bank_Soal_CBT.docx";
     a.click();
   };
 
-  // 5. Parser Dokumen Word (.docx)
+  // PARSER IMPORT SOAL WORD (.DOCX)
   window.processWordFile = function(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -858,6 +934,11 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
         const targetMapel = document.getElementById('adminMapelFilter').value;
+
+        if (!targetMapel) {
+          alert("Silakan pilih target Mata Pelajaran pada dashboard sebelum mengimpor!");
+          return;
+        }
 
         let list = [];
         let currentQ = null;
@@ -880,6 +961,7 @@
               mapel: targetMapel,
               tipe_soal: jenis === '4' ? 'BS' : (jenis === '2' ? 'KOMPLEKS' : 'PG'),
               pertanyaan: soalText,
+              link_gambar: '',
               opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '',
               kunci: ''
             };
@@ -890,6 +972,7 @@
             if (opsi.toUpperCase() === 'B') currentQ.opsi_b = jawaban;
             if (opsi.toUpperCase() === 'C') currentQ.opsi_c = jawaban;
             if (opsi.toUpperCase() === 'D') currentQ.opsi_d = jawaban;
+
             if (kunci.toUpperCase() === 'V') {
               currentQ.kunci = currentQ.kunci ? currentQ.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
             }
@@ -900,15 +983,78 @@
         }
         if (currentQ) list.push(currentQ);
 
+        if (list.length === 0) {
+          alert("Gagal membaca tabel dari file .docx. Pastikan tabel memiliki format 6 kolom yang sesuai!");
+          return;
+        }
+
         list.forEach(async item => await addDoc(collection(db, "soal"), item));
         document.getElementById('wordStatusMsg').innerText = `Berhasil mengimpor ${list.length} butir soal!`;
         setTimeout(() => location.reload(), 1500);
+      }).catch(err => {
+        alert("Error membaca file Word: " + err.message);
       });
     };
     reader.readAsArrayBuffer(file);
   };
 
-  // 6. Import Siswa Excel (.xlsx)
+  // SIMPAN SOAL MANUAL DENGAN VALIDASI & LINK GAMBAR
+  window.saveManualSoalAction = async function() {
+    const targetMapel = document.getElementById('m_target_mapel').value;
+    const no = parseInt(document.getElementById('m_no').value);
+    const tipe = document.getElementById('m_tipe').value;
+    const tanya = document.getElementById('m_tanya').value.trim();
+    const linkImg = document.getElementById('m_img').value.trim();
+
+    if (!targetMapel || !no || !tanya) {
+      alert("Lengkapi Mata Pelajaran, Nomor Soal, dan Teks Pertanyaan!");
+      return;
+    }
+
+    let kunciFinal = '';
+    if (tipe === 'BS') {
+      kunciFinal = document.getElementById('m_kunci_bs').value;
+    } else {
+      const checkedBoxes = Array.from(document.querySelectorAll('input[name="correct_chk"]:checked')).map(c => c.value);
+      if (checkedBoxes.length === 0) {
+        alert("Pilih minimal 1 kotak centang kunci jawaban!");
+        return;
+      }
+      kunciFinal = checkedBoxes.join(',');
+    }
+
+    const payload = {
+      id_soal: no,
+      mapel: targetMapel,
+      tipe_soal: tipe,
+      pertanyaan: tanya,
+      link_gambar: linkImg,
+      opsi_a: document.getElementById('m_opa').value.trim(),
+      opsi_b: document.getElementById('m_opb').value.trim(),
+      opsi_c: document.getElementById('m_opc').value.trim(),
+      opsi_d: document.getElementById('m_opd').value.trim(),
+      img_a: document.getElementById('m_imga').value.trim(),
+      img_b: document.getElementById('m_imgb').value.trim(),
+      img_c: document.getElementById('m_imgc').value.trim(),
+      img_d: document.getElementById('m_imgd').value.trim(),
+      kunci: kunciFinal
+    };
+
+    try {
+      await addDoc(collection(db, "soal"), payload);
+      alert("Butir soal berhasil disimpan ke database!");
+      bootstrap.Modal.getInstance(document.getElementById('modalManualSoal')).hide();
+      
+      document.getElementById('m_tanya').value = "";
+      document.getElementById('m_img').value = "";
+      document.querySelectorAll('input[name="correct_chk"]').forEach(c => c.checked = false);
+      renderBankSoalAdmin();
+    } catch (e) {
+      alert("Gagal menyimpan soal: " + e.message);
+    }
+  };
+
+  // Import Siswa Excel (.xlsx)
   window.handleImportSiswa = function(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -929,7 +1075,7 @@
     reader.readAsArrayBuffer(file);
   };
 
-  // 7. Unduh Rekap Hasil Nilai ke Excel (.xlsx)
+  // Unduh Rekap Hasil Nilai ke Excel (.xlsx)
   window.downloadHasilExcel = async function() {
     const snap = await getDocs(collection(db, "hasil"));
     let arr = [];
@@ -940,37 +1086,6 @@
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil CBT");
     XLSX.writeFile(wb, "Rekap_Nilai_CBT_School.xlsx");
-  };
-
-  // 8. Simpan Soal Manual
-  window.saveManualSoalAction = async function() {
-    const targetMapel = document.getElementById('m_target_mapel').value;
-    const no = parseInt(document.getElementById('m_no').value);
-    const tipe = document.getElementById('m_tipe').value;
-    const tanya = document.getElementById('m_tanya').value;
-
-    const checkedBoxes = Array.from(document.querySelectorAll('input[name="correct_chk"]:checked')).map(c => c.value);
-
-    if (!targetMapel || !no || !tanya || checkedBoxes.length === 0) {
-      alert("Lengkapi semua field dan tandai minimal 1 kunci jawaban!");
-      return;
-    }
-
-    await addDoc(collection(db, "soal"), {
-      id_soal: no,
-      mapel: targetMapel,
-      tipe_soal: tipe,
-      pertanyaan: tanya,
-      opsi_a: document.getElementById('m_opa').value,
-      opsi_b: document.getElementById('m_opb').value,
-      opsi_c: document.getElementById('m_opc').value,
-      opsi_d: document.getElementById('m_opd').value,
-      kunci: checkedBoxes.join(',')
-    });
-
-    bootstrap.Modal.getInstance(document.getElementById('modalManualSoal')).hide();
-    alert("Soal berhasil disimpan!");
-    renderBankSoalAdmin();
   };
 </script>
 
