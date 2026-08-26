@@ -465,6 +465,19 @@
   </div>
 </div>
 
+<!-- ================= MODAL PREVIEW SOAL ADMIN ================= -->
+<div class="modal fade" id="modalPreviewSoal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Pratinjau Soal (Preview Tampilan Siswa)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4" id="previewSoalBody"></div>
+    </div>
+  </div>
+</div>
+
 <!-- ================= MODAL REVIEW JAWABAN SISWA ================= -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -495,11 +508,11 @@
       <div class="modal-body p-4">
         <div class="mb-3">
           <label class="form-label small fw-bold">Username Admin</label>
-          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (Utama) atau Username Guru">
+          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (Utama)">
         </div>
         <div class="mb-3">
           <label class="form-label small fw-bold">Password / PIN</label>
-          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP (Utama) atau Password Guru">
+          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP (Utama)">
         </div>
         <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold py-2">Masuk Dashboard</button>
       </div>
@@ -576,8 +589,8 @@
             <select id="m_target_mapel" class="form-select"></select>
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold">Nomor Soal</label>
-            <input id="m_no" type="number" class="form-control" placeholder="1">
+            <label class="form-label small fw-bold">Nomor Urut Soal</label>
+            <input id="m_no" type="number" class="form-control" placeholder="1, 2, 3...">
           </div>
           <div class="col-md-3">
             <label class="form-label small fw-bold">Tipe Soal</label>
@@ -620,7 +633,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -742,7 +755,7 @@
     if (!adminSnap.empty) {
       successAdminLogin(uInput, false);
     } else {
-      alert("Username atau Password salah! (Gunakan ADMIN / 123SIAP)");
+      alert("Username atau Password salah! Gunakan ADMIN / 123SIAP");
     }
   }
 
@@ -972,7 +985,6 @@
       });
       tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
       
-      // Sinkronisasi otomatis render soal begitu dropdown mapel terisi
       if (sMapel.options.length > 0) {
         renderBankSoalAdmin();
       }
@@ -988,6 +1000,7 @@
     }
   };
 
+  // Bank Soal Diurutkan Berdasarkan Nomor Urut Asli (id_soal)
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -995,23 +1008,60 @@
     
     window.cacheBankSoal = window.cacheBankSoal || {};
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
-    let rows = ''; let i = 1;
+    
+    let soalArray = [];
     snap.forEach(docSnap => {
-      const d = docSnap.data();
-      window.cacheBankSoal[docSnap.id] = d;
+      soalArray.push({ idDoc: docSnap.id, ...docSnap.data() });
+    });
+    // Sortir urut berdasarkan id_soal numerik terkecil ke terbesar
+    soalArray.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
+
+    let rows = '';
+    soalArray.forEach((d, idx) => {
+      window.cacheBankSoal[d.idDoc] = d;
       rows += `<tr>
-        <td>${i++}</td>
+        <td><strong>${d.id_soal}</strong></td>
         <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
         <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td>
-          <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
-          <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
+          <button class="btn btn-sm btn-outline-success me-1" onclick="window.previewSoalManual('${d.idDoc}')"><i class="bi bi-eye"></i> Preview</button>
+          <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${d.idDoc}')"><i class="bi bi-pencil"></i> Edit</button>
+          <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${d.idDoc}')"><i class="bi bi-trash"></i></button>
         </td>
       </tr>`;
     });
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mapel ini.</td></tr>';
     updateDashboardMetrics();
+  };
+
+  // Fitur Preview Soal (Pratinjau Tampilan Siswa)
+  window.previewSoalManual = function(docId) {
+    const s = window.cacheBankSoal[docId];
+    if (!s) return;
+
+    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${s.tipe_soal}</span></div>`;
+    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
+    html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
+
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
+      const huruf = window.opsiHurufList[idxOpt];
+      const val = s['opsi_' + h];
+      const imgOpt = s['img_' + h];
+      if (val || imgOpt) {
+        html += `<div class="p-2 mb-2 border rounded bg-light d-flex align-items-center gap-3">
+          <span class="badge bg-secondary">${huruf}</span>
+          <div>
+            ${val ? `<div>${val}</div>` : ''}
+            ${imgOpt ? `<img src="${imgOpt}" style="max-height:80px;" class="mt-1 rounded">` : ''}
+          </div>
+        </div>`;
+      }
+    });
+
+    html += `<div class="mt-3 p-2 bg-success-subtle border border-success rounded text-success small fw-bold">Kunci Jawaban: ${s.kunci}</div>`;
+    document.getElementById('previewSoalBody').innerHTML = html;
+    new bootstrap.Modal(document.getElementById('modalPreviewSoal')).show();
   };
 
   window.editSoalManual = function(docId) {
@@ -1335,7 +1385,7 @@
     const checkedBoxes = Array.from(document.querySelectorAll('input[name="correct_chk"]:checked')).map(c => c.value);
 
     if (!targetMapel || !no || !tanya || checkedBoxes.length === 0) {
-      alert("Lengkapi Mapel, Nomor Soal, Pertanyaan, dan Kunci Jawaban!");
+      alert("Lengkapi Mapel, Nomor Urut Soal, Pertanyaan, dan Kunci Jawaban!");
       return;
     }
 
@@ -1463,7 +1513,8 @@
 
     activeSoalList = [];
     snap.forEach(d => activeSoalList.push(d.data()));
-    activeSoalList.sort((a, b) => a.id_soal - b.id_soal);
+    // Soal siswa diurutkan konsisten berdasarkan nomor urut asli (id_soal)
+    activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     currentSoalIndex = 0;
     userAnswers = {};
