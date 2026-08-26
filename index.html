@@ -26,6 +26,7 @@
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
+    /* Layout Admin */
     .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
@@ -128,8 +129,8 @@
           <select id="p_project_select" class="form-select"></select>
         </div>
         <div class="text-start mb-3">
-          <label class="form-label small fw-bold text-primary"><i class="bi bi-journal-check me-1"></i> Pilih Mata Ujian</label>
-          <select id="p_mapel_select" class="form-select border-primary"></select>
+          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
+          <select id="p_mapel_select" class="form-select"></select>
         </div>
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Username / NISN</label>
@@ -252,13 +253,12 @@
         </div>
       </div>
       <div>
-        <label class="small fw-bold text-muted me-1">Pilih Mata Ujian:</label>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2 border-primary fw-bold text-primary"></select>
+        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2"></select>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
 
-    <!-- 6 Kotak Metrik Ringkasan -->
+    <!-- 6 Kotak Metrik Ringkasan Aktivitas -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="metric-card-1">
@@ -360,9 +360,10 @@
       </div>
     </div>
 
+    <!-- Navigasi Tab Admin -->
     <ul class="nav nav-pills mb-3 gap-2" id="adminNavTabs">
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Daftar & Edit Waktu Mapel</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Kelola Durasi Mapel</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
       <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
@@ -382,13 +383,15 @@
         </div>
       </div>
 
-      <!-- Tab 2: Daftar Mapel & Edit Waktu Ujian -->
+      <!-- Tab 2: Kelola Durasi Mapel -->
       <div class="tab-pane fade" id="tab-mapel-list">
         <div class="cbt-card p-4">
-          <h6 class="fw-bold mb-3">Pengaturan Waktu Ujian Tiap Mata Pelajaran</h6>
+          <h6 class="fw-bold mb-3">Daftar Mata Pelajaran & Edit Durasi Waktu</h6>
           <div class="table-responsive">
-            <table class="table align-middle" id="tblMapelList">
-              <thead class="table-light"><tr><th>Mata Pelajaran</th><th>Durasi Ujian (Menit)</th><th>Aksi</th></tr></thead>
+            <table class="table table-hover align-middle" id="tblMapelAdmin">
+              <thead class="table-light">
+                <tr><th>Nama Mata Pelajaran</th><th>Durasi Ujian (Menit)</th><th>Aksi</th></tr>
+              </thead>
               <tbody></tbody>
             </table>
           </div>
@@ -413,7 +416,7 @@
         </div>
       </div>
 
-      <!-- Tab 4: Manajemen Admin (Hanya Tampil Jika ADMIN / 123SIAP) -->
+      <!-- Tab 4: Manajemen Admin (Hanya untuk ADMIN) -->
       <div class="tab-pane fade" id="tab-admin-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -462,7 +465,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL REVIEW JAWABAN ================= -->
+<!-- ================= MODAL REVIEW JAWABAN SISWA ================= -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -492,11 +495,11 @@
       <div class="modal-body p-4">
         <div class="mb-3">
           <label class="form-label small fw-bold">Username Admin</label>
-          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (atau kosong jika pakai PIN)">
+          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (Utama) atau Username Guru">
         </div>
         <div class="mb-3">
           <label class="form-label small fw-bold">Password / PIN</label>
-          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP atau 123456">
+          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP (Utama) atau Password Guru">
         </div>
         <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold py-2">Masuk Dashboard</button>
       </div>
@@ -557,7 +560,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL EDITOR SOAL MANUAL ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -617,7 +620,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -647,26 +650,11 @@
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
-    checkAdminRoleUI();
   } else {
     showView('view-role-selector');
   }
 
-  function checkAdminRoleUI() {
-    const roleAdmin = localStorage.getItem("cbt_admin_username");
-    const navTabAdminList = document.getElementById('navTabAdminList');
-    const tabAdminContent = document.getElementById('tab-admin-list');
-    
-    // Jika login bukan ADMIN utama, sembunyikan manajemen admin/guru
-    if (roleAdmin !== "ADMIN") {
-      if (navTabAdminList) navTabAdminList.classList.add('hidden');
-      if (tabAdminContent) tabAdminContent.classList.remove('active', 'show');
-    } else {
-      if (navTabAdminList) navTabAdminList.classList.remove('hidden');
-    }
-  }
-
-  // --- OPSI DINAMIS ---
+  // --- DINAMIK OPSI JAWABAN ---
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   window.bukaModalTambahSoal = function() {
     document.getElementById('edit_doc_id').value = "";
@@ -738,34 +726,34 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
-  // Otentikasi Admin (ADMIN / 123SIAP atau Database Guru)
+  // Otentikasi Admin (ADMIN / 123SIAP atau Akun Guru Tambahan)
   async function executeAdminLogin() {
-    const uInput = document.getElementById('admUsername').value.trim().toUpperCase();
+    const uInput = document.getElementById('admUsername').value.trim();
     const pInput = document.getElementById('admSecretPin').value.trim();
 
-    if ((uInput === "ADMIN" && pInput === "123SIAP") || (pInput === "123456" && !uInput)) {
-      successAdminLogin("ADMIN", "Administrator Utama");
+    // Cek Akun Utama
+    if ((uInput.toUpperCase() === "ADMIN" && pInput === "123SIAP") || (pInput === "123456" && !uInput)) {
+      successAdminLogin("ADMIN", true);
       return;
     }
 
     if (!uInput || !pInput) {
-      alert("Masukkan Username dan Password Admin!");
+      alert("Masukkan Username dan Password Admin/Guru!");
       return;
     }
 
     const adminSnap = await getDocs(query(collection(db, "admins"), where("username", "==", uInput), where("password", "==", pInput)));
     if (!adminSnap.empty) {
-      const adminData = adminSnap.docs[0].data();
-      successAdminLogin(uInput, adminData.nama || uInput);
+      successAdminLogin(uInput, false);
     } else {
-      alert("Username atau Password Admin salah!");
+      alert("Username atau Password salah! (Gunakan ADMIN / 123SIAP)");
     }
   }
 
-  function successAdminLogin(username, namaAdmin) {
+  function successAdminLogin(username, isSuperAdmin) {
     localStorage.setItem("cbt_admin_logged", "true");
-    localStorage.setItem("cbt_admin_username", username);
-    localStorage.setItem("cbt_admin_name", namaAdmin);
+    localStorage.setItem("cbt_super_admin", isSuperAdmin ? "true" : "false");
+    localStorage.setItem("cbt_admin_name", username);
     const modalEl = document.getElementById('modalSecretAdmin');
     const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
     modalInst.hide();
@@ -774,7 +762,6 @@
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
-    checkAdminRoleUI();
   }
 
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
@@ -782,22 +769,27 @@
 
   document.getElementById('btnAdminLogout').addEventListener('click', () => {
     localStorage.removeItem("cbt_admin_logged");
-    localStorage.removeItem("cbt_admin_username");
+    localStorage.removeItem("cbt_super_admin");
     localStorage.removeItem("cbt_admin_name");
     resetViews();
   });
 
+  // Tambah Akun Admin Baru (Hanya oleh Super Admin)
   window.tambahAdminPrompt = async function() {
-    const uname = prompt("Masukkan Username Admin Baru:");
-    const pass = prompt("Masukkan Password Admin:");
-    const nama = prompt("Nama Lengkap Admin / Guru:");
+    if (localStorage.getItem("cbt_super_admin") !== "true") {
+      alert("Akses ditolak! Hanya Administrator Utama yang dapat menambah akun admin/guru.");
+      return;
+    }
+    const uname = prompt("Masukkan Username Guru/Admin Baru:");
+    const pass = prompt("Masukkan Password:");
+    const nama = prompt("Nama Lengkap Guru/Admin:");
     if (uname && pass && nama) {
       await addDoc(collection(db, "admins"), {
-        username: uname.trim().toUpperCase(),
+        username: uname.trim(),
         password: pass.trim(),
         nama: nama.trim()
       });
-      alert("Akun Admin berhasil ditambahkan!");
+      alert("Akun Admin/Guru berhasil ditambahkan!");
     }
   };
 
@@ -940,6 +932,14 @@
     loadAdminList();
     initMonitoringListener();
     updateDashboardMetrics();
+
+    // Sembunyikan menu Manajemen Admin jika login sebagai Guru biasa
+    const isSuper = localStorage.getItem("cbt_super_admin") === "true";
+    if (!isSuper) {
+      document.getElementById('navTabAdminList').classList.add('hidden');
+    } else {
+      document.getElementById('navTabAdminList').classList.remove('hidden');
+    }
   }
 
   async function updateDashboardMetrics() {
@@ -961,66 +961,59 @@
     onSnapshot(qMapel, (snap) => {
       const sMapel = document.getElementById('adminMapelFilter');
       const sTarget = document.getElementById('m_target_mapel');
-      sMapel.innerHTML = '<option value="" disabled selected>-- Pilih Mata Ujian --</option>';
-      sTarget.innerHTML = '';
-      
+      const tblMapelBody = document.querySelector('#tblMapelAdmin tbody');
+      sMapel.innerHTML = ''; sTarget.innerHTML = '';
       let mapelRows = '';
+
       snap.forEach(d => {
         const m = d.data();
-        sMapel.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
+        sMapel.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
         sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
         
         mapelRows += `<tr>
           <td><strong>${m.nama_mapel}</strong></td>
-          <td><input type="number" id="durasi_${d.id}" class="form-control form-control-sm w-50" value="${m.durasi}"></td>
-          <td><button class="btn btn-sm btn-primary" onclick="window.updateDurasiMapel('${d.id}')"><i class="bi bi-save me-1"></i> Simpan Waktu</button></td>
+          <td><span class="badge bg-info text-dark fs-6">${m.durasi} Menit</span></td>
+          <td><button class="btn btn-sm btn-outline-primary" onclick="window.editDurasiMapel('${d.id}', '${m.nama_mapel}', ${m.durasi})"><i class="bi bi-clock"></i> Edit Durasi</button></td>
         </tr>`;
       });
-      document.querySelector('#tblMapelList tbody').innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mapel.</td></tr>';
+      tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
       renderBankSoalAdmin();
       updateDashboardMetrics();
     });
   }
 
-  window.updateDurasiMapel = async function(mapelId) {
-    const newDurasi = parseInt(document.getElementById(`durasi_${mapelId}`).value);
-    if (!newDurasi || newDurasi <= 0) { alert("Masukkan waktu durasi yang valid!"); return; }
-    await updateDoc(doc(db, "mapel", mapelId), { durasi: newDurasi });
-    alert("Waktu ujian berhasil diperbarui!");
+  // Edit Durasi Waktu Ujian Mapel
+  window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
+    const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
+    if (baru && !isNaN(baru)) {
+      await updateDoc(doc(db, "mapel", mapelId), { durasi: parseInt(baru) });
+      alert("Durasi waktu ujian berhasil diperbarui!");
+    }
   };
 
-window.renderBankSoalAdmin = async function() {
-    const selectedMapel = document.getElementById('adminMapelFilter').value;
+  window.renderBankSoalAdmin = async function() {
+    const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!selectedMapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Silakan pilih Mata Ujian di atas terlebih dahulu.</td></tr>'; return; }
+    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
-    window.cacheBankSoal = window.cacheBankSoal {};
-    // Ambil semua soal berdasarkan project aktif lalu filter case-insensitive di sisi klien
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
-    
+    window.cacheBankSoal = window.cacheBankSoal || {};
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
     let rows = ''; let i = 1;
     snap.forEach(docSnap => {
       const d = docSnap.data();
-      // Bandingkan nama mapel tanpa terpengaruh huruf besar/kecil atau spasi berlebih
-      const mapelSoalClean = String(d.mapel || "").trim().toLowerCase();
-      const mapelSelectedClean = String(selectedMapel || "").trim().toLowerCase();
-
-      if (mapelSoalClean === mapelSelectedClean) {
-        window.cacheBankSoal[docSnap.id] = d;
-        rows += `<tr>
-          <td>${i++}</td>
-          <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
-          <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
-          <td><span class="badge bg-success">${d.kunci}</span></td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
-          </td>
-        </tr>`;
-      }
+      window.cacheBankSoal[docSnap.id] = d;
+      rows += `<tr>
+        <td>${i++}</td>
+        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
+        <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
+        <td><span class="badge bg-success">${d.kunci}</span></td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
+          <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
+        </td>
+      </tr>`;
     });
-    
-    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mata ujian ini.</td></tr>';
+    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
     updateDashboardMetrics();
   };
 
@@ -1084,7 +1077,7 @@ window.renderBankSoalAdmin = async function() {
 
   function loadAdminList() {
     onSnapshot(collection(db, "admins"), (snap) => {
-      let rows = `<tr><td><strong>ADMIN (Utama)</strong></td><td><code>123SIAP</code></td><td>System Root</td><td>-</td></tr>`;
+      let rows = `<tr><td><strong>ADMIN (Utama)</strong></td><td><code>123SIAP</code></td><td>Administrator Utama (Super Admin)</td><td>-</td></tr>`;
       snap.forEach(docSnap => {
         const a = docSnap.data();
         rows += `<tr>
@@ -1256,7 +1249,7 @@ window.renderBankSoalAdmin = async function() {
     if (!file) return;
 
     const targetMapel = document.getElementById('adminMapelFilter').value;
-    if (!targetMapel) { alert("Pilih Mata Ujian terlebih dahulu di bagian atas dashboard!"); return; }
+    if (!targetMapel) { alert("Pilih mata pelajaran terlebih dahulu di dashboard!"); return; }
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1423,7 +1416,7 @@ window.renderBankSoalAdmin = async function() {
   document.getElementById('p_project_select').addEventListener('change', async function() {
     const proj = this.value;
     const mSelect = document.getElementById('p_mapel_select');
-    mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Ujian --</option>';
+    mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
     
     const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", proj)));
     snap.forEach(d => {
@@ -1439,7 +1432,7 @@ window.renderBankSoalAdmin = async function() {
     const mSelect = document.getElementById('p_mapel_select');
     const m = mSelect.value;
 
-    if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Ujian, Username, dan Password!"); return; }
+    if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Pelajaran, Username, dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", proj), where("username", "==", u), where("password", "==", p)));
     if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
