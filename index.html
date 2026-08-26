@@ -9,7 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <!-- Parser Word & Excel Engine -->
+  <!-- Parser Word (Mendukung Gambar Otomatis) & Excel Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -68,6 +68,8 @@
     }
     .option-item.selected { border-color: var(--primary); background: var(--primary-subtle); }
     .logo-secret { cursor: pointer; user-select: none; }
+    
+    img.soal-inline-img { max-height: 250px; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -201,7 +203,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN DENGAN SIDEBAR PROYEK ================= -->
+<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
   <!-- SIDEBAR PROYEK -->
   <div class="admin-sidebar">
@@ -244,7 +246,7 @@
         <div class="action-card" onclick="openWordModal()">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Format tabel Word (.docx).</small>
+          <small class="text-muted">Upload .docx (Gambar Otomatis Terbaca).</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -266,6 +268,7 @@
     <!-- Tabs Navigasi Data -->
     <ul class="nav nav-pills mb-3 gap-2">
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai</button></li>
     </ul>
@@ -283,7 +286,25 @@
         </div>
       </div>
 
-      <!-- Tab 2: Live Monitoring Anti Cheat -->
+      <!-- Tab 2: Data Siswa Terdaftar & Fitur Blokir / Hapus -->
+      <div class="tab-pane fade" id="tab-peserta-list">
+        <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Manajemen Akun Siswa Peserta</h6>
+            <button class="btn btn-sm btn-outline-danger" onclick="hapusSemuaSiswa()"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblPesertaAdmin">
+              <thead class="table-light">
+                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>Kelas</th><th>Status Akun</th><th>Aksi Pengawas</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Live Monitoring Anti Cheat -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Pelanggaran</h6>
@@ -298,7 +319,7 @@
         </div>
       </div>
 
-      <!-- Tab 3: Hasil Nilai -->
+      <!-- Tab 4: Hasil Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -339,14 +360,15 @@
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
             <h6 class="fw-bold mb-1">1. Download Template Word</h6>
-            <small class="text-muted">Template file Word berisi format tabel 6 kolom.</small>
+            <small class="text-muted">Mendukung gambar langsung di dalam tabel soal!</small>
           </div>
           <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="downloadWordTemplateClean()"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
 
         <div class="p-4 border rounded-3 text-center border-dashed">
-          <h6 class="fw-bold mb-2">2. Upload File Dokumen Word</h6>
-          <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc" onchange="processWordFile(event)">
+          <h6 class="fw-bold mb-2">2. Upload File Dokumen Word (.docx)</h6>
+          <p class="text-muted small">Gambar yang di-paste ke tabel Word akan otomatis diekstrak ke sistem.</p>
+          <input type="file" id="fileWordInput" class="hidden" accept=".docx" onchange="processWordFile(event)">
           <button class="btn btn-primary" onclick="document.getElementById('fileWordInput').click()"><i class="bi bi-upload me-1"></i> Pilih File Word</button>
           <div id="wordStatusMsg" class="mt-2 small fw-bold text-success"></div>
         </div>
@@ -473,7 +495,7 @@
 
   // MASUKKAN KONFIGURASI FIREBASE ANDA
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+     apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
     authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
     projectId: "aplikasi-tka-sekolah",
     storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -485,8 +507,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // State Global
-  let activeProjectId = localStorage.getItem("cbt_active_project") || "Default Project";
+  let activeProjectId = localStorage.getItem("cbt_active_project") || "Simulasi Ujian Utama";
   let currentStudent = "";
   let currentMapel = "";
   let currentDurasi = 60;
@@ -500,7 +521,6 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
-  // Cek Status Admin
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
@@ -550,12 +570,12 @@
     loadStudentProjects();
   };
 
-  // ================= 1. MANAJEMEN PROJECT (SIDEBAR) =================
+  // 1. PROJECT SIDEBAR
   window.tambahProjectPrompt = async function() {
-    const name = prompt("Masukkan Nama Project / Sesi Ujian Baru (cth: Simulasi TKA 2026):");
+    const name = prompt("Masukkan Nama Project / Sesi Ujian Baru:");
     if (name && name.trim()) {
       await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
-      alert("Project baru berhasil disimpan!");
+      alert("Project baru berhasil dibuat!");
     }
   };
 
@@ -565,7 +585,6 @@
       listContainer.innerHTML = '';
       
       if (snap.empty) {
-        // Buat default project jika kosong
         setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi Ujian Utama" });
         return;
       }
@@ -587,12 +606,14 @@
     localStorage.setItem("cbt_active_project", projectName);
     loadSidebarProjects();
     loadMapelOptionsAdmin();
+    loadPesertaAdmin();
   };
 
-  // ================= 2. DASHBOARD PROKTOR =================
+  // 2. DASHBOARD PROKTOR
   function initAdminDashboard() {
     loadSidebarProjects();
     loadMapelOptionsAdmin();
+    loadPesertaAdmin();
     initMonitoringListener();
   }
 
@@ -615,7 +636,7 @@
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada mata pelajaran terpilih.</td></tr>'; return; }
+    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
     let rows = ''; let i = 1;
@@ -623,13 +644,60 @@
       const d = docSnap.data();
       rows += `<tr>
         <td>${i++}</td>
-        <td>${d.pertanyaan} ${d.link_gambar ? '<i class="bi bi-image text-primary"></i>' : ''}</td>
+        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:60px;" class="rounded border mt-1">' : ''}</td>
         <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td><button class="btn btn-outline-danger btn-sm" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
       </tr>`;
     });
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
+  };
+
+  // 3. TAB DATA SISWA & FITUR BLOKIR / HAPUS (Sesuai Video)
+  function loadPesertaAdmin() {
+    const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
+    onSnapshot(qUsers, (snap) => {
+      let rows = '';
+      snap.forEach(docSnap => {
+        const u = docSnap.data();
+        const isBlocked = u.status === "Diblokir";
+        rows += `<tr>
+          <td><strong>${u.username}</strong></td>
+          <td><code>${u.password}</code></td>
+          <td>${u.nama || '-'}</td>
+          <td>${u.kelas || '-'}</td>
+          <td><span class="badge ${isBlocked ? 'bg-danger' : 'bg-success'}">${u.status || 'Aktif'}</span></td>
+          <td>
+            <button class="btn btn-sm ${isBlocked ? 'btn-outline-success' : 'btn-outline-warning'} me-1" onclick="window.toggleBlockSiswa('${docSnap.id}', '${u.status || 'Aktif'}')">
+              <i class="bi ${isBlocked ? 'bi-unlock' : 'bi-lock'}"></i> ${isBlocked ? 'Buka Blokir' : 'Blokir'}
+            </button>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${docSnap.id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>`;
+      });
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+    });
+  }
+
+  window.toggleBlockSiswa = async function(docId, currentStatus) {
+    const newStatus = currentStatus === "Diblokir" ? "Aktif" : "Diblokir";
+    await updateDoc(doc(db, "users", docId), { status: newStatus });
+  };
+
+  window.hapusSiswa = async function(docId) {
+    if (confirm("Hapus akun siswa ini?")) {
+      await deleteDoc(doc(db, "users", docId));
+    }
+  };
+
+  window.hapusSemuaSiswa = async function() {
+    if (confirm(`Yakin ingin menghapus seluruh data siswa di project [${activeProjectId}]?`)) {
+      const snap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+      snap.forEach(async (d) => await deleteDoc(doc(db, "users", d.id)));
+      alert("Semua data siswa berhasil dibersihkan!");
+    }
   };
 
   function initMonitoringListener() {
@@ -644,7 +712,7 @@
           <td>${d.mapel}</td>
           <td><span class="badge ${badge}">${d.status}</span></td>
           <td><strong class="text-danger">${d.pelanggaran || 0}</strong> Kali</td>
-          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${docSnap.id}')">Reset</button></td>
+          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${docSnap.id}')">Reset Pelanggaran</button></td>
         </tr>`;
       });
       document.querySelector('#tblMonitoring tbody').innerHTML = rows;
@@ -676,7 +744,7 @@
         nama_mapel: nama.trim(),
         durasi: parseInt(durasi)
       });
-      alert("Mata pelajaran berhasil ditambahkan ke project!");
+      alert("Mata pelajaran berhasil ditambahkan!");
     }
   };
 
@@ -689,8 +757,7 @@
     alert("Pelanggaran siswa direset!");
   };
 
-  // ================= 3. GENERATOR TEMPLATE RESMI (WORD & EXCEL) =================
-  // A. Template Excel Peserta (Download Otomatis)
+  // 4. TEMPLATE ENGINE & DOWNLOAD
   window.downloadSiswaExcelTemplate = function() {
     const dataContoh = [
       { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "XII-A" },
@@ -703,13 +770,13 @@
     XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
   };
 
-  // B. Template Dokumen Word Soal (Download Otomatis)
   window.downloadWordTemplateClean = function() {
     const tableHTML = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head><title>Template Soal</title></head>
       <body>
         <h3>TEMPLATE BANK SOAL CBT SCHOOL</h3>
+        <p>Anda bisa langsung menyisipkan (paste/insert) gambar ke dalam tabel di bawah ini.</p>
         <table border="1" style="border-collapse:collapse; width:100%;">
           <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
           <tr><td>1</td><td>Siapakah Presiden Indonesia ke-3?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td></td></tr>
@@ -729,7 +796,6 @@
     a.click();
   };
 
-  // ================= 4. IMPORT ACTIONS =================
   window.openModalImportSiswa = () => new bootstrap.Modal(document.getElementById('modalSiswaImport')).show();
   window.openWordModal = () => new bootstrap.Modal(document.getElementById('modalWordImport')).show();
   window.openManualSoalModal = () => new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
@@ -753,7 +819,8 @@
             username: String(u),
             password: String(p),
             nama: row.nama || "",
-            kelas: row.kelas || ""
+            kelas: row.kelas || "",
+            status: "Aktif"
           });
         }
       });
@@ -763,7 +830,7 @@
     reader.readAsArrayBuffer(file);
   };
 
-  // Import Word Soal
+  // Import Word Soal (DENGAN EKSTRAKSI GAMBAR OTOMATIS)
   window.processWordFile = function(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -773,7 +840,16 @@
 
     const reader = new FileReader();
     reader.onload = function(e) {
-      mammoth.convertToHtml({ arrayBuffer: e.target.result }).then(async result => {
+      // Mengonversi embedded image word ke Base64 URI otomatis
+      const options = {
+        convertImage: mammoth.images.imgElement(function(image) {
+          return image.read("base64").then(function(imageBuffer) {
+            return { src: "data:" + image.contentType + ";base64," + imageBuffer };
+          });
+        })
+      };
+
+      mammoth.convertToHtml({ arrayBuffer: e.target.result }, options).then(async result => {
         const parser = new DOMParser();
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
@@ -786,11 +862,17 @@
           if (cols.length < 6) continue;
 
           const no = cols[0].innerText.trim();
+          const soalHtml = cols[1].innerHTML.trim();
           const soalText = cols[1].innerText.trim();
           const jenis = cols[2].innerText.trim();
           const opsi = cols[3].innerText.trim();
-          const jawaban = cols[4].innerText.trim();
+          const jawabanHtml = cols[4].innerHTML.trim();
+          const jawabanText = cols[4].innerText.trim();
           const kunci = cols[5].innerText.trim();
+
+          // Cek apakah ada gambar pada kolom soal
+          const imgTag = cols[1].querySelector('img');
+          const extractedImg = imgTag ? imgTag.src : '';
 
           if (no !== "") {
             if (cur) list.push(cur);
@@ -800,17 +882,22 @@
               mapel: targetMapel,
               tipe_soal: jenis === '4' ? 'BS' : (jenis === '2' ? 'KOMPLEKS' : 'PG'),
               pertanyaan: soalText,
-              link_gambar: '',
+              link_gambar: extractedImg,
               opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '',
+              img_a: '', img_b: '', img_c: '', img_d: '',
               kunci: ''
             };
           }
 
           if (cur) {
-            if (opsi.toUpperCase() === 'A') cur.opsi_a = jawaban;
-            if (opsi.toUpperCase() === 'B') cur.opsi_b = jawaban;
-            if (opsi.toUpperCase() === 'C') cur.opsi_c = jawaban;
-            if (opsi.toUpperCase() === 'D') cur.opsi_d = jawaban;
+            const optImg = cols[4].querySelector('img');
+            const optImgSrc = optImg ? optImg.src : '';
+
+            if (opsi.toUpperCase() === 'A') { cur.opsi_a = jawabanText; cur.img_a = optImgSrc; }
+            if (opsi.toUpperCase() === 'B') { cur.opsi_b = jawabanText; cur.img_b = optImgSrc; }
+            if (opsi.toUpperCase() === 'C') { cur.opsi_c = jawabanText; cur.img_c = optImgSrc; }
+            if (opsi.toUpperCase() === 'D') { cur.opsi_d = jawabanText; cur.img_d = optImgSrc; }
+            
             if (kunci.toUpperCase() === 'V') cur.kunci = cur.kunci ? cur.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
             if (cur.tipe_soal === 'BS' && (kunci.toUpperCase() === 'B' || kunci.toUpperCase() === 'S')) cur.kunci = kunci.toUpperCase() === 'B' ? 'BENAR' : 'SALAH';
           }
@@ -821,7 +908,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal beserta gambar!`);
         bootstrap.Modal.getInstance(document.getElementById('modalWordImport')).hide();
         renderBankSoalAdmin();
       });
@@ -862,7 +949,7 @@
       kunci: checkedBoxes.join(',')
     });
 
-    alert("Soal berhasil disimpan ke database!");
+    alert("Soal berhasil disimpan!");
     bootstrap.Modal.getInstance(document.getElementById('modalManualSoal')).hide();
     renderBankSoalAdmin();
   };
@@ -880,7 +967,7 @@
     XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}.xlsx`);
   };
 
-  // ================= 5. ALUR SISWA UJIAN =================
+  // 5. ALUR SISWA UJIAN
   async function loadStudentProjects() {
     const pSelect = document.getElementById('p_project_select');
     pSelect.innerHTML = '<option value="" disabled selected>-- Pilih Project Ujian --</option>';
@@ -914,7 +1001,13 @@
     if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Pelajaran, Username, dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", proj), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) { alert("Akun peserta tidak ditemukan pada project ini!"); return; }
+    if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
+
+    const userData = userSnap.docs[0].data();
+    if (userData.status === "Diblokir") {
+      alert("AKUN ANDA DIBLOKIR! Silakan hubungi proktor/pengawas ujian.");
+      return;
+    }
 
     const opt = mSelect.options[mSelect.selectedIndex];
     currentDurasi = parseInt(opt.getAttribute('data-durasi')) || 60;
@@ -1010,7 +1103,7 @@
       <span class="badge bg-secondary">${s.tipe_soal}</span>
     </div>`;
 
-    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="img-fluid rounded border" style="max-height:220px;"></div>`;
+    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="soal-inline-img img-fluid"></div>`;
     html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
 
     const saved = userAnswers[s.id_soal];
