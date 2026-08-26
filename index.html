@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CBT School - Manajemen Project Ujian Anti-Kecurangan</title>
+  <title>CBT School - Manajemen Ujian Anti-Kecurangan</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -76,7 +76,7 @@
 <!-- Header Navbar Global -->
 <nav id="topNav" class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
-    <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand">
+    <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand" title="Klik 5x untuk masuk Proktor">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
       <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Anti-Kecurangan</small></span>
     </div>
@@ -86,7 +86,7 @@
   </div>
 </nav>
 
-<!-- ================= VIEW 1: LOGIN PESERTA ================= -->
+<!-- ================= VIEW 1: LOGIN SISWA (PORTAL UTAMA) ================= -->
 <div id="view-login" class="container py-5">
   <div class="row justify-content-center pt-2">
     <div class="col-md-5">
@@ -95,7 +95,7 @@
           <i class="bi bi-person-fill-lock fs-2"></i>
         </div>
         <h4 class="fw-bold mb-1">Portal Ujian Siswa</h4>
-        <p class="text-muted small mb-4">Pilih Project Ujian dan masukkan Akun Siswa</p>
+        <p class="text-muted small mb-4">Pilih Sesi Ujian, Mapel, lalu masukkan Akun Siswa</p>
 
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Pilih Sesi / Project Ujian</label>
@@ -109,12 +109,12 @@
 
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Username / NISN</label>
-          <input id="p_user" class="form-control" placeholder="Nomor Peserta">
+          <input id="p_user" class="form-control" placeholder="Nomor Peserta Siswa">
         </div>
 
         <div class="text-start mb-4">
           <label class="form-label small fw-bold">Password</label>
-          <input id="p_pass" type="password" class="form-control" placeholder="Password">
+          <input id="p_pass" type="password" class="form-control" placeholder="Password Siswa">
         </div>
 
         <button id="btnLoginSiswa" class="btn btn-primary w-100 py-2 fw-bold mb-3">
@@ -123,7 +123,7 @@
 
         <div class="border-top pt-3">
           <button class="btn btn-light btn-sm text-muted w-100" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
-            <i class="bi bi-gear-fill me-1"></i> Masuk Sebagai Proktor / Guru
+            <i class="bi bi-gear-fill me-1"></i> Masuk Sebagai Proktor / Guru (PIN: 123456)
           </button>
         </div>
       </div>
@@ -485,7 +485,7 @@
 <!-- Bootstrap Script -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Firebase Module Script (Fully Bound) -->
+<!-- Firebase Module Script -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
@@ -523,9 +523,11 @@
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
+  } else {
+    showView('view-login');
   }
 
-  // --- EVENT BINDINGS (Mencegah kendala klik tidak merespons) ---
+  // --- EVENT BINDINGS ---
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
     clearTimeout(logoClickTimer);
