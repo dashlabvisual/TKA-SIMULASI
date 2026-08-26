@@ -9,7 +9,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <!-- Parser Word & Excel Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -43,6 +42,14 @@
       margin-bottom: 8px; background: #fff; transition: all 0.15s ease;
     }
     .project-item-box.active { border-color: var(--primary); background-color: var(--primary-subtle); }
+
+    /* Dashboard Metric Cards Murni Referensi */
+    .metric-card-1 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-2 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-3 { background: linear-gradient(135deg, #475569, #1e293b); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-4 { background: linear-gradient(135deg, #10b981, #047857); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-5 { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-6 { background: linear-gradient(135deg, #ec4899, #be185d); color: white; border-radius: 16px; padding: 24px; }
 
     .action-card {
       border: 1px solid var(--border); border-radius: 12px; padding: 18px;
@@ -218,15 +225,12 @@
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
+<!-- ================= VIEW 5: DASHBOARD ADMIN (GAYA GAMBAR REFERENSI) ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
-  <!-- SIDEBAR PROYEK (Dilengkapi Menu Hide & See di Paling Kiri Atas serta Logout di Tiap Item) -->
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
       <div class="d-flex align-items-center gap-2">
-        <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar">
-          <i class="bi bi-list fs-6"></i>
-        </button>
+        <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar"><i class="bi bi-list fs-6"></i></button>
         <span class="fw-bold text-primary small">PROJECT UJIAN</span>
       </div>
       <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru"><i class="bi bi-plus"></i></button>
@@ -240,14 +244,10 @@
     </button>
   </div>
 
-  <!-- KONTEN ADMIN -->
   <div class="admin-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
       <div class="d-flex align-items-center gap-3">
-        <!-- Tombol See Sidebar saat tersembunyi -->
-        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu Project">
-          <i class="bi bi-list fs-5"></i>
-        </button>
+        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu Project"><i class="bi bi-list fs-5"></i></button>
         <div>
           <h4 class="fw-bold mb-1">Project: <span id="currentProjectBadge" class="text-primary">-</span></h4>
           <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai ujian.</p>
@@ -259,6 +259,77 @@
       </div>
     </div>
 
+    <!-- 6 Kotak Metrik Ringkasan Aktivitas (Sesuai Gambar Referensi) -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="metric-card-1">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-people fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSiswa">0</h3>
+              <small class="opacity-75">Total Data Siswa</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-2">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-person-badge fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalAdmin">0</h3>
+              <small class="opacity-75">Total Data Admin / Guru</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-3">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-shield-lock fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statActiveSesi">1</h3>
+              <small class="opacity-75">Sesi Aktif</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-4">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-journal-text fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalUjian">0</h3>
+              <small class="opacity-75">Total Ujian / Mapel</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-5">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-file-earmark-check fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSoal">0</h3>
+              <small class="opacity-75">Total Bank Soal</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-6">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-award fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSelesai">0</h3>
+              <small class="opacity-75">Siswa Selesai Ujian</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Cards -->
     <div class="row g-3 mb-4">
       <div class="col-md-3">
         <div class="action-card" onclick="window.bukaModalTambahSoal()">
@@ -293,12 +364,13 @@
     <ul class="nav nav-pills mb-3 gap-2">
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai & Review</button></li>
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal (Dengan Tombol Edit & Hapus) -->
+      <!-- Tab 1: Bank Soal -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -328,7 +400,25 @@
         </div>
       </div>
 
-      <!-- Tab 3: Monitoring (Dilengkapi Progress X/Y Soal Dikerjakan) -->
+      <!-- Tab 3: Manajemen Admin / Guru (Tambah Username & Password) -->
+      <div class="tab-pane fade" id="tab-admin-list">
+        <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Daftar Akun Admin / Guru Proktor</h6>
+            <button class="btn btn-sm btn-primary" onclick="window.tambahAdminPrompt()"><i class="bi bi-plus-lg me-1"></i> Tambah Admin Baru</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblAdminList">
+              <thead class="table-light">
+                <tr><th>Username Admin</th><th>Password</th><th>Nama Lengkap</th><th>Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Monitoring -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
@@ -343,7 +433,7 @@
         </div>
       </div>
 
-      <!-- Tab 4: Rekap Nilai -->
+      <!-- Tab 5: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Rekap Nilai & Review Jawaban Siswa</h6>
@@ -378,15 +468,24 @@
   </div>
 </div>
 
-<!-- ================= MODAL LOGIN ADMIN ================= -->
+<!-- ================= MODAL LOGIN ADMIN (PIN ATAU USERNAME & PASSWORD) ================= -->
 <div class="modal fade" id="modalSecretAdmin" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-sm modal-dialog-centered">
+  <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
-      <div class="modal-body p-4 text-center">
-        <i class="bi bi-shield-lock-fill text-primary fs-1 mb-2"></i>
-        <h6 class="fw-bold mb-3">PIN Proktor / Guru</h6>
-        <input type="password" id="admSecretPin" class="form-control mb-3 text-center" placeholder="PIN Default: 123456">
-        <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold">Masuk</button>
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill text-primary me-1"></i> Login Proktor / Admin</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Username Admin / Guru</label>
+          <input type="text" id="admUsername" class="form-control" placeholder="Kosongkan jika pakai PIN default">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Password / PIN</label>
+          <input type="password" id="admSecretPin" class="form-control" placeholder="PIN Default: 123456">
+        </div>
+        <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold py-2">Masuk Dashboard</button>
       </div>
     </div>
   </div>
@@ -445,7 +544,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (DENGAN TAMBAH OPSI DINAMIS) ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -539,7 +638,7 @@
     showView('view-role-selector');
   }
 
-  // --- DINAMIK OPSI JAWABAN (A, B, C, D, E, dst.) ---
+  // --- DINAMIK OPSI JAWABAN ---
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   window.bukaModalTambahSoal = function() {
     document.getElementById('edit_doc_id').value = "";
@@ -602,7 +701,6 @@
     showView('view-role-selector');
   });
 
-  // Toggle Hide & See Sidebar Proyek
   document.getElementById('btnHideSidebarTop').addEventListener('click', () => {
     document.getElementById('adminSidebar').classList.add('collapsed');
     document.getElementById('btnShowSidebarTop').classList.remove('hidden');
@@ -612,20 +710,41 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
-  function executeAdminLogin() {
-    const pin = document.getElementById('admSecretPin').value;
-    if (pin === "123456") {
-      localStorage.setItem("cbt_admin_logged", "true");
-      const modalEl = document.getElementById('modalSecretAdmin');
-      const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-      modalInst.hide();
-      document.getElementById('admSecretPin').value = "";
-      showView('view-admin');
-      document.getElementById('topNav').classList.add('hidden');
-      initAdminDashboard();
-    } else {
-      alert("PIN Proktor Salah!");
+  // Otentikasi Multi-Admin (Username & Password ATAU PIN Default)
+  async function executeAdminLogin() {
+    const uInput = document.getElementById('admUsername').value.trim();
+    const pInput = document.getElementById('admSecretPin').value.trim();
+
+    if (pInput === "123456" && !uInput) {
+      successAdminLogin("Administrator Utama");
+      return;
     }
+
+    if (!uInput || !pInput) {
+      alert("Masukkan Username dan Password Admin!");
+      return;
+    }
+
+    const adminSnap = await getDocs(query(collection(db, "admins"), where("username", "==", uInput), where("password", "==", pInput)));
+    if (!adminSnap.empty) {
+      const adminData = adminSnap.docs[0].data();
+      successAdminLogin(adminData.nama || uInput);
+    } else {
+      alert("Username atau Password Admin salah!");
+    }
+  }
+
+  function successAdminLogin(namaAdmin) {
+    localStorage.setItem("cbt_admin_logged", "true");
+    localStorage.setItem("cbt_admin_name", namaAdmin);
+    const modalEl = document.getElementById('modalSecretAdmin');
+    const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+    modalInst.hide();
+    document.getElementById('admUsername').value = "";
+    document.getElementById('admSecretPin').value = "";
+    showView('view-admin');
+    document.getElementById('topNav').classList.add('hidden');
+    initAdminDashboard();
   }
 
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
@@ -633,8 +752,24 @@
 
   document.getElementById('btnAdminLogout').addEventListener('click', () => {
     localStorage.removeItem("cbt_admin_logged");
+    localStorage.removeItem("cbt_admin_name");
     resetViews();
   });
+
+  // Tambah Akun Admin Baru
+  window.tambahAdminPrompt = async function() {
+    const uname = prompt("Masukkan Username Admin Baru:");
+    const pass = prompt("Masukkan Password Admin:");
+    const nama = prompt("Nama Lengkap Admin / Guru:");
+    if (uname && pass && nama) {
+      await addDoc(collection(db, "admins"), {
+        username: uname.trim(),
+        password: pass.trim(),
+        nama: nama.trim()
+      });
+      alert("Akun Admin berhasil ditambahkan!");
+    }
+  };
 
   document.getElementById('btnAddProject').addEventListener('click', async () => {
     const name = prompt("Masukkan Nama Project / Sesi Ujian Baru:");
@@ -728,7 +863,6 @@
     showView('view-role-selector');
   }
 
-  // Sidebar dengan Tombol Logout per Project
   function loadSidebarProjects() {
     onSnapshot(collection(db, "projects"), (snap) => {
       const listContainer = document.getElementById('sidebarProjectList');
@@ -760,6 +894,7 @@
     loadSidebarProjects();
     loadMapelOptionsAdmin();
     loadPesertaAdmin();
+    updateDashboardMetrics();
   };
 
   window.hapusProject = async function(docId, projName) {
@@ -772,7 +907,24 @@
     loadSidebarProjects();
     loadMapelOptionsAdmin();
     loadPesertaAdmin();
+    loadAdminList();
     initMonitoringListener();
+    updateDashboardMetrics();
+  }
+
+  // Update Metrik Kartu Dashboard Sesuai Gambar Referensi
+  async function updateDashboardMetrics() {
+    const qSiswa = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+    const qAdmin = await getDocs(collection(db, "admins"));
+    const qMapel = await getDocs(query(collection(db, "mapel"), where("project", "==", activeProjectId)));
+    const qSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    const qSelesai = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
+
+    document.getElementById('statTotalSiswa').innerText = qSiswa.size;
+    document.getElementById('statTotalAdmin').innerText = qAdmin.size + 1; // Termasuk admin utama
+    document.getElementById('statTotalUjian').innerText = qMapel.size;
+    document.getElementById('statTotalSoal').innerText = qSoal.size;
+    document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
   function loadMapelOptionsAdmin() {
@@ -788,10 +940,10 @@
         sTarget.innerHTML += `<option value="${m}">${m}</option>`;
       });
       renderBankSoalAdmin();
+      updateDashboardMetrics();
     });
   }
 
-  // Bank Soal dengan Tombol Edit Soal
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -815,6 +967,7 @@
       </tr>`;
     });
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
+    updateDashboardMetrics();
   };
 
   window.editSoalManual = function(docId) {
@@ -871,8 +1024,32 @@
         </tr>`;
       });
       document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      updateDashboardMetrics();
     });
   }
+
+  function loadAdminList() {
+    onSnapshot(collection(db, "admins"), (snap) => {
+      let rows = `<tr><td><strong>Administrator Utama</strong></td><td><code>123456 (PIN)</code></td><td>System Root</td><td>-</td></tr>`;
+      snap.forEach(docSnap => {
+        const a = docSnap.data();
+        rows += `<tr>
+          <td><strong>${a.username}</strong></td>
+          <td><code>${a.password}</code></td>
+          <td>${a.nama}</td>
+          <td><button class="btn btn-sm btn-outline-danger" onclick="window.hapusAdmin('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
+        </tr>`;
+      });
+      document.querySelector('#tblAdminList tbody').innerHTML = rows;
+      updateDashboardMetrics();
+    });
+  }
+
+  window.hapusAdmin = async function(id) {
+    if (confirm("Hapus akun admin ini?")) {
+      await deleteDoc(doc(db, "admins", id));
+    }
+  };
 
   window.toggleBlockSiswa = async function(docId, currentStatus) {
     const newStatus = currentStatus === "Diblokir" ? "Aktif" : "Diblokir";
@@ -883,12 +1060,10 @@
     if (confirm("Hapus akun siswa ini?")) { await deleteDoc(doc(db, "users", docId)); }
   };
 
-  // Live Monitoring dengan Progress Soal (Format X/Y)
   function initMonitoringListener() {
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
     onSnapshot(qMon, async (snap) => {
       let rows = '';
-      // Hitung total soal mapel terkait
       const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
       let soalCountMap = {};
       soalSnap.forEach(s => {
@@ -940,6 +1115,7 @@
         </tr>`;
       });
       document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
+      updateDashboardMetrics();
     });
   }
 
@@ -1104,7 +1280,6 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // Simpan / Update Soal Manual (Mendukung Dynamic Options & Edit)
   async function saveManualSoalAction() {
     const editId = document.getElementById('edit_doc_id').value;
     const targetMapel = document.getElementById('m_target_mapel').value;
@@ -1130,7 +1305,6 @@
       kunci: checkedBoxes.join(',')
     };
 
-    // Ambil data dinamis opsi teks
     const rows = document.querySelectorAll('.dynamic-option-row');
     rows.forEach((r, idx) => {
       const huruf = window.opsiHurufList[idx].toLowerCase();
@@ -1152,7 +1326,6 @@
     renderBankSoalAdmin();
   }
 
-  // Export Nilai ke Excel (Dengan Nama Siswa Lengkap)
   async function downloadHasilExcel() {
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
@@ -1345,7 +1518,6 @@
   window.pickAns = async (id, val) => {
     userAnswers[id] = val;
     renderSoalByIndex(currentSoalIndex);
-    // Update progress real-time ke monitoring
     await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
   };
 
