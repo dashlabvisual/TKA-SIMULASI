@@ -989,28 +989,37 @@
     alert("Waktu ujian berhasil diperbarui!");
   };
 
-  window.renderBankSoalAdmin = async function() {
-    const mapel = document.getElementById('adminMapelFilter').value;
+window.renderBankSoalAdmin = async function() {
+    const selectedMapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Silakan pilih Mata Ujian di atas terlebih dahulu.</td></tr>'; return; }
+    if (!selectedMapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Silakan pilih Mata Ujian di atas terlebih dahulu.</td></tr>'; return; }
     
-    window.cacheBankSoal = window.cacheBankSoal || {};
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+    window.cacheBankSoal = window.cacheBankSoal {};
+    // Ambil semua soal berdasarkan project aktif lalu filter case-insensitive di sisi klien
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    
     let rows = ''; let i = 1;
     snap.forEach(docSnap => {
       const d = docSnap.data();
-      window.cacheBankSoal[docSnap.id] = d;
-      rows += `<tr>
-        <td>${i++}</td>
-        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
-        <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
-        <td><span class="badge bg-success">${d.kunci}</span></td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
-          <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
-        </td>
-      </tr>`;
+      // Bandingkan nama mapel tanpa terpengaruh huruf besar/kecil atau spasi berlebih
+      const mapelSoalClean = String(d.mapel || "").trim().toLowerCase();
+      const mapelSelectedClean = String(selectedMapel || "").trim().toLowerCase();
+
+      if (mapelSoalClean === mapelSelectedClean) {
+        window.cacheBankSoal[docSnap.id] = d;
+        rows += `<tr>
+          <td>${i++}</td>
+          <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
+          <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
+          <td><span class="badge bg-success">${d.kunci}</span></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="window.editSoalManual('${docSnap.id}')"><i class="bi bi-pencil"></i> Edit</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.delSoal('${docSnap.id}')"><i class="bi bi-trash"></i></button>
+          </td>
+        </tr>`;
+      }
     });
+    
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mata ujian ini.</td></tr>';
     updateDashboardMetrics();
   };
