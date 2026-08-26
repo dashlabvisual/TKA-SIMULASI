@@ -253,7 +253,7 @@
         </div>
       </div>
       <div>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2"></select>
+        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2" onchange="window.renderBankSoalAdmin()"></select>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
@@ -416,7 +416,7 @@
         </div>
       </div>
 
-      <!-- Tab 4: Manajemen Admin (Hanya untuk ADMIN) -->
+      <!-- Tab 4: Manajemen Admin -->
       <div class="tab-pane fade" id="tab-admin-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -484,7 +484,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL LOGIN ADMIN (ADMIN / 123SIAP) ================= -->
+<!-- ================= MODAL LOGIN ADMIN ================= -->
 <div class="modal fade" id="modalSecretAdmin" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -620,7 +620,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -654,7 +654,6 @@
     showView('view-role-selector');
   }
 
-  // --- DINAMIK OPSI JAWABAN ---
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   window.bukaModalTambahSoal = function() {
     document.getElementById('edit_doc_id').value = "";
@@ -697,7 +696,6 @@
     container.appendChild(row);
   }
 
-  // --- EVENT BINDINGS ---
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
     clearTimeout(logoClickTimer);
@@ -726,12 +724,10 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
-  // Otentikasi Admin (ADMIN / 123SIAP atau Akun Guru Tambahan)
   async function executeAdminLogin() {
     const uInput = document.getElementById('admUsername').value.trim();
     const pInput = document.getElementById('admSecretPin').value.trim();
 
-    // Cek Akun Utama
     if ((uInput.toUpperCase() === "ADMIN" && pInput === "123SIAP") || (pInput === "123456" && !uInput)) {
       successAdminLogin("ADMIN", true);
       return;
@@ -774,10 +770,9 @@
     resetViews();
   });
 
-  // Tambah Akun Admin Baru (Hanya oleh Super Admin)
   window.tambahAdminPrompt = async function() {
     if (localStorage.getItem("cbt_super_admin") !== "true") {
-      alert("Akses ditolak! Hanya Administrator Utama yang dapat menambah akun admin/guru.");
+      alert("Akses ditolak! Hanya Administrator Utama (ADMIN) yang dapat menambah akun admin/guru.");
       return;
     }
     const uname = prompt("Masukkan Username Guru/Admin Baru:");
@@ -933,7 +928,6 @@
     initMonitoringListener();
     updateDashboardMetrics();
 
-    // Sembunyikan menu Manajemen Admin jika login sebagai Guru biasa
     const isSuper = localStorage.getItem("cbt_super_admin") === "true";
     if (!isSuper) {
       document.getElementById('navTabAdminList').classList.add('hidden');
@@ -977,12 +971,15 @@
         </tr>`;
       });
       tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
-      renderBankSoalAdmin();
+      
+      // Sinkronisasi otomatis render soal begitu dropdown mapel terisi
+      if (sMapel.options.length > 0) {
+        renderBankSoalAdmin();
+      }
       updateDashboardMetrics();
     });
   }
 
-  // Edit Durasi Waktu Ujian Mapel
   window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
     const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
     if (baru && !isNaN(baru)) {
@@ -1013,7 +1010,7 @@
         </td>
       </tr>`;
     });
-    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
+    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mapel ini.</td></tr>';
     updateDashboardMetrics();
   };
 
