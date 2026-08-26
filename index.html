@@ -26,7 +26,6 @@
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
-    /* Layout Admin */
     .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
@@ -77,7 +76,6 @@
 </head>
 <body>
 
-<!-- Header Navbar Global -->
 <nav id="topNav" class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand" title="Klik 5x untuk masuk Proktor">
@@ -90,7 +88,7 @@
   </div>
 </nav>
 
-<!-- ================= VIEW 0: PEMILIHAN PERAN ================= -->
+<!-- VIEW 0: PEMILIHAN PERAN -->
 <div id="view-role-selector" class="container py-5">
   <div class="row justify-content-center pt-5">
     <div class="col-md-5">
@@ -113,7 +111,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 1: LOGIN SISWA ================= -->
+<!-- VIEW 1: LOGIN SISWA -->
 <div id="view-login" class="container py-5 hidden">
   <div class="row justify-content-center pt-2">
     <div class="col-md-5">
@@ -148,7 +146,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 2: KONFIRMASI UJIAN ================= -->
+<!-- VIEW 2: KONFIRMASI UJIAN -->
 <div id="view-confirm-exam" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -172,7 +170,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 3: RUANG UJIAN ================= -->
+<!-- VIEW 3: RUANG UJIAN -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -209,7 +207,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 4: HASIL UJIAN ================= -->
+<!-- VIEW 4: HASIL UJIAN -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -224,7 +222,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
+<!-- VIEW 5: DASHBOARD ADMIN -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -258,7 +256,7 @@
       </div>
     </div>
 
-    <!-- 6 Kotak Metrik Ringkasan Aktivitas -->
+    <!-- Metrik Dashboard -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="metric-card-1">
@@ -371,9 +369,13 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal -->
+      <!-- Tab 1: Bank Soal (Dengan Tombol Hapus Semua Soal) -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Daftar Bank Soal</h6>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSoalMapel()"><i class="bi bi-trash me-1"></i> Hapus Semua Soal Mapel Ini</button>
+          </div>
           <div class="table-responsive">
             <table class="table align-middle" id="tblBankSoal">
               <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
@@ -589,7 +591,7 @@
             <select id="m_target_mapel" class="form-select"></select>
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold">Nomor Urut Soal</label>
+            <label class="form-label small fw-bold">Nomor Urut Soal (Auto-Increment)</label>
             <input id="m_no" type="number" class="form-control" placeholder="1, 2, 3...">
           </div>
           <div class="col-md-3">
@@ -601,8 +603,8 @@
             </select>
           </div>
           <div class="col-12">
-            <label class="form-label small fw-bold">Link URL Gambar Soal (Opsional)</label>
-            <input id="m_img" class="form-control" placeholder="https://domain.com/gambar-soal.png">
+            <label class="form-label small fw-bold">Link URL Gambar / Google Drive (Opsional)</label>
+            <input id="m_img" class="form-control" placeholder="Contoh link Drive / langsung gambar...">
           </div>
           <div class="col-12">
             <label class="form-label small fw-bold">Teks Pertanyaan</label>
@@ -633,7 +635,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -667,13 +669,53 @@
     showView('view-role-selector');
   }
 
+  // Konverter otomatis Link Google Drive agar gambar bisa tampil tanpa error
+  function formatImageUrl(url) {
+    if (!url) return "";
+    let cleanUrl = url.trim();
+    // Jika link Google Drive standar
+    if (cleanUrl.includes("drive.google.com")) {
+      let fileId = "";
+      if (cleanUrl.includes("/file/d/")) {
+        let parts = cleanUrl.split("/file/d/");
+        if (parts.length > 1) {
+          fileId = parts[1].split("/")[0];
+        }
+      } else if (cleanUrl.includes("id=")) {
+        let urlParams = new URLSearchParams(cleanUrl.split("?")[1]);
+        fileId = urlParams.get("id");
+      }
+      if (fileId) {
+        return `https://lh3.googleusercontent.com/d/${fileId}`;
+      }
+    }
+    return cleanUrl;
+  }
+
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  window.bukaModalTambahSoal = function() {
+  
+  // Buka Modal Tambah Manual dengan Otomatis Mengisi Nomor Urut Terakhir + 1
+  window.bukaModalTambahSoal = async function() {
     document.getElementById('edit_doc_id').value = "";
     document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
-    document.getElementById('m_no').value = "";
     document.getElementById('m_img').value = "";
     document.getElementById('m_tanya').value = "";
+
+    const mapel = document.getElementById('adminMapelFilter').value;
+    if (!mapel) {
+      alert("Pilih mata pelajaran terlebih dahulu!");
+      return;
+    }
+
+    // Hitung nomor urut berikutnya secara otomatis
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+    let maxNo = 0;
+    snap.forEach(d => {
+      let num = parseInt(d.data().id_soal) || 0;
+      if (num > maxNo) maxNo = num;
+    });
+    document.getElementById('m_no').value = maxNo + 1;
+
     renderDynamicOptions(['A', 'B', 'C', 'D'], {});
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
   };
@@ -829,6 +871,18 @@
       alert("Semua data siswa berhasil dibersihkan!");
     }
   });
+
+  // Opsi Hapus Semua Soal pada Mapel Aktif
+  window.hapusSemuaSoalMapel = async function() {
+    const mapel = document.getElementById('adminMapelFilter').value;
+    if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
+    if (confirm(`Yakin ingin menghapus SELURUH butir soal pada mata pelajaran [${mapel}]?`)) {
+      const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+      snap.forEach(async (d) => await deleteDoc(doc(db, "soal", d.id)));
+      alert("Semua soal pada mapel ini berhasil dihapus!");
+      renderBankSoalAdmin();
+    }
+  };
 
   document.getElementById('btnDownloadExcelTpl').addEventListener('click', () => {
     const dataContoh = [
@@ -1000,7 +1054,7 @@
     }
   };
 
-  // Bank Soal Diurutkan Berdasarkan Nomor Urut Asli (id_soal)
+  // Render Bank Soal (Urut Berdasarkan Nomor Urut Asli id_soal)
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -1013,15 +1067,16 @@
     snap.forEach(docSnap => {
       soalArray.push({ idDoc: docSnap.id, ...docSnap.data() });
     });
-    // Sortir urut berdasarkan id_soal numerik terkecil ke terbesar
+    // Urutkan soal berdasarkan id_soal secara numerik (1, 2, 3 ... 40)
     soalArray.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     let rows = '';
-    soalArray.forEach((d, idx) => {
+    soalArray.forEach((d) => {
       window.cacheBankSoal[d.idDoc] = d;
+      const formattedImg = formatImageUrl(d.link_gambar);
       rows += `<tr>
         <td><strong>${d.id_soal}</strong></td>
-        <td>${d.pertanyaan} ${d.link_gambar ? '<br><img src="'+d.link_gambar+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
+        <td>${d.pertanyaan} ${formattedImg ? '<br><img src="'+formattedImg+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
         <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td>
@@ -1035,19 +1090,19 @@
     updateDashboardMetrics();
   };
 
-  // Fitur Preview Soal (Pratinjau Tampilan Siswa)
   window.previewSoalManual = function(docId) {
     const s = window.cacheBankSoal[docId];
     if (!s) return;
 
+    const formattedImg = formatImageUrl(s.link_gambar);
     let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${s.tipe_soal}</span></div>`;
-    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
+    if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
     html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
 
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
       const huruf = window.opsiHurufList[idxOpt];
       const val = s['opsi_' + h];
-      const imgOpt = s['img_' + h];
+      const imgOpt = formatImageUrl(s['img_' + h]);
       if (val || imgOpt) {
         html += `<div class="p-2 mb-2 border rounded bg-light d-flex align-items-center gap-3">
           <span class="badge bg-secondary">${huruf}</span>
@@ -1291,6 +1346,7 @@
     reader.readAsArrayBuffer(file);
   }
 
+  // Import Word dengan Auto-Increment Nomor Urut Kelanjutan Otomatis
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1313,6 +1369,14 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
 
+        // Cari nomor urut soal tertinggi di database saat ini untuk mapel tersebut
+        const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", targetMapel)));
+        let maxExistingNo = 0;
+        existingSnap.forEach(d => {
+          let num = parseInt(d.data().id_soal) || 0;
+          if (num > maxExistingNo) maxExistingNo = num;
+        });
+
         let list = [];
         let cur = null;
 
@@ -1332,9 +1396,11 @@
 
           if (no !== "") {
             if (cur) list.push(cur);
+            // Otomatis lanjutkan nomor berdasarkan maxExistingNo
+            let assignedNo = maxExistingNo + (parseInt(no) || (list.length + 1));
             cur = {
               project: activeProjectId,
-              id_soal: parseInt(no) || (list.length + 1),
+              id_soal: assignedNo,
               mapel: targetMapel,
               tipe_soal: jenis === '4' ? 'BS' : (jenis === '2' ? 'KOMPLEKS' : 'PG'),
               pertanyaan: soalText,
@@ -1364,7 +1430,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal secara kelanjutan!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
@@ -1395,7 +1461,7 @@
       mapel: targetMapel,
       tipe_soal: tipe,
       pertanyaan: tanya,
-      link_gambar: linkImg,
+      link_gambar: formatImageUrl(linkImg),
       kunci: checkedBoxes.join(',')
     };
 
@@ -1581,12 +1647,13 @@
       if (i === idx) el.classList.add('active');
     });
 
+    const formattedImg = formatImageUrl(s.link_gambar);
     let html = `<div class="d-flex justify-content-between align-items-center mb-3">
       <span class="badge bg-primary fs-6">Nomor ${idx + 1}</span>
       <span class="badge bg-secondary">${s.tipe_soal}</span>
     </div>`;
 
-    if (s.link_gambar) html += `<div class="text-center mb-3"><img src="${s.link_gambar}" class="soal-inline-img img-fluid"></div>`;
+    if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="soal-inline-img img-fluid"></div>`;
     html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
 
     const saved = userAnswers[s.id_soal];
@@ -1594,7 +1661,7 @@
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
       const huruf = window.opsiHurufList[idxOpt];
       const val = s['opsi_' + h];
-      const imgOpt = s['img_' + h];
+      const imgOpt = formatImageUrl(s['img_' + h]);
       if (val || imgOpt) {
         const isSel = saved === huruf ? 'selected' : '';
         html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${huruf}')">
