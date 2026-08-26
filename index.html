@@ -320,7 +320,7 @@
         </div>
       </div>
       <div>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2" onchange="window.renderBankSoalAdmin()"></select>
+        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2" onchange="window.handleAdminMapelFilterChange()"></select>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
@@ -451,6 +451,7 @@
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationBankSoal"></div>
         </div>
       </div>
 
@@ -466,6 +467,7 @@
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMapel"></div>
         </div>
       </div>
 
@@ -484,6 +486,7 @@
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationSiswa"></div>
         </div>
       </div>
 
@@ -502,6 +505,7 @@
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationAdmin"></div>
         </div>
       </div>
 
@@ -517,19 +521,24 @@
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMonitoring"></div>
         </div>
       </div>
 
       <!-- Tab 6: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
-          <h6 class="fw-bold mb-3">Rekap Nilai & Review Jawaban Siswa</h6>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Rekap Nilai & Review Jawaban Siswa</h6>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaNilai()"><i class="bi bi-trash me-1"></i> Hapus Semua Rekap Nilai</button>
+          </div>
           <div class="table-responsive">
             <table class="table align-middle" id="tblHasilNilai">
-              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Skor</th><th>Benar / Total</th><th>Aksi Review</th></tr></thead>
+              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Skor</th><th>Benar / Total</th><th>Aksi</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationNilai"></div>
         </div>
       </div>
     </div>
@@ -602,8 +611,8 @@
       <div class="modal-body p-4">
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
-            <h6 class="fw-bold mb-1">1. Download Template Word (Model 1 Stimulus 3 Soal)</h6>
-            <small class="text-muted">Mendukung PG Tunggal (1), PG Kompleks MCMA (2), & PG Kompleks Kategori B/S (3).</small>
+            <h6 class="fw-bold mb-1">1. Download Template Word (Model 1 Stimulus 3 Soal)[cite: 1]</h6>
+            <small class="text-muted">Mendukung PG Tunggal (1), PG Kompleks MCMA (2), & PG Kompleks Kategori B/S (3)[cite: 1].</small>
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
@@ -681,7 +690,7 @@
             <textarea id="m_stimulus" class="form-control" rows="3" placeholder="Tuliskan teks wacana/stimulus di sini..."></textarea>
           </div>
           <div class="col-12">
-            <label class="form-label small fw-bold">Gambar Soal / Stimulus (Link Drive / URL / Komputer - Auto Compress < 150KB)</label>
+            <label class="form-label small fw-bold">Gambar Soal / Stimulus (Link Drive / URL / Komputer)</label>
             <div class="input-group">
               <input id="m_img" class="form-control" placeholder="Tempel link URL / Google Drive di sini...">
               <input type="file" id="m_img_file" class="hidden" accept="image/*" onchange="window.handleCompressImageUpload(event, 'm_img')">
@@ -741,6 +750,17 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
+  // Pagination Pages State
+  let pageState = {
+    bankSoal: 1,
+    mapel: 1,
+    siswa: 1,
+    admin: 1,
+    monitoring: 1,
+    nilai: 1
+  };
+  const PAGE_SIZE = 10;
+
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
@@ -749,6 +769,31 @@
     showView('page-1');
     loadPage1Options();
   }
+
+  // --- HELPER PAGINASI REUSABLE ---
+  function renderPaginationControls(containerId, totalItems, currentPage, onPageChange) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
+    
+    if (totalItems <= PAGE_SIZE) {
+      container.innerHTML = `<small class="text-muted">Menampilkan ${totalItems} data</small>`;
+      return;
+    }
+
+    let html = `<small class="text-muted">Halaman ${currentPage} dari ${totalPages} (Total ${totalItems} data)</small>
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-outline-primary" ${currentPage === 1 ? 'disabled' : ''} onclick="${onPageChange}(${currentPage - 1})">Sebelumnya</button>
+        <button class="btn btn-outline-primary" ${currentPage === totalPages ? 'disabled' : ''} onclick="${onPageChange}(${currentPage + 1})">Selanjutnya</button>
+      </div>`;
+    container.innerHTML = html;
+  }
+
+  window.setPageBankSoal = (p) => { pageState.bankSoal = p; renderBankSoalAdmin(); };
+  window.setPageMapel = (p) => { pageState.mapel = p; loadMapelOptionsAdmin(); };
+  window.setPageSiswa = (p) => { pageState.siswa = p; loadPesertaAdmin(); };
+  window.setPageAdmin = (p) => { pageState.admin = p; loadAdminList(); };
+  window.setPageNilai = (p) => { pageState.nilai = p; initMonitoringListener(); };
 
   window.handleCompressImageUpload = function(event, targetInputId) {
     const file = event.target.files[0];
@@ -820,11 +865,16 @@
     const mapel = document.getElementById('adminMapelFilter').value;
     if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
 
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+    document.getElementById('m_target_mapel').value = mapel;
+
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     let maxNo = 0;
     snap.forEach(d => {
-      let num = parseInt(d.data().id_soal) || 0;
-      if (num > maxNo) maxNo = num;
+      const dataSoal = d.data();
+      if (String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+        let num = parseInt(dataSoal.id_soal) || 0;
+        if (num > maxNo) maxNo = num;
+      }
     });
     document.getElementById('m_no').value = maxNo + 1;
     document.getElementById('m_tipe').value = "1";
@@ -872,7 +922,7 @@
       });
 
       tableHTML += `</tbody></table></div>
-      <small class="text-muted fst-italic"><i class="bi bi-info-circle me-1"></i>Sesuai standar asesmen: Diperbolehkan 1 Benar (B-S-S/S-B-S/S-S-B) atau 2 Benar (B-B-S). Hindari semua B atau semua S.</small>`;
+      <small class="text-muted fst-italic"><i class="bi bi-info-circle me-1"></i>Sesuai standar asesmen: Diperbolehkan 1 Benar (B-S-S) atau 2 Benar (B-B-S).</small>`;
       container.innerHTML = tableHTML;
 
     } else {
@@ -1002,11 +1052,17 @@
       document.documentElement.requestFullscreen().catch(() => {});
     }
 
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", currentMapel)));
-    if (snap.empty) { alert("Belum ada bank soal untuk mapel ini!"); return; }
-
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     activeSoalList = [];
-    snap.forEach(d => activeSoalList.push(d.data()));
+    snap.forEach(d => {
+      const dataSoal = d.data();
+      if (String(dataSoal.mapel).trim().toLowerCase() === String(currentMapel).trim().toLowerCase()) {
+        activeSoalList.push(dataSoal);
+      }
+    });
+
+    if (activeSoalList.length === 0) { alert("Belum ada bank soal untuk mata pelajaran ini!"); return; }
+
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     currentSoalIndex = 0;
@@ -1381,10 +1437,28 @@
     const mapel = document.getElementById('adminMapelFilter').value;
     if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
     if (confirm(`Yakin ingin menghapus SELURUH butir soal pada mata pelajaran [${mapel}]?`)) {
-      const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
-      snap.forEach(async (d) => await deleteDoc(doc(db, "soal", d.id)));
+      const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+      snap.forEach(async (d) => {
+        if (String(d.data().mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+          await deleteDoc(doc(db, "soal", d.id));
+        }
+      });
       alert("Semua soal pada mapel ini berhasil dihapus!");
       renderBankSoalAdmin();
+    }
+  };
+
+  window.hapusSemuaNilai = async function() {
+    if (confirm(`Yakin ingin menghapus SELURUH rekap hasil nilai di project [${activeProjectId}]?`)) {
+      const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
+      snap.forEach(async (d) => await deleteDoc(doc(db, "hasil", d.id)));
+      alert("Semua rekap nilai berhasil dihapus!");
+    }
+  };
+
+  window.hapusNilaiItem = async function(id) {
+    if (confirm("Hapus rekap nilai peserta ini?")) {
+      await deleteDoc(doc(db, "hasil", id));
     }
   };
 
@@ -1401,45 +1475,15 @@
         
         <table border="1" style="border-collapse:collapse; width:100%;">
           <tr style="background:#f2f2f2;"><th>NO</th><th>STIMULUS</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
-          
-          <!-- KELOMPOK STIMULUS 1: BUTIR 1 (PG Tunggal) -->
-          <tr>
-            <td>1</td>
-            <td>Ikan bandeng kaya akan omega-3 dan protein yang baik untuk kesehatan jantung serta perkembangan saraf otak anak.</td>
-            <td>Berdasarkan teks di samping, zat yang terkandung pada ikan bandeng adalah...</td>
-            <td>1</td>
-            <td>A</td>
-            <td>Protein dan Omega-3</td>
-            <td>V</td>
-          </tr>
+          <tr><td>1</td><td>Ikan bandeng kaya akan omega-3 dan protein.</td><td>Zat yang terkandung pada ikan bandeng adalah...</td><td>1</td><td>A</td><td>Protein dan Omega-3</td><td>V</td></tr>
           <tr><td></td><td></td><td></td><td></td><td>B</td><td>Karbohidrat murni</td><td></td></tr>
           <tr><td></td><td></td><td></td><td></td><td>C</td><td>Glukosa tinggi</td><td></td></tr>
           <tr><td></td><td></td><td></td><td></td><td>D</td><td>Zat pewarna alami</td><td></td></tr>
-
-          <!-- KELOMPOK STIMULUS 1: BUTIR 2 (PG Kompleks MCMA) -->
-          <tr>
-            <td>2</td>
-            <td></td>
-            <td>Pilihlah manfaat mengonsumsi ikan bandeng bagi tubuh manusia!</td>
-            <td>2</td>
-            <td>A</td>
-            <td>Menjaga kesehatan jantung</td>
-            <td>V</td>
-          </tr>
+          <tr><td>2</td><td></td><td>Manfaat mengonsumsi ikan bandeng bagi tubuh manusia!</td><td>2</td><td>A</td><td>Menjaga kesehatan jantung</td><td>V</td></tr>
           <tr><td></td><td></td><td></td><td></td><td>B</td><td>Membantu perkembangan saraf otak</td><td>V</td></tr>
           <tr><td></td><td></td><td></td><td></td><td>C</td><td>Menyebabkan penyakit pencernaan</td><td></td></tr>
-
-          <!-- KELOMPOK STIMULUS 1: BUTIR 3 (PG Kompleks Kategori Benar / Salah) -->
-          <tr>
-            <td>3</td>
-            <td></td>
-            <td>Tentukan Benar (B) atau Salah (S) untuk setiap pernyataan berikut!</td>
-            <td>3</td>
-            <td>1</td>
-            <td>Ikan bandeng mengandung protein tinggi.</td>
-            <td>B</td>
-          </tr>
-          <tr><td></td><td></td><td></td><td></td><td>2</td><td>Ikan bandeng berbahaya bagi perkembangan saraf otak.</td><td>S</td></tr>
+          <tr><td>3</td><td></td><td>Tentukan Benar (B) atau Salah (S)!</td><td>3</td><td>1</td><td>Ikan bandeng mengandung protein tinggi.</td><td>B</td></tr>
+          <tr><td></td><td></td><td></td><td></td><td>2</td><td>Ikan bandeng berbahaya bagi saraf otak.</td><td>S</td></tr>
           <tr><td></td><td></td><td></td><td></td><td>3</td><td>Ikan bandeng tidak mengandung omega-3.</td><td>S</td></tr>
         </table>
       </body></html>`;
@@ -1577,26 +1621,48 @@
       const sMapel = document.getElementById('adminMapelFilter');
       const sTarget = document.getElementById('m_target_mapel');
       const tblMapelBody = document.querySelector('#tblMapelAdmin tbody');
+      
+      const currentSelected = sMapel.value;
       sMapel.innerHTML = ''; sTarget.innerHTML = '';
-      let mapelRows = '';
-
+      
+      let mapelList = [];
       snap.forEach(d => {
-        const m = d.data();
+        mapelList.push({ idDoc: d.id, ...d.data() });
+      });
+
+      mapelList.forEach(m => {
         sMapel.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
         sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
-        
+      });
+
+      if (currentSelected && sMapel.querySelector(`option[value="${currentSelected}"]`)) {
+        sMapel.value = currentSelected;
+      }
+
+      // Paginasi Mapel
+      const start = (pageState.mapel - 1) * PAGE_SIZE;
+      const paginatedMapel = mapelList.slice(start, start + PAGE_SIZE);
+
+      let mapelRows = '';
+      paginatedMapel.forEach(m => {
         mapelRows += `<tr>
           <td><strong>${m.nama_mapel}</strong></td>
           <td><span class="badge bg-info text-dark fs-6">${m.durasi} Menit</span></td>
-          <td><button class="btn btn-sm btn-outline-primary" onclick="window.editDurasiMapel('${d.id}', '${m.nama_mapel}', ${m.durasi})"><i class="bi bi-clock"></i> Edit Durasi</button></td>
+          <td><button class="btn btn-sm btn-outline-primary" onclick="window.editDurasiMapel('${m.idDoc}', '${m.nama_mapel}', ${m.durasi})"><i class="bi bi-clock"></i> Edit Durasi</button></td>
         </tr>`;
       });
       tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
-      
+      renderPaginationControls('paginationMapel', mapelList.length, pageState.mapel, 'window.setPageMapel');
+
       if (sMapel.options.length > 0) renderBankSoalAdmin();
       updateDashboardMetrics();
     });
   }
+
+  window.handleAdminMapelFilterChange = function() {
+    pageState.bankSoal = 1;
+    renderBankSoalAdmin();
+  };
 
   window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
     const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
@@ -1606,22 +1672,32 @@
     }
   };
 
+  // --- RENDER BANK SOAL FIX CASE-INSENSITIVE & PAGINASI 10 DATA ---
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
     if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
     window.cacheBankSoal = window.cacheBankSoal || {};
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     
     let soalArray = [];
     snap.forEach(docSnap => {
-      soalArray.push({ idDoc: docSnap.id, ...docSnap.data() });
+      const dataSoal = docSnap.data();
+      // Case-Insensitive matching agar tidak tertukar antar-mapel
+      if (String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+        soalArray.push({ idDoc: docSnap.id, ...dataSoal });
+      }
     });
+
     soalArray.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
+    // Slice 10 items
+    const start = (pageState.bankSoal - 1) * PAGE_SIZE;
+    const paginatedSoal = soalArray.slice(start, start + PAGE_SIZE);
+
     let rows = '';
-    soalArray.forEach((d) => {
+    paginatedSoal.forEach((d) => {
       window.cacheBankSoal[d.idDoc] = d;
       const formattedImg = formatImageUrl(d.link_gambar);
       const tipeStr = String(d.tipe_soal);
@@ -1646,6 +1722,7 @@
       </tr>`;
     });
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mapel ini.</td></tr>';
+    renderPaginationControls('paginationBankSoal', soalArray.length, pageState.bankSoal, 'window.setPageBankSoal');
     updateDashboardMetrics();
   };
 
@@ -1716,9 +1793,16 @@
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     onSnapshot(qUsers, (snap) => {
-      let rows = '';
+      let userList = [];
       snap.forEach(docSnap => {
-        const u = docSnap.data();
+        userList.push({ idDoc: docSnap.id, ...docSnap.data() });
+      });
+
+      const start = (pageState.siswa - 1) * PAGE_SIZE;
+      const paginatedUsers = userList.slice(start, start + PAGE_SIZE);
+
+      let rows = '';
+      paginatedUsers.forEach(u => {
         const isBlocked = u.status === "Diblokir";
         rows += `<tr>
           <td><strong>${u.username}</strong></td>
@@ -1727,31 +1811,40 @@
           <td>${u.kelas || '-'}</td>
           <td><span class="badge ${isBlocked ? 'bg-danger' : 'bg-success'}">${u.status || 'Aktif'}</span></td>
           <td>
-            <button class="btn btn-sm ${isBlocked ? 'btn-outline-success' : 'btn-outline-warning'} me-1" onclick="window.toggleBlockSiswa('${docSnap.id}', '${u.status || 'Aktif'}')">
+            <button class="btn btn-sm ${isBlocked ? 'btn-outline-success' : 'btn-outline-warning'} me-1" onclick="window.toggleBlockSiswa('${u.idDoc}', '${u.status || 'Aktif'}')">
               <i class="bi ${isBlocked ? 'bi-unlock' : 'bi-lock'}"></i> ${isBlocked ? 'Buka Blokir' : 'Blokir'}
             </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${docSnap.id}')"><i class="bi bi-trash"></i></button>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${u.idDoc}')"><i class="bi bi-trash"></i></button>
           </td>
         </tr>`;
       });
       document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
   }
 
   function loadAdminList() {
     onSnapshot(collection(db, "admins"), (snap) => {
-      let rows = `<tr><td><strong>ADMIN (Utama)</strong></td><td><code>123SIAP</code></td><td>Administrator Utama (Super Admin)</td><td>-</td></tr>`;
+      let adminList = [];
       snap.forEach(docSnap => {
-        const a = docSnap.data();
+        adminList.push({ idDoc: docSnap.id, ...docSnap.data() });
+      });
+
+      const start = (pageState.admin - 1) * PAGE_SIZE;
+      const paginatedAdmins = adminList.slice(start, start + PAGE_SIZE);
+
+      let rows = `<tr><td><strong>ADMIN (Utama)</strong></td><td><code>123SIAP</code></td><td>Administrator Utama (Super Admin)</td><td>-</td></tr>`;
+      paginatedAdmins.forEach(a => {
         rows += `<tr>
           <td><strong>${a.username}</strong></td>
           <td><code>${a.password}</code></td>
           <td>${a.nama}</td>
-          <td><button class="btn btn-sm btn-outline-danger" onclick="window.hapusAdmin('${docSnap.id}')"><i class="bi bi-trash"></i></button></td>
+          <td><button class="btn btn-sm btn-outline-danger" onclick="window.hapusAdmin('${a.idDoc}')"><i class="bi bi-trash"></i></button></td>
         </tr>`;
       });
       document.querySelector('#tblAdminList tbody').innerHTML = rows;
+      renderPaginationControls('paginationAdmin', adminList.length, pageState.admin, 'window.setPageAdmin');
       updateDashboardMetrics();
     });
   }
@@ -1772,18 +1865,26 @@
   function initMonitoringListener() {
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
     onSnapshot(qMon, async (snap) => {
-      let rows = '';
+      let monList = [];
       const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
       let soalCountMap = {};
       soalSnap.forEach(s => {
-        const m = s.data().mapel;
+        const m = String(s.data().mapel).trim().toLowerCase();
         soalCountMap[m] = (soalCountMap[m] || 0) + 1;
       });
 
       snap.forEach(docSnap => {
-        const d = docSnap.data();
+        monList.push({ idDoc: docSnap.id, ...docSnap.data() });
+      });
+
+      const start = (pageState.monitoring - 1) * PAGE_SIZE;
+      const paginatedMon = monList.slice(start, start + PAGE_SIZE);
+
+      let rows = '';
+      paginatedMon.forEach(d => {
         let badge = d.status === 'Melanggar' ? 'bg-warning text-dark' : (d.status === 'Diskualifikasi' ? 'bg-danger' : 'bg-primary');
-        const totalSoalMapel = soalCountMap[d.mapel] || 0;
+        const mapelKey = String(d.mapel).trim().toLowerCase();
+        const totalSoalMapel = soalCountMap[mapelKey] || 0;
         const dikerjakan = d.jawaban ? Object.keys(d.jawaban).length : 0;
         const progressFormat = `${dikerjakan}/${totalSoalMapel}`;
 
@@ -1793,26 +1894,34 @@
           <td><span class="badge ${badge}">${d.status}</span></td>
           <td><span class="fw-bold text-primary">${progressFormat}</span></td>
           <td><strong class="text-danger">${d.pelanggaran || 0}</strong> Kali</td>
-          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${docSnap.id}')">Reset</button></td>
+          <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${d.idDoc}')">Reset</button></td>
         </tr>`;
       });
       document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
+      renderPaginationControls('paginationMonitoring', monList.length, pageState.monitoring, 'window.setPageNilai');
     });
 
     const qHasil = query(collection(db, "hasil"), where("project", "==", activeProjectId));
     onSnapshot(qHasil, async (snap) => {
-      let rows = '';
+      let hasilList = [];
       const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
       let userMap = {};
       userSnap.forEach(u => { userMap[u.data().username] = u.data(); });
 
       snap.forEach(d => {
-        const data = d.data();
+        hasilList.push({ idDoc: d.id, ...d.data() });
+      });
+
+      const start = (pageState.nilai - 1) * PAGE_SIZE;
+      const paginatedHasil = hasilList.slice(start, start + PAGE_SIZE);
+
+      let rows = '';
+      paginatedHasil.forEach(data => {
         const infoSiswa = userMap[data.username] || {};
         const namaLengkap = infoSiswa.nama || "Siswa";
         
         window.allHasilCache = window.allHasilCache || {};
-        window.allHasilCache[d.id] = data;
+        window.allHasilCache[data.idDoc] = data;
 
         rows += `<tr>
           <td><strong>${data.username}</strong></td>
@@ -1820,10 +1929,14 @@
           <td>${data.mapel}</td>
           <td><span class="badge bg-primary fs-6">${data.skor}</span></td>
           <td>${data.benar} / ${data.total}</td>
-          <td><button class="btn btn-sm btn-outline-info" onclick="window.bukaModalReview('${d.id}', '${namaLengkap}')"><i class="bi bi-eye"></i> Review</button></td>
+          <td>
+            <button class="btn btn-sm btn-outline-info me-1" onclick="window.bukaModalReview('${data.idDoc}', '${namaLengkap}')"><i class="bi bi-eye"></i> Review</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusNilaiItem('${data.idDoc}')"><i class="bi bi-trash"></i></button>
+          </td>
         </tr>`;
       });
       document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
+      renderPaginationControls('paginationNilai', hasilList.length, pageState.nilai, 'window.setPageNilai');
       updateDashboardMetrics();
     });
   }
@@ -1836,9 +1949,14 @@
     document.getElementById('revMapel').innerText = dataHasil.mapel;
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
-    const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project), where("mapel", "==", dataHasil.mapel)));
+    const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project)));
     let soalMap = {};
-    soalSnap.forEach(s => { soalMap[s.data().id_soal] = s.data(); });
+    soalSnap.forEach(s => {
+      const dataSoal = s.data();
+      if (String(dataSoal.mapel).trim().toLowerCase() === String(dataHasil.mapel).trim().toLowerCase()) {
+        soalMap[dataSoal.id_soal] = dataSoal;
+      }
+    });
 
     let containerHTML = '';
     const jawabanSiswa = dataHasil.jawaban || {};
@@ -1921,7 +2039,7 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // --- PARSER WORD FIX LENGKAP DENGAN KUNCI TIPE SOAL ---
+  // --- PARSER WORD FIX SESUAI MAPEL TERPILIH ---
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1944,11 +2062,14 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
 
-        const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", targetMapel)));
+        const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
         let maxExistingNo = 0;
         existingSnap.forEach(d => {
-          let num = parseInt(d.data().id_soal) || 0;
-          if (num > maxExistingNo) maxExistingNo = num;
+          const dataSoal = d.data();
+          if (String(dataSoal.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase()) {
+            let num = parseInt(dataSoal.id_soal) || 0;
+            if (num > maxExistingNo) maxExistingNo = num;
+          }
         });
 
         let list = [];
@@ -1972,12 +2093,10 @@
 
           if (stimulusText !== "") lastStimulus = stimulusText;
 
-          // JIKA BARIS ADALAH AWAL NOMOR BARU
           if (no !== "") {
             if (cur) list.push(cur);
             let assignedNo = maxExistingNo + (parseInt(no) || (list.length + 1));
             
-            // Default jika jenis kosong: cek apakah opsi nomor/angka (tipe 3) atau huruf (tipe 1)
             let detectedJenis = jenisText;
             if (!detectedJenis) {
               if (['1', '2', '3'].includes(opsi)) detectedJenis = '3';
@@ -1987,7 +2106,7 @@
             cur = {
               project: activeProjectId,
               id_soal: assignedNo,
-              mapel: targetMapel,
+              mapel: targetMapel, // Mengunci mapel yang terpilih
               tipe_soal: String(detectedJenis),
               stimulus: stimulusText || lastStimulus,
               pertanyaan: soalText,
@@ -2027,7 +2146,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal model 1 stimulus!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal ke mapel [${targetMapel}]!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
