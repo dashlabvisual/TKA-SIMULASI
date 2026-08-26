@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CBT School - High Performance Enterprise System</title>
+  <title>Simulasi TKA Tingkat SD/MI/Sederajat Kabupaten Klaten</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -86,7 +86,7 @@
   <div class="container-fluid">
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand" title="Klik 5x untuk masuk Proktor">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
-      <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Enterprise Secure Edition</small></span>
+      <span>CBT KLATEN <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Sistem Ujian Online</small></span>
     </div>
     <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
       <i class="bi bi-shield-lock me-1"></i> Login Proktor
@@ -94,89 +94,132 @@
   </div>
 </nav>
 
-<!-- VIEW 0: PEMILIHAN PERAN -->
-<div id="view-role-selector" class="container py-5">
-  <div class="row justify-content-center pt-5">
-    <div class="col-md-5">
+<!-- ================= PAGE 1: PILIH MATA PELAJARAN SIMULASI ================= -->
+<div id="view-page-1" class="container py-5">
+  <div class="row justify-content-center pt-4">
+    <div class="col-md-6">
       <div class="cbt-card p-5 text-center">
         <div class="bg-primary text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
-          <i class="bi bi-shield-check fs-1"></i>
+          <i class="bi bi-journal-bookmark-fill fs-1"></i>
         </div>
-        <h3 class="fw-bold mb-2">Selamat Datang di CBT School</h3>
-        <p class="text-muted small mb-4">Silakan pilih akses masuk sesuai peran Anda:</p>
-        <div class="d-grid gap-3">
-          <button id="btnRoleSiswa" class="btn btn-primary btn-lg py-3 fw-bold">
-            <i class="bi bi-person-fill me-2"></i> Masuk Sebagai Siswa
-          </button>
-          <button id="btnRoleAdmin" class="btn btn-outline-dark btn-lg py-3 fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
-            <i class="bi bi-gear-fill me-2"></i> Masuk Sebagai Admin / Proktor
-          </button>
+        <h4 class="fw-bold text-uppercase mb-3" style="color: #1e293b; line-height: 1.4;">
+          SIMULASI TKA TINGKAT SD/MI/SEDERAJAT KABUPATEN KLATEN
+        </h4>
+        <p class="text-muted small mb-4">Silakan pilih mata pelajaran yang akan diujikan:</p>
+
+        <div class="text-start mb-4">
+          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
+          <select id="selMapelPage1" class="form-select form-select-lg">
+            <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
+            <option value="BAHASA INDONESIA - SD SEDERAJAT" data-durasi="90">BAHASA INDONESIA - SD SEDERAJAT (90 Menit)</option>
+            <option value="MATEMATIKA-SD SEDERAJAT" data-durasi="90">MATEMATIKA-SD SEDERAJAT (90 Menit)</option>
+          </select>
         </div>
+
+        <button id="btnMulaiSimulasi" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">
+          MULAI SIMULASI <i class="bi bi-arrow-right ms-2"></i>
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VIEW 1: LOGIN SISWA -->
-<div id="view-login" class="container py-5 hidden">
-  <div class="row justify-content-center pt-2">
+<!-- ================= PAGE 2: LOGIN USERNAME & PASSWORD ================= -->
+<div id="view-page-2" class="container py-5 hidden">
+  <div class="row justify-content-center pt-4">
     <div class="col-md-5">
       <div class="cbt-card p-4 text-center">
-        <div class="bg-primary text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
+        <div class="bg-success text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
           <i class="bi bi-person-fill-lock fs-2"></i>
         </div>
-        <h4 class="fw-bold mb-1">Portal Ujian Siswa</h4>
-        <p class="text-muted small mb-4">Pilih Sesi Ujian, Mapel, lalu masukkan Akun Siswa</p>
+        <h4 class="fw-bold mb-1">Login Peserta Ujian</h4>
+        <p class="text-muted small mb-4">Masukkan Username dan Password Anda</p>
 
         <div class="text-start mb-3">
-          <label class="form-label small fw-bold">Pilih Sesi / Project Ujian</label>
-          <select id="p_project_select" class="form-select"></select>
-        </div>
-        <div class="text-start mb-3">
-          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
-          <select id="p_mapel_select" class="form-select"></select>
-        </div>
-        <div class="text-start mb-3">
           <label class="form-label small fw-bold">Username / NISN</label>
-          <input id="p_user" class="form-control" placeholder="Nomor Peserta Siswa">
+          <input id="inputUserLogin" class="form-control" placeholder="Contoh: 1051">
         </div>
         <div class="text-start mb-4">
           <label class="form-label small fw-bold">Password</label>
-          <input id="p_pass" type="password" class="form-control" placeholder="Password Siswa">
+          <input id="inputPassLogin" type="password" class="form-control" placeholder="Password peserta">
         </div>
 
-        <button id="btnLoginSiswa" class="btn btn-primary w-100 py-2 fw-bold mb-3">Masuk Ruang Ujian</button>
-        <button id="btnBackToRole" class="btn btn-light btn-sm text-muted w-100"><i class="bi bi-arrow-left me-1"></i> Kembali</button>
+        <button id="btnLoginPesertaPage2" class="btn btn-success w-100 py-2 fw-bold mb-2">Login Peserta</button>
+        <button id="btnBackToPage1" class="btn btn-light btn-sm text-muted w-100"><i class="bi bi-arrow-left me-1"></i> Ganti Mata Pelajaran</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VIEW 2: KONFIRMASI UJIAN -->
-<div id="view-confirm-exam" class="container py-5 hidden">
+<!-- ================= PAGE 3: KONFIRMASI DATA PESERTA ================= -->
+<div id="view-page-3" class="container py-5 hidden">
+  <div class="row justify-content-center pt-2">
+    <div class="col-md-6">
+      <div class="cbt-card p-4">
+        <h4 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="bi bi-card-checklist me-2"></i>Konfirmasi Data Peserta</h4>
+        
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">KODE USERNAME</label>
+          <input id="confKodeUser" class="form-control bg-light fw-bold" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">NAMA PESERTA (USERNAME - NAMA)</label>
+          <input id="confNamaFormat" class="form-control bg-light fw-bold text-success" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold">JENIS KELAMIN</label>
+          <select id="confJenisKelamin" class="form-select">
+            <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
+            <option value="LAKI-LAKI">LAKI-LAKI</option>
+            <option value="PEREMPUAN">PEREMPUAN</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">MATA UJIAN</label>
+          <input id="confMataUjian" class="form-control bg-light fw-bold" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">NAMA PESERTA LENGKAP</label>
+          <input id="confNamaLengkap" class="form-control bg-light fw-bold" readonly>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label small fw-bold">TANGGAL LAHIR</label>
+          <input type="date" id="confTanggalLahir" class="form-control">
+        </div>
+
+        <button id="btnSubmitPage3" class="btn btn-primary w-100 py-2 fw-bold">SUBMIT DATA PESERTA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 4: KONFIRMASI TES ================= -->
+<div id="view-page-4" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-6">
       <div class="cbt-card p-4">
-        <div class="alert alert-warning d-flex align-items-center gap-3 border-warning">
-          <i class="bi bi-shield-exclamation fs-1 text-warning"></i>
-          <div>
-            <h6 class="fw-bold mb-1">SECURE EXAM MODE AKTIF</h6>
-            <small class="text-dark">Sistem memantau pergerakan layar. Dilarang berpindah tab.</small>
-          </div>
-        </div>
+        <h4 class="fw-bold mb-3 border-bottom pb-2 text-danger"><i class="bi bi-stopwatch me-2"></i>Konfirmasi Tes Ujian</h4>
+        
         <div class="p-3 bg-light rounded-3 mb-4">
-          <div class="d-flex justify-content-between mb-1"><span>Project:</span><strong id="confProj">-</strong></div>
-          <div class="d-flex justify-content-between mb-1"><span>Peserta:</span><strong id="confUser">-</strong></div>
-          <div class="d-flex justify-content-between mb-1"><span>Mata Pelajaran:</span><strong id="confMapel">-</strong></div>
-          <div class="d-flex justify-content-between"><span>Durasi:</span><strong id="confDurasi">-</strong></div>
+          <div class="d-flex justify-content-between mb-2"><span>Nama Tes:</span><strong id="lblTesNama">-</strong></div>
+          <div class="d-flex justify-content-between mb-2"><span>Waktu Tes (Submit):</span><strong id="lblTesWaktu">-</strong></div>
+          <div class="d-flex justify-content-between"><span>Alokasi Waktu Tes:</span><strong id="lblTesDurasi" class="text-primary">-</strong></div>
         </div>
-        <button id="btnStartExam" class="btn btn-danger w-100 py-2 fw-bold">Kunci Layar (Fullscreen) & Mulai</button>
+
+        <button id="btnMulaiUjianReal" class="btn btn-danger w-100 py-3 fw-bold shadow">
+          <i class="bi bi-lock-fill me-1"></i> MULAI UJIAN SEKARANG
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VIEW 3: RUANG UJIAN (Dengan LocalStorage Cache Anti-Data Loss) -->
+<!-- ================= VIEW: RUANG UJIAN ================= -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -213,7 +256,7 @@
   </div>
 </div>
 
-<!-- VIEW 4: HASIL UJIAN -->
+<!-- ================= VIEW: HASIL UJIAN ================= -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -222,13 +265,13 @@
         <h4 class="fw-bold">Ujian Selesai!</h4>
         <h1 class="display-3 fw-bold text-success my-3" id="resScore">0</h1>
         <p>Jawaban berhasil terekam ke sistem.</p>
-        <button id="btnBackHome" class="btn btn-primary w-100">Kembali</button>
+        <button id="btnBackHome" class="btn btn-primary w-100">Kembali ke Beranda</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- VIEW 5: DASHBOARD ADMIN -->
+<!-- ================= VIEW: DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -528,7 +571,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT WORD (Drag & Drop) ================= -->
+<!-- ================= MODAL IMPORT WORD ================= -->
 <div class="modal fade" id="modalWordImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -558,7 +601,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT SISWA (Drag & Drop) ================= -->
+<!-- ================= MODAL IMPORT SISWA ================= -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -651,13 +694,12 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
-  authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
-  projectId: "aplikasi-tka-sekolah",
-  storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
-  messagingSenderId: "495658059611",
-  appId: "1:495658059611:web:cb64503e2448331affbc7e",
-  measurementId: "G-R1W64C1X98"
+    apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+    authDomain: "GANTI_DENGAN_AUTH_DOMAIN_ANDA",
+    projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+    storageBucket: "GANTI_DENGAN_STORAGE_BUCKET_ANDA",
+    messagingSenderId: "GANTI_DENGAN_SENDER_ID_ANDA",
+    appId: "GANTI_DENGAN_APP_ID_ANDA"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -677,6 +719,12 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
+  // Variabel penampung state alur 4 Halaman Siswa
+  let tempSelectedMapel = "";
+  let tempSelectedDurasi = 90;
+  let tempUserData = null;
+  let submitTimestamp = "";
+
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
@@ -684,6 +732,83 @@
   } else {
     showView('view-role-selector');
   }
+
+  // --- ALUR PAGE 1 s.d. PAGE 4 SISWA ---
+  document.getElementById('btnMulaiSimulasi').addEventListener('click', () => {
+    const sel = document.getElementById('selMapelPage1');
+    if (!sel.value) {
+      alert("Silakan pilih mata pelajaran terlebih dahulu!");
+      return;
+    }
+    tempSelectedMapel = sel.value;
+    tempSelectedDurasi = parseInt(sel.options[sel.selectedIndex].getAttribute('data-durasi')) || 90;
+    
+    // Otomatis buat project "Simulasi TKA Klaten" jika belum ada
+    activeProjectId = "Simulasi TKA Klaten";
+    localStorage.setItem("cbt_active_project", activeProjectId);
+    
+    showView('view-page-2');
+  });
+
+  document.getElementById('btnBackToPage1').addEventListener('click', () => {
+    showView('view-page-1');
+  });
+
+  document.getElementById('btnLoginPesertaPage2').addEventListener('click', async () => {
+    const u = document.getElementById('inputUserLogin').value.trim();
+    const p = document.getElementById('inputPassLogin').value.trim();
+
+    if (!u || !p) {
+      alert("Masukkan Username dan Password!");
+      return;
+    }
+
+    const userSnap = await getDocs(query(collection(db, "users"), where("username", "==", u), where("password", "==", p)));
+    if (userSnap.empty) {
+      alert("Akun peserta tidak terdaftar!");
+      return;
+    }
+
+    tempUserData = userSnap.docs[0].data();
+    if (tempUserData.status === "Diblokir") {
+      alert("AKUN ANDA DIBLOKIR!");
+      return;
+    }
+
+    // Pindah ke Page 3 (Konfirmasi Data Peserta)
+    document.getElementById('confKodeUser').value = tempUserData.username;
+    document.getElementById('confNamaFormat').value = `${tempUserData.username} - ${tempUserData.nama || 'Peserta'}`;
+    document.getElementById('confMataUjian').value = tempSelectedMapel;
+    document.getElementById('confNamaLengkap').value = tempUserData.nama || '-';
+    
+    showView('view-page-3');
+  });
+
+  document.getElementById('btnSubmitPage3').addEventListener('click', () => {
+    const jk = document.getElementById('confJenisKelamin').value;
+    const tgl = document.getElementById('confTanggalLahir').value;
+
+    if (!jk || !tgl) {
+      alert("Pilih Jenis Kelamin dan Tanggal Lahir terlebih dahulu!");
+      return;
+    }
+
+    submitTimestamp = new Date().toLocaleString('id-ID');
+
+    // Pindah ke Page 4 (Konfirmasi Tes)
+    document.getElementById('lblTesNama').innerText = tempSelectedMapel;
+    document.getElementById('lblTesWaktu').innerText = submitTimestamp;
+    document.getElementById('lblTesDurasi').innerText = `${tempSelectedDurasi} Menit`;
+
+    showView('view-page-4');
+  });
+
+  document.getElementById('btnMulaiUjianReal').addEventListener('click', () => {
+    currentStudent = tempUserData.username;
+    currentMapel = tempSelectedMapel;
+    currentDurasi = tempSelectedDurasi;
+    startSecureExam();
+  });
 
   // --- PARSER GAMBAR & GOOGLE DRIVE FIXER ---
   function formatImageUrl(url) {
@@ -783,7 +908,6 @@
     container.appendChild(row);
   }
 
-  // Drag and Drop Handler
   function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
     const dropZone = document.getElementById(dropZoneId);
     const fileInput = document.getElementById(fileInputId);
@@ -820,8 +944,7 @@
   });
 
   document.getElementById('btnRoleSiswa').addEventListener('click', () => {
-    showView('view-login');
-    loadStudentProjects();
+    showView('view-page-1');
   });
 
   document.getElementById('btnBackToRole').addEventListener('click', () => {
@@ -911,7 +1034,7 @@
 
   document.getElementById('btnAddMapelCard').addEventListener('click', async () => {
     const nama = prompt("Nama Mata Pelajaran Baru:");
-    const durasi = prompt("Durasi Ujian (Menit):", "60");
+    const durasi = prompt("Durasi Ujian (Menit):", "90");
     if (nama && durasi) {
       await addDoc(collection(db, "mapel"), {
         project: activeProjectId,
@@ -983,7 +1106,6 @@
 
   document.getElementById('btnSaveManualSoal').addEventListener('click', saveManualSoalAction);
   document.getElementById('btnExportExcel').addEventListener('click', downloadHasilExcel);
-  document.getElementById('btnLoginSiswa').addEventListener('click', loginSiswaAction);
   document.getElementById('btnStartExam').addEventListener('click', startSecureExam);
   document.getElementById('btnPrevSoal').addEventListener('click', () => navigateSoal(-1));
   document.getElementById('btnNextSoal').addEventListener('click', () => navigateSoal(1));
@@ -991,7 +1113,7 @@
   document.getElementById('btnBackHome').addEventListener('click', resetViews);
 
   function showView(viewId) {
-    ['view-role-selector', 'view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
+    ['view-role-selector', 'view-page-1', 'view-page-2', 'view-page-3', 'view-page-4', 'view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
       document.getElementById(id).classList.add('hidden');
     });
     document.getElementById(viewId).classList.remove('hidden');
@@ -1010,7 +1132,7 @@
       listContainer.innerHTML = '';
       
       if (snap.empty) {
-        setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi Ujian Utama" });
+        setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi TKA Klaten" });
         return;
       }
 
@@ -1574,59 +1696,6 @@
     XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}.xlsx`);
   }
 
-  async function loadStudentProjects() {
-    const pSelect = document.getElementById('p_project_select');
-    pSelect.innerHTML = '<option value="" disabled selected>-- Pilih Project Ujian --</option>';
-    const snap = await getDocs(collection(db, "projects"));
-    snap.forEach(d => {
-      const pName = d.data().nama_project;
-      pSelect.innerHTML += `<option value="${pName}">${pName}</option>`;
-    });
-  }
-
-  document.getElementById('p_project_select').addEventListener('change', async function() {
-    const proj = this.value;
-    const mSelect = document.getElementById('p_mapel_select');
-    mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
-    
-    const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", proj)));
-    snap.forEach(d => {
-      const m = d.data();
-      mSelect.innerHTML += `<option value="${m.nama_mapel}" data-durasi="${m.durasi}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
-    });
-  });
-
-  async function loginSiswaAction() {
-    const proj = document.getElementById('p_project_select').value;
-    const u = document.getElementById('p_user').value.trim();
-    const p = document.getElementById('p_pass').value.trim();
-    const mSelect = document.getElementById('p_mapel_select');
-    const m = mSelect.value;
-
-    if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Pelajaran, Username, dan Password!"); return; }
-
-    const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", proj), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
-
-    const userData = userSnap.docs[0].data();
-    if (userData.status === "Diblokir") {
-      alert("AKUN ANDA DIBLOKIR!");
-      return;
-    }
-
-    const opt = mSelect.options[mSelect.selectedIndex];
-    currentDurasi = parseInt(opt.getAttribute('data-durasi')) || 60;
-    activeProjectId = proj;
-    currentStudent = u;
-    currentMapel = m;
-
-    document.getElementById('confProj').innerText = proj;
-    document.getElementById('confUser').innerText = u;
-    document.getElementById('confMapel').innerText = m;
-    document.getElementById('confDurasi').innerText = `${currentDurasi} Menit`;
-    showView('view-confirm-exam');
-  }
-
   async function startSecureExam() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
@@ -1655,7 +1724,7 @@
 
     showView('view-exam');
     document.getElementById('examMapelTitle').innerText = currentMapel;
-    document.getElementById('examStudentUser').innerText = currentStudent;
+    document.getElementById('examStudentUser').innerText = `${tempUserData.username} - ${tempUserData.nama || currentStudent}`;
 
     renderGridNumbers();
     renderSoalByIndex(0);
@@ -1734,18 +1803,13 @@
     document.getElementById('soalContainer').innerHTML = html;
   }
 
-  // Simpan LocalStorage secara berkala (Anti Data-Loss saat Jaringan Putus)
   window.pickAns = async (id, val) => {
     userAnswers[id] = val;
     localStorage.setItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`, JSON.stringify(userAnswers));
     renderSoalByIndex(currentSoalIndex);
-    
-    // Kirim update ringan ke server monitoring
     try {
       await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
-    } catch (e) {
-      // Abaikan error jaringan sementara agar siswa tidak terganggu saat ujian
-    }
+    } catch (e) {}
   };
 
   function startTimer(sec) {
