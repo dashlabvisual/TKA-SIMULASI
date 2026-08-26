@@ -220,12 +220,12 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-bold">Ketik Ulang Nama Peserta</label>
-          <input id="p3_nama_input" class="form-control" placeholder="Ketik nama lengkap Anda">
+          <label class="form-label small fw-bold text-danger">Ketik Ulang Nama Lengkap Peserta (Wajib Input Sendiri)</label>
+          <input id="p3_nama_input" class="form-control" placeholder="Ketik nama lengkap Anda di sini...">
         </div>
 
         <div class="mb-4">
-          <label class="form-label small fw-bold">Tanggal Lahir</label>
+          <label class="form-label small fw-bold text-danger">Tanggal Lahir (Harus Sesuai Database)</label>
           <input id="p3_tgl_lahir" type="date" class="form-control">
         </div>
 
@@ -351,6 +351,7 @@
         </div>
       </div>
       
+      <!-- Custom Pill-Badge Dropdown Mapel Baru -->
       <div class="d-flex align-items-center gap-2">
         <div class="custom-mapel-selector">
           <button type="button" class="mapel-select-btn" id="btnMapelDropdown" onclick="window.toggleCustomMapelDropdown()">
@@ -521,7 +522,7 @@
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblPesertaAdmin">
               <thead class="table-light">
-                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>Kelas</th><th>Status Akun</th><th>Aksi Pengawas</th></tr>
+                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>Kelas</th><th>Tgl Lahir</th><th>Status</th><th>Aksi Pengawas</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -598,12 +599,12 @@
   </div>
 </div>
 
-<!-- MODAL REVIEW JAWABAN -->
+<!-- MODAL REVIEW JAWABAN (SEMUA SOAL) -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content" style="border-radius: 16px;">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold">Review Jawaban: <span id="revNamaSiswa" class="text-primary"></span></h5>
+        <h5 class="modal-title fw-bold">Review Jawaban Lengkap: <span id="revNamaSiswa" class="text-primary"></span></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
@@ -611,7 +612,43 @@
           <span>Mapel: <strong id="revMapel"></strong></span>
           <span>Skor: <strong id="revSkor" class="text-success"></strong></span>
         </div>
-        <div id="revContainerSoal" style="max-height: 450px; overflow-y: auto;"></div>
+        <div id="revContainerSoal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT DATA SISWA (BARU) -->
+<div class="modal fade" id="modalEditSiswa" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Edit Data Diri Siswa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <input type="hidden" id="edit_siswa_doc_id">
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Username / NISN</label>
+          <input type="text" id="edit_siswa_user" class="form-control" readonly>
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Password Siswa</label>
+          <input type="text" id="edit_siswa_pass" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Nama Lengkap Siswa</label>
+          <input type="text" id="edit_siswa_nama" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Kelas</label>
+          <input type="text" id="edit_siswa_kelas" class="form-control">
+        </div>
+        <div class="mb-4">
+          <label class="form-label small fw-bold">Tanggal Lahir Siswa</label>
+          <input type="date" id="edit_siswa_tgl" class="form-control">
+        </div>
+        <button id="btnSaveEditSiswa" class="btn btn-primary w-100 fw-bold">Simpan Perubahan Data</button>
       </div>
     </div>
   </div>
@@ -669,7 +706,7 @@
   </div>
 </div>
 
-<!-- MODAL IMPORT SISWA -->
+<!-- MODAL IMPORT SISWA (DENGAN TANGGAL LAHIR) -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -681,7 +718,7 @@
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
             <h6 class="fw-bold mb-1">1. Download Template Data Peserta (.xlsx)</h6>
-            <small class="text-muted">Format spreadsheet berisi: username, password, nama, kelas.</small>
+            <small class="text-muted">Format spreadsheet berisi: username, password, nama, kelas, tgl_lahir (DD-MM-YYYY).</small>
           </div>
           <button id="btnDownloadExcelTpl" class="btn btn-outline-success btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
@@ -777,7 +814,7 @@
 
   let activeProjectId = localStorage.getItem("cbt_active_project") || "Simulasi Ujian Utama";
   let currentStudent = "";
-  let currentStudentName = "";
+  let currentStudentObj = {};
   let currentMapel = "";
   let currentDurasi = 60;
   let activeSoalList = [];
@@ -789,8 +826,6 @@
 
   let logoClickCount = 0;
   let logoClickTimer = null;
-
-  // Unsubscribe listeners pool for QA memory safety
   let activeListeners = [];
 
   let pageState = {
@@ -810,6 +845,34 @@
   } else {
     showView('page-1');
     loadPage1Options();
+  }
+
+  // Helper Formatter Normalisasi Tanggal (YYYY-MM-DD vs DD-MM-YYYY)
+  function normalizeDateStr(dateStr) {
+    if (!dateStr) return "";
+    dateStr = String(dateStr).trim();
+    if (dateStr.includes("/")) dateStr = dateStr.replace(/\//g, "-");
+    if (dateStr.includes("-")) {
+      const parts = dateStr.split("-");
+      if (parts[0].length === 4) {
+        // YYYY-MM-DD to DD-MM-YYYY
+        return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
+      } else if (parts[2].length === 4) {
+        // DD-MM-YYYY
+        return `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
+      }
+    }
+    return dateStr;
+  }
+
+  function dateToInputFormat(dateStr) {
+    if (!dateStr) return "";
+    const norm = normalizeDateStr(dateStr);
+    const parts = norm.split("-");
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD for HTML input
+    }
+    return dateStr;
   }
 
   // --- DROPDOWN MAPEL CUSTOM LOGIC ---
@@ -832,7 +895,6 @@
     renderBankSoalAdmin();
   };
 
-  // --- HELPER PAGINASI ---
   function renderPaginationControls(containerId, totalItems, currentPage, onPageChange) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -1079,21 +1141,45 @@
     if (userData.status === "Diblokir") { alert("AKUN ANDA DIBLOKIR!"); return; }
 
     currentStudent = u;
-    currentStudentName = userData.nama || u;
+    currentStudentObj = userData;
 
     document.getElementById('p3_kode_user').value = u;
-    document.getElementById('p3_nama_lengkap_disp').value = `${u} - ${currentStudentName}`;
+    document.getElementById('p3_nama_lengkap_disp').value = `${u} - ${userData.nama || u}`;
     document.getElementById('p3_mata_ujian').value = currentMapel;
-    document.getElementById('p3_nama_input').value = currentStudentName;
+    // Kosongkan agar siswa mengetik sendiri
+    document.getElementById('p3_nama_input').value = "";
+    document.getElementById('p3_tgl_lahir').value = "";
 
     showView('page-3');
   });
 
+  // Validasi Page 3: Case-Insensitive Nama & Tanggal Lahir Ketat
   document.getElementById('btnPage3Submit').addEventListener('click', () => {
     const namaInput = document.getElementById('p3_nama_input').value.trim();
-    const tglLahir = document.getElementById('p3_tgl_lahir').value;
+    const tglLahirInput = document.getElementById('p3_tgl_lahir').value; // YYYY-MM-DD
 
-    if (!namaInput || !tglLahir) { alert("Lengkapi konfirmasi Nama Peserta dan Tanggal Lahir!"); return; }
+    if (!namaInput || !tglLahirInput) {
+      alert("Lengkapi konfirmasi Nama Lengkap dan Tanggal Lahir Anda!");
+      return;
+    }
+
+    // 1. Validasi Nama Case-Insensitive
+    const dbNama = String(currentStudentObj.nama || currentStudent).trim().toLowerCase();
+    const userInputNama = namaInput.toLowerCase();
+
+    if (dbNama !== userInputNama) {
+      alert("NAMA LENGKAP YANG ANDA MASUKKAN TIDAK COCOK DENGAN DATA PESERTA! Silakan periksa kembali penulisan nama Anda.");
+      return;
+    }
+
+    // 2. Validasi Tanggal Lahir (Format DD-MM-YYYY)
+    const normInputTgl = normalizeDateStr(tglLahirInput);
+    const normDbTgl = normalizeDateStr(currentStudentObj.tgl_lahir || "");
+
+    if (normDbTgl && normDbTgl !== normInputTgl) {
+      alert(`TANGGAL LAHIR TIDAK COCOK DENGAN DATABASE PESERTA!\nFormat Tanggal Lahir Anda harus sesuai: DD-MM-YYYY.`);
+      return;
+    }
 
     const now = new Date();
     const waktuSubmitStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
@@ -1143,7 +1229,7 @@
 
     showView('view-exam');
     document.getElementById('examMapelTitle').innerText = currentMapel;
-    document.getElementById('examStudentUser').innerText = `${currentStudent} - ${currentStudentName}`;
+    document.getElementById('examStudentUser').innerText = `${currentStudent} - ${currentStudentObj.nama || currentStudent}`;
 
     renderGridNumbers();
     renderSoalByIndex(0);
@@ -1444,7 +1530,6 @@
   document.getElementById('admSecretPin').addEventListener('keyup', (e) => { if (e.key === 'Enter') executeAdminLogin(); });
 
   document.getElementById('btnAdminLogout').addEventListener('click', () => {
-    // Clear all real-time listeners upon logout
     activeListeners.forEach(unsub => unsub());
     activeListeners = [];
     localStorage.removeItem("cbt_admin_logged");
@@ -1561,8 +1646,8 @@
 
   document.getElementById('btnDownloadExcelTpl').addEventListener('click', () => {
     const dataContoh = [
-      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "VI-A" },
-      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "VI-A" }
+      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "VI-A", tgl_lahir: "15-08-2012" },
+      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "VI-A", tgl_lahir: "20-05-2012" }
     ];
     const ws = XLSX.utils.json_to_sheet(dataContoh);
     const wb = XLSX.utils.book_new();
@@ -1863,6 +1948,7 @@
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
   };
 
+  // --- MANAJEMEN SISWA & FITUR EDIT DATA SISWA ---
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     const unsub = onSnapshot(qUsers, (snap) => {
@@ -1871,32 +1957,77 @@
         userList.push({ idDoc: docSnap.id, ...docSnap.data() });
       });
 
+      window.cacheUserList = {};
+      userList.forEach(u => { window.cacheUserList[u.idDoc] = u; });
+
       const start = (pageState.siswa - 1) * PAGE_SIZE;
       const paginatedUsers = userList.slice(start, start + PAGE_SIZE);
 
       let rows = '';
       paginatedUsers.forEach(u => {
         const isBlocked = u.status === "Diblokir";
+        const tglFormatted = normalizeDateStr(u.tgl_lahir) || '-';
         rows += `<tr>
           <td><strong>${u.username}</strong></td>
           <td><code>${u.password}</code></td>
           <td>${u.nama || '-'}</td>
           <td>${u.kelas || '-'}</td>
+          <td><span class="badge bg-light text-dark border">${tglFormatted}</span></td>
           <td><span class="badge ${isBlocked ? 'bg-danger' : 'bg-success'}">${u.status || 'Aktif'}</span></td>
           <td>
+            <button class="btn btn-sm btn-outline-primary me-1" onclick="window.openEditSiswaModal('${u.idDoc}')"><i class="bi bi-pencil"></i> Edit</button>
             <button class="btn btn-sm ${isBlocked ? 'btn-outline-success' : 'btn-outline-warning'} me-1" onclick="window.toggleBlockSiswa('${u.idDoc}', '${u.status || 'Aktif'}')">
-              <i class="bi ${isBlocked ? 'bi-unlock' : 'bi-lock'}"></i> ${isBlocked ? 'Buka Blokir' : 'Blokir'}
+              <i class="bi ${isBlocked ? 'bi-unlock' : 'bi-lock'}"></i>
             </button>
             <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSiswa('${u.idDoc}')"><i class="bi bi-trash"></i></button>
           </td>
         </tr>`;
       });
-      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
       renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
     activeListeners.push(unsub);
   }
+
+  window.openEditSiswaModal = function(docId) {
+    const u = window.cacheUserList[docId];
+    if (!u) return;
+
+    document.getElementById('edit_siswa_doc_id').value = docId;
+    document.getElementById('edit_siswa_user').value = u.username;
+    document.getElementById('edit_siswa_pass').value = u.password;
+    document.getElementById('edit_siswa_nama').value = u.nama || '';
+    document.getElementById('edit_siswa_kelas').value = u.kelas || '';
+    document.getElementById('edit_siswa_tgl').value = dateToInputFormat(u.tgl_lahir);
+
+    new bootstrap.Modal(document.getElementById('modalEditSiswa')).show();
+  };
+
+  document.getElementById('btnSaveEditSiswa').addEventListener('click', async () => {
+    const docId = document.getElementById('edit_siswa_doc_id').value;
+    const pass = document.getElementById('edit_siswa_pass').value.trim();
+    const nama = document.getElementById('edit_siswa_nama').value.trim();
+    const kelas = document.getElementById('edit_siswa_kelas').value.trim();
+    const tgl = document.getElementById('edit_siswa_tgl').value; // YYYY-MM-DD
+
+    if (!pass || !nama || !tgl) {
+      alert("Lengkapi Password, Nama Siswa, dan Tanggal Lahir!");
+      return;
+    }
+
+    const tglFormatted = normalizeDateStr(tgl); // DD-MM-YYYY
+
+    await updateDoc(doc(db, "users", docId), {
+      password: pass,
+      nama: nama,
+      kelas: kelas,
+      tgl_lahir: tglFormatted
+    });
+
+    alert("Data peserta berhasil diperbarui!");
+    bootstrap.Modal.getInstance(document.getElementById('modalEditSiswa')).hide();
+  });
 
   function loadAdminList() {
     const unsub = onSnapshot(collection(db, "admins"), (snap) => {
@@ -2018,6 +2149,7 @@
     activeListeners.push(unsubHasil);
   }
 
+  // --- REVIEW JAWABAN LENGKAP SEMUA SOAL ---
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
@@ -2027,20 +2159,22 @@
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
     const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project)));
-    let soalMap = {};
+    let soalListReview = [];
     soalSnap.forEach(s => {
       const dataSoal = s.data();
       if (String(dataSoal.mapel).trim().toLowerCase() === String(dataHasil.mapel).trim().toLowerCase()) {
-        soalMap[dataSoal.id_soal] = dataSoal;
+        soalListReview.push(dataSoal);
       }
     });
+
+    // Urutkan nomor 1 sampai selesai (Semua Soal)
+    soalListReview.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     let containerHTML = '';
     const jawabanSiswa = dataHasil.jawaban || {};
 
-    let no = 1;
-    for (const [idSoal, ans] of Object.entries(jawabanSiswa)) {
-      const soal = soalMap[idSoal] || { pertanyaan: "Soal tidak ditemukan", kunci: "?", tipe_soal: "1" };
+    soalListReview.forEach((soal) => {
+      const ans = jawabanSiswa[soal.id_soal];
       let isBenar = false;
       const tipeStr = String(soal.tipe_soal);
 
@@ -2060,19 +2194,19 @@
       containerHTML += `
         <div class="p-3 mb-3 border rounded-3 ${isBenar ? 'bg-success-subtle border-success' : 'bg-danger-subtle border-danger'}">
           <div class="d-flex justify-content-between mb-1">
-            <strong>Soal No. ${no++}</strong>
+            <strong>Soal No. ${soal.id_soal} (${tipeStr === '3' ? 'PG Kompleks Kategori' : (tipeStr === '2' ? 'PG Kompleks MCMA' : 'PG Tunggal')})</strong>
             <span class="badge ${isBenar ? 'bg-success' : 'bg-danger'}">${isBenar ? 'BENAR (Skor: 1)' : 'SALAH (Skor: 0)'}</span>
           </div>
           ${soal.stimulus ? `<div class="small text-muted mb-1 fst-italic">[Stimulus] ${soal.stimulus}</div>` : ''}
           <p class="mb-2 fw-semibold">${soal.pertanyaan}</p>
           <div class="small">
-            <div>Jawaban Siswa: <span class="fw-bold">${typeof ans === 'object' ? JSON.stringify(ans) : ans}</span></div>
+            <div>Jawaban Siswa: <span class="fw-bold">${typeof ans === 'object' ? JSON.stringify(ans) : (ans || '<em class="text-muted">Tidak Dijawab</em>')}</span></div>
             <div>Kunci Jawaban: <span class="fw-bold text-success">${soal.kunci}</span></div>
           </div>
         </div>`;
-    }
+    });
 
-    document.getElementById('revContainerSoal').innerHTML = containerHTML || '<p class="text-muted">Tidak ada rincian jawaban.</p>';
+    document.getElementById('revContainerSoal').innerHTML = containerHTML || '<p class="text-muted">Tidak ada rincian soal ditemukan.</p>';
     new bootstrap.Modal(document.getElementById('modalReviewSiswa')).show();
   };
 
@@ -2097,6 +2231,7 @@
       json.forEach(async row => {
         const u = row.username || row.NISN || row.Username;
         const p = row.password || row.Password;
+        const tgl = row.tgl_lahir || row.tanggal_lahir || row["Tgl Lahir"] || "";
         if (u && p) {
           await setDoc(doc(db, "users", `${activeProjectId}_${String(u)}`), {
             project: activeProjectId,
@@ -2104,6 +2239,7 @@
             password: String(p),
             nama: row.nama || row.Nama || "",
             kelas: row.kelas || row.Kelas || "",
+            tgl_lahir: normalizeDateStr(tgl),
             status: "Aktif"
           });
         }
@@ -2317,6 +2453,7 @@
         Username: data.username,
         "Nama Siswa": infoSiswa.nama || "-",
         Kelas: infoSiswa.kelas || "-",
+        "Tanggal Lahir": infoSiswa.tgl_lahir || "-",
         "Mata Pelajaran": data.mapel,
         Skor: data.skor,
         "Jawaban Benar": data.benar,
