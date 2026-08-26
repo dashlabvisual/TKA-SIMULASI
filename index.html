@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CBT School - Manajemen Ujian Anti-Kecurangan</title>
+  <title>CBT School - High Performance Enterprise System</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -73,7 +73,6 @@
     .logo-secret { cursor: pointer; user-select: none; }
     img.soal-inline-img { max-height: 250px; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; }
 
-    /* Drag and Drop Box Styling */
     .drop-zone {
       border: 2px dashed #cbd5e1; border-radius: 12px; padding: 25px; text-align: center;
       background: #f8fafc; cursor: pointer; transition: all 0.2s;
@@ -87,7 +86,7 @@
   <div class="container-fluid">
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand" title="Klik 5x untuk masuk Proktor">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
-      <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Anti-Kecurangan</small></span>
+      <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Enterprise Secure Edition</small></span>
     </div>
     <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
       <i class="bi bi-shield-lock me-1"></i> Login Proktor
@@ -177,7 +176,7 @@
   </div>
 </div>
 
-<!-- VIEW 3: RUANG UJIAN -->
+<!-- VIEW 3: RUANG UJIAN (Dengan LocalStorage Cache Anti-Data Loss) -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -346,14 +345,14 @@
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Drag & drop .docx otomatis.</small>
+          <small class="text-muted">Upload .docx (Gambar Otomatis).</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Drag & drop Excel peserta.</small>
+          <small class="text-muted">Upload Excel peserta.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -529,7 +528,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT WORD (DENGAN DRAG & DROP) ================= -->
+<!-- ================= MODAL IMPORT WORD (Drag & Drop) ================= -->
 <div class="modal fade" id="modalWordImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -559,7 +558,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT SISWA (DENGAN DRAG & DROP) ================= -->
+<!-- ================= MODAL IMPORT SISWA (Drag & Drop) ================= -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -588,7 +587,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (DENGAN UPLOAD / DRAG & DROP GAMBAR OPSI) ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -616,9 +615,9 @@
             </select>
           </div>
           <div class="col-12">
-            <label class="form-label small fw-bold">Gambar Soal (Link URL atau Upload dari Komputer)</label>
+            <label class="form-label small fw-bold">Gambar Soal (Link URL / Google Drive / Upload Komputer)</label>
             <div class="input-group">
-              <input id="m_img" class="form-control" placeholder="Tempel link URL gambar / Google Drive di sini...">
+              <input id="m_img" class="form-control" placeholder="Tempel link URL / Google Drive / tag img...">
               <input type="file" id="m_img_file" class="hidden" accept="image/*" onchange="window.handleLocalImageUpload(event, 'm_img')">
               <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('m_img_file').click()"><i class="bi bi-upload"></i> Upload</button>
             </div>
@@ -631,7 +630,7 @@
 
         <div id="sectionOptions">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban, Kunci & Gambar Opsi</h6>
+            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban & Kunci (Centang Benar)</h6>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.tambahOpsiDinamis()"><i class="bi bi-plus"></i> Tambah Opsi</button>
           </div>
           <div id="containerDynamicOptions"></div>
@@ -652,7 +651,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -686,20 +685,17 @@
     showView('view-role-selector');
   }
 
-  // --- PARSER GAMBAR CERDAS & GOOGLE DRIVE LINK FIXER ---
+  // --- PARSER GAMBAR & GOOGLE DRIVE FIXER ---
   function formatImageUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
-    // Jika format tag HTML mentah seperti <img src="organel_sel.jpg" />
     if (cleanUrl.startsWith("<img") && cleanUrl.includes("src=")) {
       let match = cleanUrl.match(/src=["'](.*?)["']/);
       if (match && match[1]) cleanUrl = match[1];
     }
-    // Jika nama file lokal tanpa path web (misal: organel_sel.jpg)
     if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://") && !cleanUrl.startsWith("data:")) {
-      return ""; // Abaikan path lokal murni yang tidak memiliki base64 / URL web
+      return "";
     }
-    // Konversi Google Drive Link
     if (cleanUrl.includes("drive.google.com")) {
       let fileId = "";
       if (cleanUrl.includes("/file/d/")) {
@@ -714,7 +710,6 @@
     return cleanUrl;
   }
 
-  // Handle Upload File Gambar Lokal Komputer Menjadi Base64
   window.handleLocalImageUpload = function(event, targetInputId) {
     const file = event.target.files[0];
     if (!file) return;
@@ -726,11 +721,10 @@
   };
 
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  
+
   window.bukaModalTambahSoal = async function() {
     document.getElementById('edit_doc_id').value = "";
     document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
-    document.getElementById('m_no').value = "";
     document.getElementById('m_img').value = "";
     document.getElementById('m_tanya').value = "";
 
@@ -789,7 +783,7 @@
     container.appendChild(row);
   }
 
-  // --- DRAG AND DROP FILE HANDLERS (.docx & .xlsx) ---
+  // Drag and Drop Handler
   function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
     const dropZone = document.getElementById(dropZoneId);
     const fileInput = document.getElementById(fileInputId);
@@ -810,7 +804,6 @@
     }, false);
   }
 
-  // --- EVENT BINDINGS ---
   document.addEventListener("DOMContentLoaded", () => {
     setupDragAndDrop('dropZoneWord', 'fileWordInput', processWordFile);
     setupDragAndDrop('dropZoneSiswa', 'fileExcelSiswaInput', handleImportSiswa);
@@ -1647,7 +1640,7 @@
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     currentSoalIndex = 0;
-    userAnswers = {};
+    userAnswers = JSON.parse(localStorage.getItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`)) || {};
     cheatCount = 0;
     isExamActive = true;
 
@@ -1657,7 +1650,7 @@
       mapel: currentMapel,
       status: "Mengerjakan",
       pelanggaran: 0,
-      jawaban: {}
+      jawaban: userAnswers
     });
 
     showView('view-exam');
@@ -1741,10 +1734,18 @@
     document.getElementById('soalContainer').innerHTML = html;
   }
 
+  // Simpan LocalStorage secara berkala (Anti Data-Loss saat Jaringan Putus)
   window.pickAns = async (id, val) => {
     userAnswers[id] = val;
+    localStorage.setItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`, JSON.stringify(userAnswers));
     renderSoalByIndex(currentSoalIndex);
-    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
+    
+    // Kirim update ringan ke server monitoring
+    try {
+      await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
+    } catch (e) {
+      // Abaikan error jaringan sementara agar siswa tidak terganggu saat ujian
+    }
   };
 
   function startTimer(sec) {
@@ -1780,6 +1781,7 @@
     });
 
     await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { status: "Selesai" });
+    localStorage.removeItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`);
 
     showView('view-result');
     document.getElementById('resScore').innerText = skor;
