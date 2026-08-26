@@ -72,6 +72,13 @@
     .option-item.selected { border-color: var(--primary); background: var(--primary-subtle); }
     .logo-secret { cursor: pointer; user-select: none; }
     img.soal-inline-img { max-height: 250px; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; }
+
+    /* Drag and Drop Box Styling */
+    .drop-zone {
+      border: 2px dashed #cbd5e1; border-radius: 12px; padding: 25px; text-align: center;
+      background: #f8fafc; cursor: pointer; transition: all 0.2s;
+    }
+    .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-subtle); }
   </style>
 </head>
 <body>
@@ -339,14 +346,14 @@
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Upload .docx (Gambar Otomatis).</small>
+          <small class="text-muted">Drag & drop .docx otomatis.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Upload Excel peserta.</small>
+          <small class="text-muted">Drag & drop Excel peserta.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -369,7 +376,7 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal (Dengan Tombol Hapus Semua Soal) -->
+      <!-- Tab 1: Bank Soal -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -522,7 +529,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT WORD ================= -->
+<!-- ================= MODAL IMPORT WORD (DENGAN DRAG & DROP) ================= -->
 <div class="modal fade" id="modalWordImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -538,10 +545,13 @@
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
-        <div class="p-4 border rounded-3 text-center border-dashed">
-          <h6 class="fw-bold mb-2">2. Upload File Dokumen Word (.docx)</h6>
+        
+        <div id="dropZoneWord" class="drop-zone">
+          <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-2"></i>
+          <h6 class="fw-bold mb-1">2. Drag & Drop File Dokumen Word (.docx) Di Sini</h6>
+          <p class="text-muted small mb-3">Atau klik tombol untuk memilih file dari komputer</p>
           <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc">
-          <button id="btnTriggerWordUpload" class="btn btn-primary"><i class="bi bi-upload me-1"></i> Pilih File Word</button>
+          <button id="btnTriggerWordUpload" class="btn btn-primary btn-sm"><i class="bi bi-folder2-open me-1"></i> Pilih File .docx</button>
           <div id="wordStatusMsg" class="mt-2 small fw-bold text-success"></div>
         </div>
       </div>
@@ -549,7 +559,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT SISWA ================= -->
+<!-- ================= MODAL IMPORT SISWA (DENGAN DRAG & DROP) ================= -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -565,17 +575,20 @@
           </div>
           <button id="btnDownloadExcelTpl" class="btn btn-outline-success btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
-        <div class="p-4 border rounded-3 text-center border-dashed mb-3">
-          <h6 class="fw-bold mb-2">2. Upload File Excel Peserta (.xlsx)</h6>
+
+        <div id="dropZoneSiswa" class="drop-zone">
+          <i class="bi bi-cloud-arrow-up fs-1 text-success mb-2"></i>
+          <h6 class="fw-bold mb-1">2. Drag & Drop File Excel Peserta (.xlsx) Di Sini</h6>
+          <p class="text-muted small mb-3">Atau klik tombol untuk memilih file dari komputer</p>
           <input type="file" id="fileExcelSiswaInput" class="hidden" accept=".xlsx, .xls, .csv">
-          <button id="btnTriggerExcelUpload" class="btn btn-success"><i class="bi bi-upload me-1"></i> Upload File Siswa</button>
+          <button id="btnTriggerExcelUpload" class="btn btn-success btn-sm"><i class="bi bi-folder2-open me-1"></i> Pilih File .xlsx</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (DENGAN UPLOAD / DRAG & DROP GAMBAR OPSI) ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -591,7 +604,7 @@
             <select id="m_target_mapel" class="form-select"></select>
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold">Nomor Urut Soal (Auto-Increment)</label>
+            <label class="form-label small fw-bold">Nomor Urut Soal</label>
             <input id="m_no" type="number" class="form-control" placeholder="1, 2, 3...">
           </div>
           <div class="col-md-3">
@@ -603,8 +616,12 @@
             </select>
           </div>
           <div class="col-12">
-            <label class="form-label small fw-bold">Link URL Gambar / Google Drive (Opsional)</label>
-            <input id="m_img" class="form-control" placeholder="Contoh link Drive / langsung gambar...">
+            <label class="form-label small fw-bold">Gambar Soal (Link URL atau Upload dari Komputer)</label>
+            <div class="input-group">
+              <input id="m_img" class="form-control" placeholder="Tempel link URL gambar / Google Drive di sini...">
+              <input type="file" id="m_img_file" class="hidden" accept="image/*" onchange="window.handleLocalImageUpload(event, 'm_img')">
+              <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('m_img_file').click()"><i class="bi bi-upload"></i> Upload</button>
+            </div>
           </div>
           <div class="col-12">
             <label class="form-label small fw-bold">Teks Pertanyaan</label>
@@ -614,7 +631,7 @@
 
         <div id="sectionOptions">
           <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban & Kunci (Centang Benar)</h6>
+            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban, Kunci & Gambar Opsi</h6>
             <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.tambahOpsiDinamis()"><i class="bi bi-plus"></i> Tambah Opsi</button>
           </div>
           <div id="containerDynamicOptions"></div>
@@ -635,7 +652,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -669,35 +686,51 @@
     showView('view-role-selector');
   }
 
-  // Konverter otomatis Link Google Drive agar gambar bisa tampil tanpa error
+  // --- PARSER GAMBAR CERDAS & GOOGLE DRIVE LINK FIXER ---
   function formatImageUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
-    // Jika link Google Drive standar
+    // Jika format tag HTML mentah seperti <img src="organel_sel.jpg" />
+    if (cleanUrl.startsWith("<img") && cleanUrl.includes("src=")) {
+      let match = cleanUrl.match(/src=["'](.*?)["']/);
+      if (match && match[1]) cleanUrl = match[1];
+    }
+    // Jika nama file lokal tanpa path web (misal: organel_sel.jpg)
+    if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://") && !cleanUrl.startsWith("data:")) {
+      return ""; // Abaikan path lokal murni yang tidak memiliki base64 / URL web
+    }
+    // Konversi Google Drive Link
     if (cleanUrl.includes("drive.google.com")) {
       let fileId = "";
       if (cleanUrl.includes("/file/d/")) {
         let parts = cleanUrl.split("/file/d/");
-        if (parts.length > 1) {
-          fileId = parts[1].split("/")[0];
-        }
+        if (parts.length > 1) fileId = parts[1].split("/")[0];
       } else if (cleanUrl.includes("id=")) {
         let urlParams = new URLSearchParams(cleanUrl.split("?")[1]);
         fileId = urlParams.get("id");
       }
-      if (fileId) {
-        return `https://lh3.googleusercontent.com/d/${fileId}`;
-      }
+      if (fileId) return `https://lh3.googleusercontent.com/d/${fileId}`;
     }
     return cleanUrl;
   }
 
+  // Handle Upload File Gambar Lokal Komputer Menjadi Base64
+  window.handleLocalImageUpload = function(event, targetInputId) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById(targetInputId).value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   
-  // Buka Modal Tambah Manual dengan Otomatis Mengisi Nomor Urut Terakhir + 1
   window.bukaModalTambahSoal = async function() {
     document.getElementById('edit_doc_id').value = "";
     document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
+    document.getElementById('m_no').value = "";
     document.getElementById('m_img').value = "";
     document.getElementById('m_tanya').value = "";
 
@@ -707,7 +740,6 @@
       return;
     }
 
-    // Hitung nomor urut berikutnya secara otomatis
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
     let maxNo = 0;
     snap.forEach(d => {
@@ -725,7 +757,7 @@
     const count = container.querySelectorAll('.dynamic-option-row').length;
     if (count >= window.opsiHurufList.length) { alert("Maksimal opsi tercapai!"); return; }
     const huruf = window.opsiHurufList[count];
-    appendOptionRow(huruf, "", "");
+    appendOptionRow(huruf, "", "", "");
   };
 
   function renderDynamicOptions(hurufArr, dataOpsiVal) {
@@ -733,11 +765,12 @@
     container.innerHTML = '';
     hurufArr.forEach(h => {
       const val = dataOpsiVal['opsi_' + h.toLowerCase()] || "";
-      appendOptionRow(h, val, dataOpsiVal.kunci || "");
+      const imgVal = dataOpsiVal['img_' + h.toLowerCase()] || "";
+      appendOptionRow(h, val, imgVal, dataOpsiVal.kunci || "");
     });
   }
 
-  function appendOptionRow(huruf, teksVal, kunciStr) {
+  function appendOptionRow(huruf, teksVal, imgVal, kunciStr) {
     const container = document.getElementById('containerDynamicOptions');
     const isChecked = kunciStr.includes(huruf) ? 'checked' : '';
     const row = document.createElement('div');
@@ -747,9 +780,41 @@
         <input type="checkbox" name="correct_chk" value="${huruf}" class="form-check-input mt-0 fs-5" ${isChecked}>
         <span class="badge bg-primary">${huruf}</span>
         <input type="text" id="opt_text_${huruf}" class="form-control option-text-val" placeholder="Teks Opsi ${huruf}" value="${teksVal}">
+      </div>
+      <div class="input-group input-group-sm">
+        <input type="text" id="opt_img_${huruf}" class="form-control option-img-val" placeholder="Link URL Gambar Opsi ${huruf} / Upload" value="${imgVal}">
+        <input type="file" id="opt_file_${huruf}" class="hidden" accept="image/*" onchange="window.handleLocalImageUpload(event, 'opt_img_${huruf}')">
+        <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('opt_file_${huruf}').click()"><i class="bi bi-upload"></i> Gambar Opsi</button>
       </div>`;
     container.appendChild(row);
   }
+
+  // --- DRAG AND DROP FILE HANDLERS (.docx & .xlsx) ---
+  function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
+    const dropZone = document.getElementById(dropZoneId);
+    const fileInput = document.getElementById(fileInputId);
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        processCallback({ target: { files: files } });
+      }
+    }, false);
+  }
+
+  // --- EVENT BINDINGS ---
+  document.addEventListener("DOMContentLoaded", () => {
+    setupDragAndDrop('dropZoneWord', 'fileWordInput', processWordFile);
+    setupDragAndDrop('dropZoneSiswa', 'fileExcelSiswaInput', handleImportSiswa);
+  });
 
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
@@ -872,7 +937,6 @@
     }
   });
 
-  // Opsi Hapus Semua Soal pada Mapel Aktif
   window.hapusSemuaSoalMapel = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
@@ -1054,7 +1118,6 @@
     }
   };
 
-  // Render Bank Soal (Urut Berdasarkan Nomor Urut Asli id_soal)
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -1067,7 +1130,6 @@
     snap.forEach(docSnap => {
       soalArray.push({ idDoc: docSnap.id, ...docSnap.data() });
     });
-    // Urutkan soal berdasarkan id_soal secara numerik (1, 2, 3 ... 40)
     soalArray.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     let rows = '';
@@ -1132,20 +1194,24 @@
     document.getElementById('m_tanya').value = s.pertanyaan || '';
 
     let opsiVal = {};
+    let opsiImgVal = {};
     let hurufAktif = ['A', 'B', 'C', 'D'];
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
       const huruf = window.opsiHurufList[idx];
-      if (s['opsi_' + h]) {
-        opsiVal['opsi_' + h] = s['opsi_' + h];
+      if (s['opsi_' + h] || s['img_' + h]) {
+        opsiVal['opsi_' + h] = s['opsi_' + h] || '';
+        opsiImgVal['img_' + h] = s['img_' + h] || '';
         if (!hurufAktif.includes(huruf)) hurufAktif.push(huruf);
       }
     });
 
-    renderDynamicOptions(hurufAktif, { kunci: s.kunci, ...opsiVal });
+    renderDynamicOptions(hurufAktif, { kunci: s.kunci, ...opsiVal, ...opsiImgVal });
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
       const huruf = window.opsiHurufList[idx];
-      const elem = document.getElementById('opt_text_' + huruf);
-      if (elem && s['opsi_' + h]) elem.value = s['opsi_' + h];
+      const elemText = document.getElementById('opt_text_' + huruf);
+      const elemImg = document.getElementById('opt_img_' + huruf);
+      if (elemText && s['opsi_' + h]) elemText.value = s['opsi_' + h];
+      if (elemImg && s['img_' + h]) elemImg.value = s['img_' + h];
     });
 
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
@@ -1346,7 +1412,6 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // Import Word dengan Auto-Increment Nomor Urut Kelanjutan Otomatis
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1369,7 +1434,6 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
 
-        // Cari nomor urut soal tertinggi di database saat ini untuk mapel tersebut
         const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", targetMapel)));
         let maxExistingNo = 0;
         existingSnap.forEach(d => {
@@ -1396,7 +1460,6 @@
 
           if (no !== "") {
             if (cur) list.push(cur);
-            // Otomatis lanjutkan nomor berdasarkan maxExistingNo
             let assignedNo = maxExistingNo + (parseInt(no) || (list.length + 1));
             cur = {
               project: activeProjectId,
@@ -1469,7 +1532,9 @@
     rows.forEach((r, idx) => {
       const huruf = window.opsiHurufList[idx].toLowerCase();
       const val = r.querySelector('.option-text-val').value.trim();
+      const imgVal = r.querySelector('.option-img-val').value.trim();
       payload['opsi_' + huruf] = val;
+      payload['img_' + huruf] = formatImageUrl(imgVal);
     });
 
     if (editId) {
@@ -1579,7 +1644,6 @@
 
     activeSoalList = [];
     snap.forEach(d => activeSoalList.push(d.data()));
-    // Soal siswa diurutkan konsisten berdasarkan nomor urut asli (id_soal)
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     currentSoalIndex = 0;
