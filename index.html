@@ -86,8 +86,32 @@
   </div>
 </nav>
 
-<!-- ================= VIEW 1: LOGIN SISWA (PORTAL UTAMA) ================= -->
-<div id="view-login" class="container py-5">
+<!-- ================= VIEW 0: HALAMAN UTAMA PEMILIHAN PERAN (ROLE SELECTOR) ================= -->
+<div id="view-role-selector" class="container py-5">
+  <div class="row justify-content-center pt-5">
+    <div class="col-md-5">
+      <div class="cbt-card p-5 text-center">
+        <div class="bg-primary text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
+          <i class="bi bi-shield-check fs-1"></i>
+        </div>
+        <h3 class="fw-bold mb-2">Selamat Datang di CBT School</h3>
+        <p class="text-muted small mb-4">Silakan pilih akses masuk sesuai peran Anda di bawah ini:</p>
+
+        <div class="d-grid gap-3">
+          <button id="btnRoleSiswa" class="btn btn-primary btn-lg py-3 fw-bold">
+            <i class="bi bi-person-fill me-2"></i> Masuk Sebagai Siswa
+          </button>
+          <button id="btnRoleAdmin" class="btn btn-outline-dark btn-lg py-3 fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
+            <i class="bi bi-gear-fill me-2"></i> Masuk Sebagai Admin / Proktor
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VIEW 1: LOGIN SISWA ================= -->
+<div id="view-login" class="container py-5 hidden">
   <div class="row justify-content-center pt-2">
     <div class="col-md-5">
       <div class="cbt-card p-4 text-center">
@@ -121,11 +145,9 @@
           <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ruang Ujian
         </button>
 
-        <div class="border-top pt-3">
-          <button class="btn btn-light btn-sm text-muted w-100" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
-            <i class="bi bi-gear-fill me-1"></i> Masuk Sebagai Proktor / Guru (PIN: 123456)
-          </button>
-        </div>
+        <button id="btnBackToRole" class="btn btn-light btn-sm text-muted w-100">
+          <i class="bi bi-arrow-left me-1"></i> Kembali ke Pilih Peran
+        </button>
       </div>
     </div>
   </div>
@@ -492,7 +514,7 @@
 
   // MASUKKAN KONFIGURASI FIREBASE ANDA
   const firebaseConfig = {
-     apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -524,7 +546,7 @@
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
   } else {
-    showView('view-login');
+    showView('view-role-selector');
   }
 
   // --- EVENT BINDINGS ---
@@ -536,6 +558,15 @@
       logoClickCount = 0;
       new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
     }
+  });
+
+  document.getElementById('btnRoleSiswa').addEventListener('click', () => {
+    showView('view-login');
+    loadStudentProjects();
+  });
+
+  document.getElementById('btnBackToRole').addEventListener('click', () => {
+    showView('view-role-selector');
   });
 
   function executeAdminLogin() {
@@ -647,7 +678,7 @@
   document.getElementById('btnBackHome').addEventListener('click', resetViews);
 
   function showView(viewId) {
-    ['view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
+    ['view-role-selector', 'view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
       document.getElementById(id).classList.add('hidden');
     });
     document.getElementById(viewId).classList.remove('hidden');
@@ -657,8 +688,7 @@
     if (timerInterval) clearInterval(timerInterval);
     isExamActive = false;
     document.getElementById('topNav').classList.remove('hidden');
-    showView('view-login');
-    loadStudentProjects();
+    showView('view-role-selector');
   }
 
   function loadSidebarProjects() {
@@ -990,7 +1020,6 @@
       pSelect.innerHTML += `<option value="${pName}">${pName}</option>`;
     });
   }
-  loadStudentProjects();
 
   document.getElementById('p_project_select').addEventListener('change', async function() {
     const proj = this.value;
