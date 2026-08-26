@@ -9,7 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   
-  <!-- Parser Word (Mendukung Gambar Otomatis) & Excel Engine -->
+  <!-- Parser Word & Excel Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -27,7 +27,7 @@
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
-    /* Layout Admin dengan Sidebar */
+    /* Layout Admin */
     .admin-wrapper { display: flex; min-height: 100vh; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
@@ -68,19 +68,21 @@
     }
     .option-item.selected { border-color: var(--primary); background: var(--primary-subtle); }
     .logo-secret { cursor: pointer; user-select: none; }
-    
     img.soal-inline-img { max-height: 250px; border-radius: 8px; border: 1px solid var(--border); margin-top: 8px; }
   </style>
 </head>
 <body>
 
-<!-- Header Navbar Global (Saat Non-Admin) -->
+<!-- Header Navbar Global -->
 <nav id="topNav" class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" onclick="handleSecretLogoClick()">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
       <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Anti-Kecurangan</small></span>
     </div>
+    <button class="btn btn-outline-primary btn-sm fw-bold" onclick="openAdminModalDirect()">
+      <i class="bi bi-shield-lock me-1"></i> Login Proktor
+    </button>
   </div>
 </nav>
 
@@ -115,9 +117,15 @@
           <input id="p_pass" type="password" class="form-control" placeholder="Password">
         </div>
 
-        <button class="btn btn-primary w-100 py-2 fw-bold" onclick="loginSiswaAction()">
+        <button class="btn btn-primary w-100 py-2 fw-bold mb-3" onclick="loginSiswaAction()">
           <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ruang Ujian
         </button>
+
+        <div class="border-top pt-3">
+          <button class="btn btn-light btn-sm text-muted w-100" onclick="openAdminModalDirect()">
+            <i class="bi bi-gear-fill me-1"></i> Masuk Sebagai Proktor / Guru
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -215,7 +223,7 @@
     <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH PROJECT AKTIF:</small>
     <div id="sidebarProjectList" class="flex-grow-1 overflow-auto mb-3"></div>
 
-    <button class="btn btn-outline-danger btn-sm w-100 mt-auto" onclick="handleLogout()">
+    <button class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2" onclick="handleAdminLogout()">
       <i class="bi bi-box-arrow-left me-1"></i> Keluar Dashboard
     </button>
   </div>
@@ -286,7 +294,7 @@
         </div>
       </div>
 
-      <!-- Tab 2: Data Siswa Terdaftar & Fitur Blokir / Hapus -->
+      <!-- Tab 2: Data Siswa Terdaftar -->
       <div class="tab-pane fade" id="tab-peserta-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -334,7 +342,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL SECRET LOGIN ADMIN ================= -->
+<!-- ================= MODAL LOGIN ADMIN ================= -->
 <div class="modal fade" id="modalSecretAdmin" tabindex="-1">
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -342,7 +350,7 @@
         <i class="bi bi-shield-lock-fill text-primary fs-1 mb-2"></i>
         <h6 class="fw-bold mb-3">PIN Proktor / Guru</h6>
         <input type="password" id="admSecretPin" class="form-control mb-3 text-center" placeholder="PIN Default: 123456">
-        <button class="btn btn-primary w-100" onclick="verifyAdminSecret()">Masuk</button>
+        <button class="btn btn-primary w-100 fw-bold" onclick="verifyAdminSecret()">Masuk</button>
       </div>
     </div>
   </div>
@@ -386,7 +394,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <!-- Step 1 Template -->
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
             <h6 class="fw-bold mb-1">1. Download Template Data Peserta (.xlsx)</h6>
@@ -395,7 +402,6 @@
           <button class="btn btn-outline-success btn-sm fw-semibold" onclick="downloadSiswaExcelTemplate()"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
 
-        <!-- Step 2 Upload -->
         <div class="p-4 border rounded-3 text-center border-dashed mb-3">
           <h6 class="fw-bold mb-2">2. Upload File Excel Peserta (.xlsx)</h6>
           <input type="file" id="fileExcelSiswaInput" class="hidden" accept=".xlsx, .xls, .csv" onchange="handleImportSiswa(event)">
@@ -444,7 +450,6 @@
 
         <div id="sectionOptions">
           <h6 class="fw-bold mb-3 small text-muted text-uppercase">Opsi Jawaban (Tandai Kunci yang Benar)</h6>
-          <!-- A -->
           <div class="border rounded-3 p-3 mb-2 bg-light">
             <div class="d-flex align-items-center gap-2 mb-2">
               <input type="checkbox" name="correct_chk" value="A" class="form-check-input mt-0 fs-5">
@@ -453,7 +458,6 @@
             </div>
             <input type="text" id="m_imga" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi A (Opsional)">
           </div>
-          <!-- B -->
           <div class="border rounded-3 p-3 mb-2 bg-light">
             <div class="d-flex align-items-center gap-2 mb-2">
               <input type="checkbox" name="correct_chk" value="B" class="form-check-input mt-0 fs-5">
@@ -462,7 +466,6 @@
             </div>
             <input type="text" id="m_imgb" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi B (Opsional)">
           </div>
-          <!-- C -->
           <div class="border rounded-3 p-3 mb-2 bg-light">
             <div class="d-flex align-items-center gap-2 mb-2">
               <input type="checkbox" name="correct_chk" value="C" class="form-check-input mt-0 fs-5">
@@ -471,7 +474,6 @@
             </div>
             <input type="text" id="m_imgc" class="form-control form-control-sm" placeholder="Link URL Gambar Opsi C (Opsional)">
           </div>
-          <!-- D -->
           <div class="border rounded-3 p-3 mb-2 bg-light">
             <div class="d-flex align-items-center gap-2 mb-2">
               <input type="checkbox" name="correct_chk" value="D" class="form-check-input mt-0 fs-5">
@@ -495,13 +497,12 @@
 
   // MASUKKAN KONFIGURASI FIREBASE ANDA
   const firebaseConfig = {
-     apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
-    authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
-    projectId: "aplikasi-tka-sekolah",
-    storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
-    messagingSenderId: "495658059611",
-    appId: "1:495658059611:web:cb64503e2448331affbc7e",
-    measurementId: "G-R1W64C1X98"
+    apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+    authDomain: "GANTI_DENGAN_AUTH_DOMAIN_ANDA",
+    projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+    storageBucket: "GANTI_DENGAN_STORAGE_BUCKET_ANDA",
+    messagingSenderId: "GANTI_DENGAN_SENDER_ID_ANDA",
+    appId: "GANTI_DENGAN_APP_ID_ANDA"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -521,16 +522,21 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
+  // Cek Status Admin Saat Refresh
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
   }
 
+  window.openAdminModalDirect = function() {
+    new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
+  };
+
   window.handleSecretLogoClick = function() {
     logoClickCount++;
     clearTimeout(logoClickTimer);
-    logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+    logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 4000);
     if (logoClickCount >= 5) {
       logoClickCount = 0;
       new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
@@ -542,6 +548,7 @@
     if (pin === "123456") {
       localStorage.setItem("cbt_admin_logged", "true");
       bootstrap.Modal.getInstance(document.getElementById('modalSecretAdmin')).hide();
+      document.getElementById('admSecretPin').value = "";
       showView('view-admin');
       document.getElementById('topNav').classList.add('hidden');
       initAdminDashboard();
@@ -550,7 +557,7 @@
     }
   };
 
-  window.handleLogout = function() {
+  window.handleAdminLogout = function() {
     localStorage.removeItem("cbt_admin_logged");
     resetViews();
   };
@@ -653,7 +660,7 @@
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
   };
 
-  // 3. TAB DATA SISWA & FITUR BLOKIR / HAPUS (Sesuai Video)
+  // 3. TAB DATA SISWA
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     onSnapshot(qUsers, (snap) => {
@@ -830,7 +837,7 @@
     reader.readAsArrayBuffer(file);
   };
 
-  // Import Word Soal (DENGAN EKSTRAKSI GAMBAR OTOMATIS)
+  // Import Word Soal
   window.processWordFile = function(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -840,7 +847,6 @@
 
     const reader = new FileReader();
     reader.onload = function(e) {
-      // Mengonversi embedded image word ke Base64 URI otomatis
       const options = {
         convertImage: mammoth.images.imgElement(function(image) {
           return image.read("base64").then(function(imageBuffer) {
@@ -862,15 +868,12 @@
           if (cols.length < 6) continue;
 
           const no = cols[0].innerText.trim();
-          const soalHtml = cols[1].innerHTML.trim();
           const soalText = cols[1].innerText.trim();
           const jenis = cols[2].innerText.trim();
           const opsi = cols[3].innerText.trim();
-          const jawabanHtml = cols[4].innerHTML.trim();
           const jawabanText = cols[4].innerText.trim();
           const kunci = cols[5].innerText.trim();
 
-          // Cek apakah ada gambar pada kolom soal
           const imgTag = cols[1].querySelector('img');
           const extractedImg = imgTag ? imgTag.src : '';
 
@@ -1056,7 +1059,6 @@
     startTimer(currentDurasi * 60);
   };
 
-  // Anti Cheat Handler
   window.addEventListener('visibilitychange', () => { if (isExamActive && (document.hidden || !document.hasFocus())) triggerCheat(); });
   window.addEventListener('blur', () => { if (isExamActive) triggerCheat(); });
 
