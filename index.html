@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulasi TKA Tingkat SD/MI/Sederajat Kabupaten Klaten</title>
+  <title>SIMULASI TKA KABUPATEN KLATEN</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,9 +14,9 @@
 
   <style>
     :root {
-      --primary: #4f46e5;
-      --primary-dark: #4338ca;
-      --primary-subtle: #eef2ff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-subtle: #eff6ff;
       --bg: #f8fafc;
       --border: #e2e8f0;
       --sidebar-w: 280px;
@@ -24,7 +24,7 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #0f172a; margin: 0; }
     .hidden { display: none !important; }
     
-    .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
     
     .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
@@ -82,11 +82,12 @@
 </head>
 <body>
 
+<!-- Navbar Global -->
 <nav id="topNav" class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
     <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand" title="Klik 5x untuk masuk Proktor">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
-      <span>CBT KLATEN <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Sistem Ujian Online</small></span>
+      <span>SIMULASI TKA <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| KABUPATEN KLATEN</small></span>
     </div>
     <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
       <i class="bi bi-shield-lock me-1"></i> Login Proktor
@@ -94,30 +95,28 @@
   </div>
 </nav>
 
-<!-- ================= PAGE 1: PILIH MATA PELAJARAN SIMULASI ================= -->
-<div id="view-page-1" class="container py-5">
+<!-- ================= PAGE 1: MENU AWAL SIMULASI TKA ================= -->
+<div id="page-1" class="container py-5">
   <div class="row justify-content-center pt-4">
-    <div class="col-md-6">
-      <div class="cbt-card p-5 text-center">
+    <div class="col-md-7 text-center">
+      <div class="cbt-card p-5">
         <div class="bg-primary text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
-          <i class="bi bi-journal-bookmark-fill fs-1"></i>
+          <i class="bi bi-award-fill fs-1"></i>
         </div>
-        <h4 class="fw-bold text-uppercase mb-3" style="color: #1e293b; line-height: 1.4;">
-          SIMULASI TKA TINGKAT SD/MI/SEDERAJAT KABUPATEN KLATEN
-        </h4>
-        <p class="text-muted small mb-4">Silakan pilih mata pelajaran yang akan diujikan:</p>
+        <h4 class="fw-bold text-uppercase text-primary mb-1">SIMULASI TKA TINGKAT SD/MI/SEDERAJAT</h4>
+        <h5 class="fw-bold text-dark mb-4">KABUPATEN KLATEN</h5>
+        <hr class="my-4">
 
         <div class="text-start mb-4">
-          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
-          <select id="selMapelPage1" class="form-select form-select-lg">
-            <option value="" disabled selected>-- Pilih Mata Pelajaran --</option>
-            <option value="BAHASA INDONESIA - SD SEDERAJAT" data-durasi="90">BAHASA INDONESIA - SD SEDERAJAT (90 Menit)</option>
-            <option value="MATEMATIKA-SD SEDERAJAT" data-durasi="90">MATEMATIKA-SD SEDERAJAT (90 Menit)</option>
-          </select>
+          <label class="form-label fw-bold">Pilih Project / Sesi Ujian</label>
+          <select id="p1_project_select" class="form-select form-select-lg mb-3"></select>
+          
+          <label class="form-label fw-bold">Pilih Mata Pelajaran</label>
+          <select id="p1_mapel_select" class="form-select form-select-lg"></select>
         </div>
 
-        <button id="btnMulaiSimulasi" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">
-          MULAI SIMULASI <i class="bi bi-arrow-right ms-2"></i>
+        <button id="btnPage1Next" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">
+          <i class="bi bi-play-circle-fill me-2"></i> MULAI SIMULASI
         </button>
       </div>
     </div>
@@ -125,101 +124,117 @@
 </div>
 
 <!-- ================= PAGE 2: LOGIN USERNAME & PASSWORD ================= -->
-<div id="view-page-2" class="container py-5 hidden">
+<div id="page-2" class="container py-5 hidden">
   <div class="row justify-content-center pt-4">
     <div class="col-md-5">
       <div class="cbt-card p-4 text-center">
-        <div class="bg-success text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
+        <div class="bg-primary text-white d-inline-flex p-3 rounded-circle mb-3 shadow-sm">
           <i class="bi bi-person-fill-lock fs-2"></i>
         </div>
-        <h4 class="fw-bold mb-1">Login Peserta Ujian</h4>
-        <p class="text-muted small mb-4">Masukkan Username dan Password Anda</p>
+        <h4 class="fw-bold mb-1">Login Peserta</h4>
+        <p class="text-muted small mb-4">Masukkan Username / NISN dan Password</p>
 
         <div class="text-start mb-3">
-          <label class="form-label small fw-bold">Username / NISN</label>
-          <input id="inputUserLogin" class="form-control" placeholder="Contoh: 1051">
+          <label class="form-label small fw-bold">Username / Kode Peserta</label>
+          <input id="p2_username" class="form-control" placeholder="Contoh: 1001">
         </div>
         <div class="text-start mb-4">
           <label class="form-label small fw-bold">Password</label>
-          <input id="inputPassLogin" type="password" class="form-control" placeholder="Password peserta">
+          <input id="p2_password" type="password" class="form-control" placeholder="Password">
         </div>
 
-        <button id="btnLoginPesertaPage2" class="btn btn-success w-100 py-2 fw-bold mb-2">Login Peserta</button>
-        <button id="btnBackToPage1" class="btn btn-light btn-sm text-muted w-100"><i class="bi bi-arrow-left me-1"></i> Ganti Mata Pelajaran</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ================= PAGE 3: KONFIRMASI DATA PESERTA ================= -->
-<div id="view-page-3" class="container py-5 hidden">
-  <div class="row justify-content-center pt-2">
-    <div class="col-md-6">
-      <div class="cbt-card p-4">
-        <h4 class="fw-bold mb-3 border-bottom pb-2 text-primary"><i class="bi bi-card-checklist me-2"></i>Konfirmasi Data Peserta</h4>
-        
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">KODE USERNAME</label>
-          <input id="confKodeUser" class="form-control bg-light fw-bold" readonly>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">NAMA PESERTA (USERNAME - NAMA)</label>
-          <input id="confNamaFormat" class="form-control bg-light fw-bold text-success" readonly>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label small fw-bold">JENIS KELAMIN</label>
-          <select id="confJenisKelamin" class="form-select">
-            <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
-            <option value="LAKI-LAKI">LAKI-LAKI</option>
-            <option value="PEREMPUAN">PEREMPUAN</option>
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">MATA UJIAN</label>
-          <input id="confMataUjian" class="form-control bg-light fw-bold" readonly>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-muted">NAMA PESERTA LENGKAP</label>
-          <input id="confNamaLengkap" class="form-control bg-light fw-bold" readonly>
-        </div>
-
-        <div class="mb-4">
-          <label class="form-label small fw-bold">TANGGAL LAHIR</label>
-          <input type="date" id="confTanggalLahir" class="form-control">
-        </div>
-
-        <button id="btnSubmitPage3" class="btn btn-primary w-100 py-2 fw-bold">SUBMIT DATA PESERTA</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ================= PAGE 4: KONFIRMASI TES ================= -->
-<div id="view-page-4" class="container py-5 hidden">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="cbt-card p-4">
-        <h4 class="fw-bold mb-3 border-bottom pb-2 text-danger"><i class="bi bi-stopwatch me-2"></i>Konfirmasi Tes Ujian</h4>
-        
-        <div class="p-3 bg-light rounded-3 mb-4">
-          <div class="d-flex justify-content-between mb-2"><span>Nama Tes:</span><strong id="lblTesNama">-</strong></div>
-          <div class="d-flex justify-content-between mb-2"><span>Waktu Tes (Submit):</span><strong id="lblTesWaktu">-</strong></div>
-          <div class="d-flex justify-content-between"><span>Alokasi Waktu Tes:</span><strong id="lblTesDurasi" class="text-primary">-</strong></div>
-        </div>
-
-        <button id="btnMulaiUjianReal" class="btn btn-danger w-100 py-3 fw-bold shadow">
-          <i class="bi bi-lock-fill me-1"></i> MULAI UJIAN SEKARANG
+        <button id="btnPage2Login" class="btn btn-primary w-100 py-2 fw-bold mb-3">
+          <i class="bi bi-box-arrow-in-right me-1"></i> LOGIN
+        </button>
+        <button id="btnPage2Back" class="btn btn-light btn-sm text-muted w-100">
+          <i class="bi bi-arrow-left me-1"></i> Kembali ke Menu Utama
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ================= VIEW: RUANG UJIAN ================= -->
+<!-- ================= PAGE 3: KONFIRMASI DATA PESERTA ================= -->
+<div id="page-3" class="container py-5 hidden">
+  <div class="row justify-content-center pt-3">
+    <div class="col-md-6">
+      <div class="cbt-card p-4">
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-person-vcard me-2"></i>Konfirmasi Data Peserta</h5>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">Kode Username</label>
+          <input id="p3_kode_user" class="form-control bg-light fw-bold" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">Nama Peserta (Terdaftar)</label>
+          <input id="p3_nama_lengkap_disp" class="form-control bg-light fw-bold" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Jenis Kelamin</label>
+          <select id="p3_jenis_kelamin" class="form-select">
+            <option value="LAKI-LAKI">Laki-laki</option>
+            <option value="PEREMPUAN">Perempuan</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold text-muted">Mata Ujian</label>
+          <input id="p3_mata_ujian" class="form-control bg-light fw-bold text-primary" readonly>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Ketik Ulang Nama Peserta</label>
+          <input id="p3_nama_input" class="form-control" placeholder="Ketik nama lengkap Anda">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label small fw-bold">Tanggal Lahir</label>
+          <input id="p3_tgl_lahir" type="date" class="form-control">
+        </div>
+
+        <button id="btnPage3Submit" class="btn btn-primary w-100 py-2 fw-bold">SUBMIT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PAGE 4: KONFIRMASI TES ================= -->
+<div id="page-4" class="container py-5 hidden">
+  <div class="row justify-content-center pt-4">
+    <div class="col-md-6">
+      <div class="cbt-card p-4">
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-file-earmark-check me-2"></i>Konfirmasi Tes</h5>
+
+        <div class="bg-light p-3 rounded-3 mb-4">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Nama Tes:</span>
+            <strong id="p4_nama_tes" class="text-primary">-</strong>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Waktu Tes:</span>
+            <strong id="p4_waktu_tes">-</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Alokasi Waktu Tes:</span>
+            <strong id="p4_alokasi_waktu">-</strong>
+          </div>
+        </div>
+
+        <div class="alert alert-info small mb-4">
+          <i class="bi bi-info-circle-fill me-1"></i> Setelah tombol <strong>MULAI</strong> diklik, layar akan terkunci otomatis (Fullscreen) dan waktu ujian akan langsung berjalan.
+        </div>
+
+        <button id="btnPage4StartExam" class="btn btn-danger btn-lg w-100 py-3 fw-bold">
+          <i class="bi bi-play-circle-fill me-1"></i> MULAI
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RUANG UJIAN (SOAL & JAWABAN) ================= -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -256,7 +271,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW: HASIL UJIAN ================= -->
+<!-- ================= HASIL NILAI ================= -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -271,7 +286,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW: DASHBOARD ADMIN ================= -->
+<!-- ================= DASHBOARD ADMIN / PROKTOR ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -388,14 +403,14 @@
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Upload .docx (Gambar Otomatis).</small>
+          <small class="text-muted">Drag & drop .docx otomatis.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Upload Excel peserta.</small>
+          <small class="text-muted">Drag & drop Excel peserta.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -516,7 +531,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL PREVIEW SOAL ADMIN ================= -->
+<!-- ================= MODAL PREVIEW SOAL ================= -->
 <div class="modal fade" id="modalPreviewSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -529,7 +544,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL REVIEW JAWABAN SISWA ================= -->
+<!-- ================= MODAL REVIEW JAWABAN ================= -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -587,7 +602,6 @@
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
-        
         <div id="dropZoneWord" class="drop-zone">
           <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-2"></i>
           <h6 class="fw-bold mb-1">2. Drag & Drop File Dokumen Word (.docx) Di Sini</h6>
@@ -630,7 +644,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
+<!-- ================= MODAL MANUAL SOAL ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -694,13 +708,12 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
-  authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
-  projectId: "aplikasi-tka-sekolah",
-  storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
-  messagingSenderId: "495658059611",
-  appId: "1:495658059611:web:cb64503e2448331affbc7e",
-  measurementId: "G-R1W64C1X98"
+    apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+    authDomain: "GANTI_DENGAN_AUTH_DOMAIN_ANDA",
+    projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+    storageBucket: "GANTI_DENGAN_STORAGE_BUCKET_ANDA",
+    messagingSenderId: "GANTI_DENGAN_SENDER_ID_ANDA",
+    appId: "GANTI_DENGAN_APP_ID_ANDA"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -708,6 +721,7 @@
 
   let activeProjectId = localStorage.getItem("cbt_active_project") || "Simulasi Ujian Utama";
   let currentStudent = "";
+  let currentStudentName = "";
   let currentMapel = "";
   let currentDurasi = 60;
   let activeSoalList = [];
@@ -720,98 +734,15 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
-  // Variabel penampung state alur 4 Halaman Siswa
-  let tempSelectedMapel = "";
-  let tempSelectedDurasi = 90;
-  let tempUserData = null;
-  let submitTimestamp = "";
-
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
   } else {
-    showView('view-role-selector');
+    showView('page-1');
+    loadPage1Options();
   }
 
-  // --- ALUR PAGE 1 s.d. PAGE 4 SISWA ---
-  document.getElementById('btnMulaiSimulasi').addEventListener('click', () => {
-    const sel = document.getElementById('selMapelPage1');
-    if (!sel.value) {
-      alert("Silakan pilih mata pelajaran terlebih dahulu!");
-      return;
-    }
-    tempSelectedMapel = sel.value;
-    tempSelectedDurasi = parseInt(sel.options[sel.selectedIndex].getAttribute('data-durasi')) || 90;
-    
-    // Otomatis buat project "Simulasi TKA Klaten" jika belum ada
-    activeProjectId = "Simulasi TKA Klaten";
-    localStorage.setItem("cbt_active_project", activeProjectId);
-    
-    showView('view-page-2');
-  });
-
-  document.getElementById('btnBackToPage1').addEventListener('click', () => {
-    showView('view-page-1');
-  });
-
-  document.getElementById('btnLoginPesertaPage2').addEventListener('click', async () => {
-    const u = document.getElementById('inputUserLogin').value.trim();
-    const p = document.getElementById('inputPassLogin').value.trim();
-
-    if (!u || !p) {
-      alert("Masukkan Username dan Password!");
-      return;
-    }
-
-    const userSnap = await getDocs(query(collection(db, "users"), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) {
-      alert("Akun peserta tidak terdaftar!");
-      return;
-    }
-
-    tempUserData = userSnap.docs[0].data();
-    if (tempUserData.status === "Diblokir") {
-      alert("AKUN ANDA DIBLOKIR!");
-      return;
-    }
-
-    // Pindah ke Page 3 (Konfirmasi Data Peserta)
-    document.getElementById('confKodeUser').value = tempUserData.username;
-    document.getElementById('confNamaFormat').value = `${tempUserData.username} - ${tempUserData.nama || 'Peserta'}`;
-    document.getElementById('confMataUjian').value = tempSelectedMapel;
-    document.getElementById('confNamaLengkap').value = tempUserData.nama || '-';
-    
-    showView('view-page-3');
-  });
-
-  document.getElementById('btnSubmitPage3').addEventListener('click', () => {
-    const jk = document.getElementById('confJenisKelamin').value;
-    const tgl = document.getElementById('confTanggalLahir').value;
-
-    if (!jk || !tgl) {
-      alert("Pilih Jenis Kelamin dan Tanggal Lahir terlebih dahulu!");
-      return;
-    }
-
-    submitTimestamp = new Date().toLocaleString('id-ID');
-
-    // Pindah ke Page 4 (Konfirmasi Tes)
-    document.getElementById('lblTesNama').innerText = tempSelectedMapel;
-    document.getElementById('lblTesWaktu').innerText = submitTimestamp;
-    document.getElementById('lblTesDurasi').innerText = `${tempSelectedDurasi} Menit`;
-
-    showView('view-page-4');
-  });
-
-  document.getElementById('btnMulaiUjianReal').addEventListener('click', () => {
-    currentStudent = tempUserData.username;
-    currentMapel = tempSelectedMapel;
-    currentDurasi = tempSelectedDurasi;
-    startSecureExam();
-  });
-
-  // --- PARSER GAMBAR & GOOGLE DRIVE FIXER ---
   function formatImageUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
@@ -846,6 +777,290 @@
     reader.readAsDataURL(file);
   };
 
+  // --- ALUR 4 PAGE SISWA ---
+  async function loadPage1Options() {
+    const pSelect = document.getElementById('p1_project_select');
+    pSelect.innerHTML = '';
+    const snap = await getDocs(collection(db, "projects"));
+    
+    if (snap.empty) {
+      pSelect.innerHTML = '<option value="Simulasi Ujian Utama">Simulasi Ujian Utama</option>';
+      loadPage1Mapel("Simulasi Ujian Utama");
+    } else {
+      snap.forEach(d => {
+        const pName = d.data().nama_project;
+        pSelect.innerHTML += `<option value="${pName}">${pName}</option>`;
+      });
+      loadPage1Mapel(pSelect.value);
+    }
+  }
+
+  document.getElementById('p1_project_select').addEventListener('change', function() {
+    loadPage1Mapel(this.value);
+  });
+
+  async function loadPage1Mapel(projName) {
+    const mSelect = document.getElementById('p1_mapel_select');
+    mSelect.innerHTML = '';
+    const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", projName)));
+    snap.forEach(d => {
+      const m = d.data();
+      mSelect.innerHTML += `<option value="${m.nama_mapel}" data-durasi="${m.durasi}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
+    });
+    if (snap.empty) {
+      mSelect.innerHTML = '<option value="">Belum ada mapel</option>';
+    }
+  }
+
+  // PAGE 1 -> PAGE 2
+  document.getElementById('btnPage1Next').addEventListener('click', () => {
+    activeProjectId = document.getElementById('p1_project_select').value;
+    const mSelect = document.getElementById('p1_mapel_select');
+    currentMapel = mSelect.value;
+    
+    if (!activeProjectId || !currentMapel) {
+      alert("Pilih project dan mata pelajaran terlebih dahulu!");
+      return;
+    }
+
+    const opt = mSelect.options[mSelect.selectedIndex];
+    currentDurasi = parseInt(opt.getAttribute('data-durasi')) || 60;
+
+    showView('page-2');
+  });
+
+  document.getElementById('btnPage2Back').addEventListener('click', () => {
+    showView('page-1');
+  });
+
+  // PAGE 2 -> PAGE 3 (LOGIN CHECK)
+  document.getElementById('btnPage2Login').addEventListener('click', async () => {
+    const u = document.getElementById('p2_username').value.trim();
+    const p = document.getElementById('p2_password').value.trim();
+
+    if (!u || !p) {
+      alert("Masukkan Username dan Password!");
+      return;
+    }
+
+    const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId), where("username", "==", u), where("password", "==", p)));
+    if (userSnap.empty) {
+      alert("Akun peserta tidak ditemukan!");
+      return;
+    }
+
+    const userData = userSnap.docs[0].data();
+    if (userData.status === "Diblokir") {
+      alert("AKUN ANDA DIBLOKIR! Hubungi proktor.");
+      return;
+    }
+
+    currentStudent = u;
+    currentStudentName = userData.nama || u;
+
+    // Isi Data ke PAGE 3
+    document.getElementById('p3_kode_user').value = u;
+    document.getElementById('p3_nama_lengkap_disp').value = `${u} - ${currentStudentName}`;
+    document.getElementById('p3_mata_ujian').value = currentMapel;
+    document.getElementById('p3_nama_input').value = currentStudentName;
+
+    showView('page-3');
+  });
+
+  // PAGE 3 -> PAGE 4 (SUBMIT DATA PESERTA)
+  document.getElementById('btnPage3Submit').addEventListener('click', () => {
+    const namaInput = document.getElementById('p3_nama_input').value.trim();
+    const tglLahir = document.getElementById('p3_tgl_lahir').value;
+
+    if (!namaInput || !tglLahir) {
+      alert("Lengkapi konfirmasi Nama Peserta dan Tanggal Lahir!");
+      return;
+    }
+
+    // Ambil Jam Submit Real-Time
+    const now = new Date();
+    const waktuSubmitStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+
+    // Isi Data ke PAGE 4
+    document.getElementById('p4_nama_tes').innerText = `SIMULASI TKA - ${currentMapel}`;
+    document.getElementById('p4_waktu_tes').innerText = waktuSubmitStr;
+    document.getElementById('p4_alokasi_waktu').innerText = `${currentDurasi} Menit`;
+
+    showView('page-4');
+  });
+
+  // PAGE 4 -> RUANG UJIAN (START EXAM)
+  document.getElementById('btnPage4StartExam').addEventListener('click', () => {
+    startSecureExam();
+  });
+
+  async function startSecureExam() {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", currentMapel)));
+    if (snap.empty) { alert("Belum ada bank soal untuk mata pelajaran ini!"); return; }
+
+    activeSoalList = [];
+    snap.forEach(d => activeSoalList.push(d.data()));
+    activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
+
+    currentSoalIndex = 0;
+    userAnswers = JSON.parse(localStorage.getItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`)) || {};
+    cheatCount = 0;
+    isExamActive = true;
+
+    await setDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), {
+      project: activeProjectId,
+      username: currentStudent,
+      mapel: currentMapel,
+      status: "Mengerjakan",
+      pelanggaran: 0,
+      jawaban: userAnswers
+    });
+
+    showView('view-exam');
+    document.getElementById('examMapelTitle').innerText = currentMapel;
+    document.getElementById('examStudentUser').innerText = `${currentStudent} - ${currentStudentName}`;
+
+    renderGridNumbers();
+    renderSoalByIndex(0);
+    startTimer(currentDurasi * 60);
+  }
+
+  // --- CONTROLLER SOAL & UJIAN ---
+  function renderGridNumbers() {
+    const c = document.getElementById('soalGridContainer');
+    c.innerHTML = '';
+    activeSoalList.forEach((_, idx) => {
+      c.innerHTML += `<div id="grid-btn-${idx}" class="grid-no-btn ${idx === 0 ? 'active' : ''}" onclick="window.jumpSoal(${idx})">${idx + 1}</div>`;
+    });
+  }
+
+  window.jumpSoal = (idx) => { currentSoalIndex = idx; renderSoalByIndex(idx); };
+
+  document.getElementById('btnPrevSoal').addEventListener('click', () => {
+    if (currentSoalIndex > 0) { currentSoalIndex--; renderSoalByIndex(currentSoalIndex); }
+  });
+  document.getElementById('btnNextSoal').addEventListener('click', () => {
+    if (currentSoalIndex < activeSoalList.length - 1) { currentSoalIndex++; renderSoalByIndex(currentSoalIndex); }
+  });
+
+  function renderSoalByIndex(idx) {
+    const s = activeSoalList[idx];
+    document.querySelectorAll('.grid-no-btn').forEach((el, i) => {
+      el.classList.remove('active');
+      if (userAnswers[activeSoalList[i].id_soal]) el.classList.add('answered');
+      if (i === idx) el.classList.add('active');
+    });
+
+    const formattedImg = formatImageUrl(s.link_gambar);
+    let html = `<div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="badge bg-primary fs-6">Nomor ${idx + 1}</span>
+      <span class="badge bg-secondary">${s.tipe_soal}</span>
+    </div>`;
+
+    if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="soal-inline-img img-fluid"></div>`;
+    html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
+
+    const saved = userAnswers[s.id_soal];
+
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
+      const huruf = window.opsiHurufList[idxOpt];
+      const val = s['opsi_' + h];
+      const imgOpt = formatImageUrl(s['img_' + h]);
+      if (val || imgOpt) {
+        const isSel = saved === huruf ? 'selected' : '';
+        html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${huruf}')">
+          <span class="badge bg-primary">${huruf}</span>
+          <div class="flex-grow-1">
+            ${val ? `<div class="fw-semibold">${val}</div>` : ''}
+            ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
+          </div>
+        </div>`;
+      }
+    });
+
+    document.getElementById('soalContainer').innerHTML = html;
+  }
+
+  window.pickAns = async (id, val) => {
+    userAnswers[id] = val;
+    localStorage.setItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`, JSON.stringify(userAnswers));
+    renderSoalByIndex(currentSoalIndex);
+    try {
+      await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
+    } catch (e) {}
+  };
+
+  function startTimer(sec) {
+    let t = sec;
+    timerInterval = setInterval(() => {
+      let m = parseInt(t / 60, 10);
+      let s = parseInt(t % 60, 10);
+      document.getElementById('lblTimer').innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      if (--t < 0) { clearInterval(timerInterval); submitExamAuto(); }
+    }, 1000);
+  }
+
+  document.getElementById('btnFinishExam').addEventListener('click', () => {
+    if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto();
+  });
+
+  async function submitExamAuto() {
+    isExamActive = false;
+    if (timerInterval) clearInterval(timerInterval);
+    if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+
+    let benar = 0;
+    activeSoalList.forEach(s => { if (userAnswers[s.id_soal] === s.kunci) benar++; });
+    const skor = activeSoalList.length > 0 ? Math.round((benar / activeSoalList.length) * 100) : 0;
+
+    await addDoc(collection(db, "hasil"), {
+      project: activeProjectId,
+      username: currentStudent,
+      mapel: currentMapel,
+      skor: skor,
+      benar: benar,
+      total: activeSoalList.length,
+      jawaban: userAnswers,
+      waktu: new Date().toLocaleString('id-ID')
+    });
+
+    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { status: "Selesai" });
+    localStorage.removeItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`);
+
+    showView('view-result');
+    document.getElementById('resScore').innerText = skor;
+  }
+
+  document.getElementById('btnBackHome').addEventListener('click', () => {
+    showView('page-1');
+    loadPage1Options();
+  });
+
+  // Anti Cheat Handler
+  window.addEventListener('visibilitychange', () => { if (isExamActive && (document.hidden || !document.hasFocus())) triggerCheat(); });
+  window.addEventListener('blur', () => { if (isExamActive) triggerCheat(); });
+
+  async function triggerCheat() {
+    cheatCount++;
+    document.getElementById('lblCheatCount').innerText = cheatCount;
+    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), {
+      pelanggaran: cheatCount,
+      status: cheatCount >= 3 ? "Diskualifikasi" : "Melanggar"
+    });
+
+    if (cheatCount >= 3) {
+      alert("Anda telah melanggar aturan sebanyak 3 kali.");
+      submitExamAuto();
+    } else {
+      alert(`PERINGATAN (${cheatCount}/3): Keluar dari layar ujian!`);
+    }
+  }
+
+  // --- DASHBOARD ADMIN ACTIONS ---
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
   window.bukaModalTambahSoal = async function() {
@@ -855,10 +1070,7 @@
     document.getElementById('m_tanya').value = "";
 
     const mapel = document.getElementById('adminMapelFilter').value;
-    if (!mapel) {
-      alert("Pilih mata pelajaran terlebih dahulu!");
-      return;
-    }
+    if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
 
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
     let maxNo = 0;
@@ -909,9 +1121,11 @@
     container.appendChild(row);
   }
 
+  // Drag and Drop Helper
   function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
     const dropZone = document.getElementById(dropZoneId);
     const fileInput = document.getElementById(fileInputId);
+    if (!dropZone || !fileInput) return;
 
     ['dragenter', 'dragover'].forEach(eventName => {
       dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
@@ -934,6 +1148,7 @@
     setupDragAndDrop('dropZoneSiswa', 'fileExcelSiswaInput', handleImportSiswa);
   });
 
+  // Secret Click Logo
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
     clearTimeout(logoClickTimer);
@@ -942,14 +1157,6 @@
       logoClickCount = 0;
       new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
     }
-  });
-
-  document.getElementById('btnRoleSiswa').addEventListener('click', () => {
-    showView('view-page-1');
-  });
-
-  document.getElementById('btnBackToRole').addEventListener('click', () => {
-    showView('view-role-selector');
   });
 
   document.getElementById('btnHideSidebarTop').addEventListener('click', () => {
@@ -961,6 +1168,7 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
+  // Otentikasi Admin
   async function executeAdminLogin() {
     const uInput = document.getElementById('admUsername').value.trim();
     const pInput = document.getElementById('admSecretPin').value.trim();
@@ -1004,7 +1212,9 @@
     localStorage.removeItem("cbt_admin_logged");
     localStorage.removeItem("cbt_super_admin");
     localStorage.removeItem("cbt_admin_name");
-    resetViews();
+    showView('page-1');
+    document.getElementById('topNav').classList.remove('hidden');
+    loadPage1Options();
   });
 
   window.tambahAdminPrompt = async function() {
@@ -1016,11 +1226,7 @@
     const pass = prompt("Masukkan Password:");
     const nama = prompt("Nama Lengkap Guru/Admin:");
     if (uname && pass && nama) {
-      await addDoc(collection(db, "admins"), {
-        username: uname.trim(),
-        password: pass.trim(),
-        nama: nama.trim()
-      });
+      await addDoc(collection(db, "admins"), { username: uname.trim(), password: pass.trim(), nama: nama.trim() });
       alert("Akun Admin/Guru berhasil ditambahkan!");
     }
   };
@@ -1035,7 +1241,7 @@
 
   document.getElementById('btnAddMapelCard').addEventListener('click', async () => {
     const nama = prompt("Nama Mata Pelajaran Baru:");
-    const durasi = prompt("Durasi Ujian (Menit):", "90");
+    const durasi = prompt("Durasi Ujian (Menit):", "60");
     if (nama && durasi) {
       await addDoc(collection(db, "mapel"), {
         project: activeProjectId,
@@ -1107,36 +1313,22 @@
 
   document.getElementById('btnSaveManualSoal').addEventListener('click', saveManualSoalAction);
   document.getElementById('btnExportExcel').addEventListener('click', downloadHasilExcel);
-  document.getElementById('btnStartExam').addEventListener('click', startSecureExam);
-  document.getElementById('btnPrevSoal').addEventListener('click', () => navigateSoal(-1));
-  document.getElementById('btnNextSoal').addEventListener('click', () => navigateSoal(1));
-  document.getElementById('btnFinishExam').addEventListener('click', finishExamPrompt);
-  document.getElementById('btnBackHome').addEventListener('click', resetViews);
 
   function showView(viewId) {
-    ['view-role-selector', 'view-page-1', 'view-page-2', 'view-page-3', 'view-page-4', 'view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
+    ['page-1', 'page-2', 'page-3', 'page-4', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
       document.getElementById(id).classList.add('hidden');
     });
     document.getElementById(viewId).classList.remove('hidden');
-  }
-
-  function resetViews() {
-    if (timerInterval) clearInterval(timerInterval);
-    isExamActive = false;
-    document.getElementById('topNav').classList.remove('hidden');
-    showView('view-role-selector');
   }
 
   function loadSidebarProjects() {
     onSnapshot(collection(db, "projects"), (snap) => {
       const listContainer = document.getElementById('sidebarProjectList');
       listContainer.innerHTML = '';
-      
       if (snap.empty) {
-        setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi TKA Klaten" });
+        setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi Ujian Utama" });
         return;
       }
-
       snap.forEach(d => {
         const proj = d.data().nama_project;
         const isActive = proj === activeProjectId;
@@ -1219,9 +1411,7 @@
       });
       tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
       
-      if (sMapel.options.length > 0) {
-        renderBankSoalAdmin();
-      }
+      if (sMapel.options.length > 0) renderBankSoalAdmin();
       updateDashboardMetrics();
     });
   }
@@ -1377,9 +1567,7 @@
   }
 
   window.hapusAdmin = async function(id) {
-    if (confirm("Hapus akun admin ini?")) {
-      await deleteDoc(doc(db, "admins", id));
-    }
+    if (confirm("Hapus akun admin ini?")) { await deleteDoc(doc(db, "admins", id)); }
   };
 
   window.toggleBlockSiswa = async function(docId, currentStatus) {
@@ -1695,161 +1883,6 @@
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil CBT");
     XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}.xlsx`);
-  }
-
-  async function startSecureExam() {
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch(() => {});
-    }
-
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", currentMapel)));
-    if (snap.empty) { alert("Belum ada bank soal!"); return; }
-
-    activeSoalList = [];
-    snap.forEach(d => activeSoalList.push(d.data()));
-    activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
-
-    currentSoalIndex = 0;
-    userAnswers = JSON.parse(localStorage.getItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`)) || {};
-    cheatCount = 0;
-    isExamActive = true;
-
-    await setDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), {
-      project: activeProjectId,
-      username: currentStudent,
-      mapel: currentMapel,
-      status: "Mengerjakan",
-      pelanggaran: 0,
-      jawaban: userAnswers
-    });
-
-    showView('view-exam');
-    document.getElementById('examMapelTitle').innerText = currentMapel;
-    document.getElementById('examStudentUser').innerText = `${tempUserData.username} - ${tempUserData.nama || currentStudent}`;
-
-    renderGridNumbers();
-    renderSoalByIndex(0);
-    startTimer(currentDurasi * 60);
-  }
-
-  window.addEventListener('visibilitychange', () => { if (isExamActive && (document.hidden || !document.hasFocus())) triggerCheat(); });
-  window.addEventListener('blur', () => { if (isExamActive) triggerCheat(); });
-
-  async function triggerCheat() {
-    cheatCount++;
-    document.getElementById('lblCheatCount').innerText = cheatCount;
-    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), {
-      pelanggaran: cheatCount,
-      status: cheatCount >= 3 ? "Diskualifikasi" : "Melanggar"
-    });
-
-    if (cheatCount >= 3) {
-      alert("Anda telah melanggar aturan sebanyak 3 kali.");
-      submitExamAuto();
-    } else {
-      alert(`PERINGATAN (${cheatCount}/3): Keluar dari layar ujian!`);
-    }
-  }
-
-  function renderGridNumbers() {
-    const c = document.getElementById('soalGridContainer');
-    c.innerHTML = '';
-    activeSoalList.forEach((_, idx) => {
-      c.innerHTML += `<div id="grid-btn-${idx}" class="grid-no-btn ${idx === 0 ? 'active' : ''}" onclick="window.jumpSoal(${idx})">${idx + 1}</div>`;
-    });
-  }
-
-  window.jumpSoal = (idx) => { currentSoalIndex = idx; renderSoalByIndex(idx); };
-
-  function navigateSoal(dir) {
-    const t = currentSoalIndex + dir;
-    if (t >= 0 && t < activeSoalList.length) { currentSoalIndex = t; renderSoalByIndex(t); }
-  }
-
-  function renderSoalByIndex(idx) {
-    const s = activeSoalList[idx];
-    document.querySelectorAll('.grid-no-btn').forEach((el, i) => {
-      el.classList.remove('active');
-      if (userAnswers[activeSoalList[i].id_soal]) el.classList.add('answered');
-      if (i === idx) el.classList.add('active');
-    });
-
-    const formattedImg = formatImageUrl(s.link_gambar);
-    let html = `<div class="d-flex justify-content-between align-items-center mb-3">
-      <span class="badge bg-primary fs-6">Nomor ${idx + 1}</span>
-      <span class="badge bg-secondary">${s.tipe_soal}</span>
-    </div>`;
-
-    if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="soal-inline-img img-fluid"></div>`;
-    html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
-
-    const saved = userAnswers[s.id_soal];
-
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
-      const huruf = window.opsiHurufList[idxOpt];
-      const val = s['opsi_' + h];
-      const imgOpt = formatImageUrl(s['img_' + h]);
-      if (val || imgOpt) {
-        const isSel = saved === huruf ? 'selected' : '';
-        html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${huruf}')">
-          <span class="badge bg-primary">${huruf}</span>
-          <div class="flex-grow-1">
-            ${val ? `<div class="fw-semibold">${val}</div>` : ''}
-            ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
-          </div>
-        </div>`;
-      }
-    });
-
-    document.getElementById('soalContainer').innerHTML = html;
-  }
-
-  window.pickAns = async (id, val) => {
-    userAnswers[id] = val;
-    localStorage.setItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`, JSON.stringify(userAnswers));
-    renderSoalByIndex(currentSoalIndex);
-    try {
-      await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
-    } catch (e) {}
-  };
-
-  function startTimer(sec) {
-    let t = sec;
-    timerInterval = setInterval(() => {
-      let m = parseInt(t / 60, 10);
-      let s = parseInt(t % 60, 10);
-      document.getElementById('lblTimer').innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-      if (--t < 0) { clearInterval(timerInterval); submitExamAuto(); }
-    }, 1000);
-  }
-
-  function finishExamPrompt() { if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto(); }
-
-  async function submitExamAuto() {
-    isExamActive = false;
-    if (timerInterval) clearInterval(timerInterval);
-    if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-
-    let benar = 0;
-    activeSoalList.forEach(s => { if (userAnswers[s.id_soal] === s.kunci) benar++; });
-    const skor = activeSoalList.length > 0 ? Math.round((benar / activeSoalList.length) * 100) : 0;
-
-    await addDoc(collection(db, "hasil"), {
-      project: activeProjectId,
-      username: currentStudent,
-      mapel: currentMapel,
-      skor: skor,
-      benar: benar,
-      total: activeSoalList.length,
-      jawaban: userAnswers,
-      waktu: new Date().toLocaleString('id-ID')
-    });
-
-    await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { status: "Selesai" });
-    localStorage.removeItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`);
-
-    showView('view-result');
-    document.getElementById('resScore').innerText = skor;
   }
 </script>
 </body>
