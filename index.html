@@ -207,10 +207,11 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-bold">Jenis Kelamin</label>
+          <label class="form-label small fw-bold text-danger">Pilih Jenis Kelamin Anda (Wajib Sesuai Database)</label>
           <select id="p3_jenis_kelamin" class="form-select">
-            <option value="LAKI-LAKI">Laki-laki</option>
-            <option value="PEREMPUAN">Perempuan</option>
+            <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
+            <option value="LAKI-LAKI">Laki-laki (L)</option>
+            <option value="PEREMPUAN">Perempuan (P)</option>
           </select>
         </div>
 
@@ -362,7 +363,7 @@
           <div class="custom-mapel-dropdown" id="customMapelMenu"></div>
           <input type="hidden" id="adminMapelFilter" value="">
         </div>
-        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
+        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai (Mapel Terpilih)</button>
       </div>
     </div>
 
@@ -456,7 +457,7 @@
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Upload Excel peserta.</small>
+          <small class="text-muted">Upload Excel + Gender & Tgl Lahir.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -522,7 +523,7 @@
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblPesertaAdmin">
               <thead class="table-light">
-                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>Kelas</th><th>Tgl Lahir</th><th>Status</th><th>Aksi Pengawas</th></tr>
+                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>L/P</th><th>Kelas</th><th>Tgl Lahir</th><th>Status</th><th>Aksi Pengawas</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -618,7 +619,7 @@
   </div>
 </div>
 
-<!-- MODAL EDIT DATA SISWA (BARU) -->
+<!-- MODAL EDIT DATA SISWA (GENDER & TANGGAL LAHIR) -->
 <div class="modal fade" id="modalEditSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -639,6 +640,13 @@
         <div class="mb-3">
           <label class="form-label small fw-bold">Nama Lengkap Siswa</label>
           <input type="text" id="edit_siswa_nama" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Jenis Kelamin</label>
+          <select id="edit_siswa_gender" class="form-select">
+            <option value="LAKI-LAKI">Laki-laki (L)</option>
+            <option value="PEREMPUAN">Perempuan (P)</option>
+          </select>
         </div>
         <div class="mb-3">
           <label class="form-label small fw-bold">Kelas</label>
@@ -706,7 +714,7 @@
   </div>
 </div>
 
-<!-- MODAL IMPORT SISWA (DENGAN TANGGAL LAHIR) -->
+<!-- MODAL IMPORT SISWA -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -718,7 +726,7 @@
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
             <h6 class="fw-bold mb-1">1. Download Template Data Peserta (.xlsx)</h6>
-            <small class="text-muted">Format spreadsheet berisi: username, password, nama, kelas, tgl_lahir (DD-MM-YYYY).</small>
+            <small class="text-muted">Format: username, password, nama, jenis_kelamin (L/P), kelas, tgl_lahir (DD-MM-YYYY).</small>
           </div>
           <button id="btnDownloadExcelTpl" class="btn btn-outline-success btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
@@ -847,7 +855,14 @@
     loadPage1Options();
   }
 
-  // Helper Formatter Normalisasi Tanggal (YYYY-MM-DD vs DD-MM-YYYY)
+  function normalizeGender(gStr) {
+    if (!gStr) return "LAKI-LAKI";
+    const s = String(gStr).trim().toUpperCase();
+    if (s === "L" || s.startsWith("LAK") || s.startsWith("PRIA") || s.startsWith("MALE")) return "LAKI-LAKI";
+    if (s === "P" || s.startsWith("PER") || s.startsWith("WANITA") || s.startsWith("FEMALE")) return "PEREMPUAN";
+    return s;
+  }
+
   function normalizeDateStr(dateStr) {
     if (!dateStr) return "";
     dateStr = String(dateStr).trim();
@@ -855,10 +870,8 @@
     if (dateStr.includes("-")) {
       const parts = dateStr.split("-");
       if (parts[0].length === 4) {
-        // YYYY-MM-DD to DD-MM-YYYY
         return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
       } else if (parts[2].length === 4) {
-        // DD-MM-YYYY
         return `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
       }
     }
@@ -870,12 +883,11 @@
     const norm = normalizeDateStr(dateStr);
     const parts = norm.split("-");
     if (parts.length === 3) {
-      return `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD for HTML input
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
     return dateStr;
   }
 
-  // --- DROPDOWN MAPEL CUSTOM LOGIC ---
   window.toggleCustomMapelDropdown = function() {
     document.getElementById('customMapelMenu').classList.toggle('show');
   };
@@ -1146,24 +1158,34 @@
     document.getElementById('p3_kode_user').value = u;
     document.getElementById('p3_nama_lengkap_disp').value = `${u} - ${userData.nama || u}`;
     document.getElementById('p3_mata_ujian').value = currentMapel;
-    // Kosongkan agar siswa mengetik sendiri
     document.getElementById('p3_nama_input').value = "";
     document.getElementById('p3_tgl_lahir').value = "";
+    document.getElementById('p3_jenis_kelamin').value = "";
 
     showView('page-3');
   });
 
-  // Validasi Page 3: Case-Insensitive Nama & Tanggal Lahir Ketat
+  // Validasi Page 3: Case-Insensitive Nama, Gender, dan Tanggal Lahir Ketat
   document.getElementById('btnPage3Submit').addEventListener('click', () => {
+    const genderInput = document.getElementById('p3_jenis_kelamin').value;
     const namaInput = document.getElementById('p3_nama_input').value.trim();
     const tglLahirInput = document.getElementById('p3_tgl_lahir').value; // YYYY-MM-DD
 
-    if (!namaInput || !tglLahirInput) {
-      alert("Lengkapi konfirmasi Nama Lengkap dan Tanggal Lahir Anda!");
+    if (!genderInput || !namaInput || !tglLahirInput) {
+      alert("Lengkapi konfirmasi Jenis Kelamin, Nama Lengkap, dan Tanggal Lahir Anda!");
       return;
     }
 
-    // 1. Validasi Nama Case-Insensitive
+    // 1. Validasi Jenis Kelamin
+    const dbGender = normalizeGender(currentStudentObj.jenis_kelamin || "");
+    const inputGender = normalizeGender(genderInput);
+
+    if (dbGender && dbGender !== inputGender) {
+      alert("PILIHAN JENIS KELAMIN TIDAK SESUAI DENGAN DATA DATABASE PESERTA!");
+      return;
+    }
+
+    // 2. Validasi Nama Case-Insensitive
     const dbNama = String(currentStudentObj.nama || currentStudent).trim().toLowerCase();
     const userInputNama = namaInput.toLowerCase();
 
@@ -1172,7 +1194,7 @@
       return;
     }
 
-    // 2. Validasi Tanggal Lahir (Format DD-MM-YYYY)
+    // 3. Validasi Tanggal Lahir (Format DD-MM-YYYY)
     const normInputTgl = normalizeDateStr(tglLahirInput);
     const normDbTgl = normalizeDateStr(currentStudentObj.tgl_lahir || "");
 
@@ -1646,8 +1668,8 @@
 
   document.getElementById('btnDownloadExcelTpl').addEventListener('click', () => {
     const dataContoh = [
-      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "VI-A", tgl_lahir: "15-08-2012" },
-      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "VI-A", tgl_lahir: "20-05-2012" }
+      { username: "1001", password: "123", nama: "Ahmad Siswa", jenis_kelamin: "L", kelas: "VI-A", tgl_lahir: "15-08-2012" },
+      { username: "1002", password: "123", nama: "Siti Rahmawati", jenis_kelamin: "P", kelas: "VI-A", tgl_lahir: "20-05-2012" }
     ];
     const ws = XLSX.utils.json_to_sheet(dataContoh);
     const wb = XLSX.utils.book_new();
@@ -1768,6 +1790,7 @@
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
+  // --- RENDER MAPEL ADMIN DENGAN CUSTOM SELECTOR MENU ---
   function loadMapelOptionsAdmin() {
     const qMapel = query(collection(db, "mapel"), where("project", "==", activeProjectId));
     const unsub = onSnapshot(qMapel, (snap) => {
@@ -1833,6 +1856,7 @@
     }
   };
 
+  // --- RENDER BANK SOAL FIX CASE-INSENSITIVE ---
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -1948,7 +1972,7 @@
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
   };
 
-  // --- MANAJEMEN SISWA & FITUR EDIT DATA SISWA ---
+  // --- MANAJEMEN SISWA (DILENGKAPI GENDER & EDIT LENGKAP) ---
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     const unsub = onSnapshot(qUsers, (snap) => {
@@ -1967,10 +1991,12 @@
       paginatedUsers.forEach(u => {
         const isBlocked = u.status === "Diblokir";
         const tglFormatted = normalizeDateStr(u.tgl_lahir) || '-';
+        const genderLabel = normalizeGender(u.jenis_kelamin) === "LAKI-LAKI" ? "L" : "P";
         rows += `<tr>
           <td><strong>${u.username}</strong></td>
           <td><code>${u.password}</code></td>
           <td>${u.nama || '-'}</td>
+          <td><span class="badge ${genderLabel === 'L' ? 'bg-primary' : 'bg-danger'}">${genderLabel}</span></td>
           <td>${u.kelas || '-'}</td>
           <td><span class="badge bg-light text-dark border">${tglFormatted}</span></td>
           <td><span class="badge ${isBlocked ? 'bg-danger' : 'bg-success'}">${u.status || 'Aktif'}</span></td>
@@ -1983,7 +2009,7 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
       renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
@@ -1998,6 +2024,7 @@
     document.getElementById('edit_siswa_user').value = u.username;
     document.getElementById('edit_siswa_pass').value = u.password;
     document.getElementById('edit_siswa_nama').value = u.nama || '';
+    document.getElementById('edit_siswa_gender').value = normalizeGender(u.jenis_kelamin);
     document.getElementById('edit_siswa_kelas').value = u.kelas || '';
     document.getElementById('edit_siswa_tgl').value = dateToInputFormat(u.tgl_lahir);
 
@@ -2008,19 +2035,21 @@
     const docId = document.getElementById('edit_siswa_doc_id').value;
     const pass = document.getElementById('edit_siswa_pass').value.trim();
     const nama = document.getElementById('edit_siswa_nama').value.trim();
+    const gender = document.getElementById('edit_siswa_gender').value;
     const kelas = document.getElementById('edit_siswa_kelas').value.trim();
-    const tgl = document.getElementById('edit_siswa_tgl').value; // YYYY-MM-DD
+    const tgl = document.getElementById('edit_siswa_tgl').value;
 
     if (!pass || !nama || !tgl) {
       alert("Lengkapi Password, Nama Siswa, dan Tanggal Lahir!");
       return;
     }
 
-    const tglFormatted = normalizeDateStr(tgl); // DD-MM-YYYY
+    const tglFormatted = normalizeDateStr(tgl);
 
     await updateDoc(doc(db, "users", docId), {
       password: pass,
       nama: nama,
+      jenis_kelamin: gender,
       kelas: kelas,
       tgl_lahir: tglFormatted
     });
@@ -2149,7 +2178,6 @@
     activeListeners.push(unsubHasil);
   }
 
-  // --- REVIEW JAWABAN LENGKAP SEMUA SOAL ---
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
@@ -2167,7 +2195,6 @@
       }
     });
 
-    // Urutkan nomor 1 sampai selesai (Semua Soal)
     soalListReview.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     let containerHTML = '';
@@ -2231,6 +2258,7 @@
       json.forEach(async row => {
         const u = row.username || row.NISN || row.Username;
         const p = row.password || row.Password;
+        const gender = row.jenis_kelamin || row.gender || row.jk || row["Jenis Kelamin"] || "LAKI-LAKI";
         const tgl = row.tgl_lahir || row.tanggal_lahir || row["Tgl Lahir"] || "";
         if (u && p) {
           await setDoc(doc(db, "users", `${activeProjectId}_${String(u)}`), {
@@ -2238,6 +2266,7 @@
             username: String(u),
             password: String(p),
             nama: row.nama || row.Nama || "",
+            jenis_kelamin: normalizeGender(gender),
             kelas: row.kelas || row.Kelas || "",
             tgl_lahir: normalizeDateStr(tgl),
             status: "Aktif"
@@ -2439,35 +2468,111 @@
     renderBankSoalAdmin();
   }
 
+  // --- EXPORT REKAP EXCEL MENARIK & SESUAI FILTER MAPEL AKTIF ---
   async function downloadHasilExcel() {
+    const targetMapel = document.getElementById('adminMapelFilter').value;
+    if (!targetMapel) {
+      alert("Pilih mata pelajaran terlebih dahulu untuk mendownload rekap nilai!");
+      return;
+    }
+
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+    
     let userMap = {};
     userSnap.forEach(u => { userMap[u.data().username] = u.data(); });
 
-    let arr = [];
+    let hasilFiltered = [];
     snap.forEach(d => {
       const data = d.data();
-      const infoSiswa = userMap[data.username] || {};
-      arr.push({
-        Username: data.username,
-        "Nama Siswa": infoSiswa.nama || "-",
-        Kelas: infoSiswa.kelas || "-",
-        "Tanggal Lahir": infoSiswa.tgl_lahir || "-",
-        "Mata Pelajaran": data.mapel,
-        Skor: data.skor,
-        "Jawaban Benar": data.benar,
-        "Total Soal": data.total,
-        "Waktu Selesai": data.waktu
-      });
+      if (String(data.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase()) {
+        hasilFiltered.push(data);
+      }
     });
 
-    if (arr.length === 0) { alert("Belum ada data nilai!"); return; }
+    if (hasilFiltered.length === 0) {
+      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di project [${activeProjectId}]! Tidak ada data yang bisa diexport.`);
+      return;
+    }
 
-    const ws = XLSX.utils.json_to_sheet(arr);
+    // Urutkan ranking dari skor tertinggi ke terendah
+    hasilFiltered.sort((a, b) => (b.skor || 0) - (a.skor || 0));
+
+    let totalSkorKumulatif = 0;
+    let skorTertinggi = hasilFiltered[0].skor || 0;
+    let skorTerendah = hasilFiltered[hasilFiltered.length - 1].skor || 0;
+
+    // Header Laporan Formal
+    let exportData = [
+      ["REKAPITULASI HASIL SIMULASI TKA KABUPATEN KLATEN"],
+      [`PROJECT / SESI: ${activeProjectId.toUpperCase()}`],
+      [`MATA PELAJARAN: ${targetMapel.toUpperCase()}`],
+      [`WAKTU EXPORT: ${new Date().toLocaleString('id-ID')} WIB`],
+      [], // Baris Kosong
+      [
+        "PERINGKAT",
+        "USERNAME / NISN",
+        "NAMA LENGKAP SISWA",
+        "JENIS KELAMIN",
+        "KELAS",
+        "JAWABAN BENAR",
+        "JAWABAN SALAH",
+        "SKOR (NILAI)",
+        "WAKTU SELESAI"
+      ]
+    ];
+
+    hasilFiltered.forEach((d, idx) => {
+      const infoSiswa = userMap[d.username] || {};
+      const benar = parseInt(d.benar) || 0;
+      const totalSoal = parseInt(d.total) || benar;
+      const salah = totalSoal >= benar ? totalSoal - benar : 0;
+      const skor = parseInt(d.skor) || 0;
+      totalSkorKumulatif += skor;
+
+      const gender = normalizeGender(infoSiswa.jenis_kelamin) === "LAKI-LAKI" ? "L" : "P";
+
+      exportData.push([
+        idx + 1,
+        d.username,
+        infoSiswa.nama || "Siswa",
+        gender,
+        infoSiswa.kelas || "-",
+        benar,
+        salah,
+        skor,
+        d.waktu || "-"
+      ]);
+    });
+
+    const rataRata = (totalSkorKumulatif / hasilFiltered.length).toFixed(2);
+
+    // Baris Ringkasan Statistik di Bagian Bawah
+    exportData.push([]);
+    exportData.push(["--- RINGKASAN STATISTIK KELAS / UJIAN ---"]);
+    exportData.push(["TOTAL PESERTA UJIAN", `${hasilFiltered.length} Siswa`]);
+    exportData.push(["RATA-RATA NILAI", rataRata]);
+    exportData.push(["NILAI TERTINGGI", skorTertinggi]);
+    exportData.push(["NILAI TERENDAH", skorTerendah]);
+
+    const ws = XLSX.utils.aoa_to_sheet(exportData);
+
+    // Styling Kolom Lebar agar Rapi di Excel / Google Spreadsheet
+    ws['!cols'] = [
+      { wch: 12 }, // Peringkat
+      { wch: 18 }, // Username
+      { wch: 30 }, // Nama
+      { wch: 15 }, // Gender
+      { wch: 12 }, // Kelas
+      { wch: 16 }, // Benar
+      { wch: 16 }, // Salah
+      { wch: 14 }, // Skor
+      { wch: 22 }  // Waktu
+    ];
+
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil CBT");
-    XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}.xlsx`);
+    XLSX.utils.book_append_sheet(wb, ws, `Nilai_${targetMapel}`);
+    XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}_${targetMapel}.xlsx`);
   }
 </script>
 </body>
