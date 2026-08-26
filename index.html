@@ -76,11 +76,10 @@
 <!-- Header Navbar Global -->
 <nav id="topNav" class="navbar bg-white border-bottom sticky-top px-3 py-2">
   <div class="container-fluid">
-    <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" onclick="window.handleSecretLogoClick()">
+    <div class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2 logo-secret" id="logoBrand">
       <div class="bg-primary text-white p-2 rounded-3"><i class="bi bi-mortarboard-fill"></i></div>
       <span>CBT SCHOOL <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| Anti-Kecurangan</small></span>
     </div>
-    <!-- Pemanggilan Modal Murni Bootstrap (Pasti Terbuka) -->
     <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
       <i class="bi bi-shield-lock me-1"></i> Login Proktor
     </button>
@@ -100,7 +99,7 @@
 
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Pilih Sesi / Project Ujian</label>
-          <select id="p_project_select" class="form-select" onchange="window.handleStudentProjectChange()"></select>
+          <select id="p_project_select" class="form-select"></select>
         </div>
 
         <div class="text-start mb-3">
@@ -118,7 +117,7 @@
           <input id="p_pass" type="password" class="form-control" placeholder="Password">
         </div>
 
-        <button class="btn btn-primary w-100 py-2 fw-bold mb-3" onclick="window.loginSiswaAction()">
+        <button id="btnLoginSiswa" class="btn btn-primary w-100 py-2 fw-bold mb-3">
           <i class="bi bi-box-arrow-in-right me-1"></i> Masuk Ruang Ujian
         </button>
 
@@ -152,7 +151,7 @@
           <div class="d-flex justify-content-between"><span>Durasi:</span><strong id="confDurasi">-</strong></div>
         </div>
 
-        <button class="btn btn-danger w-100 py-2 fw-bold" onclick="window.startSecureExam()">
+        <button id="btnStartExam" class="btn btn-danger w-100 py-2 fw-bold">
           <i class="bi bi-lock-fill me-1"></i> Kunci Layar (Fullscreen) & Mulai Ujian
         </button>
       </div>
@@ -182,8 +181,8 @@
       <div class="cbt-card p-4">
         <div id="soalContainer"></div>
         <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-          <button class="btn btn-outline-secondary px-3" onclick="window.navigateSoal(-1)">Sebelumnya</button>
-          <button class="btn btn-outline-secondary px-3" onclick="window.navigateSoal(1)">Berikutnya</button>
+          <button id="btnPrevSoal" class="btn btn-outline-secondary px-3">Sebelumnya</button>
+          <button id="btnNextSoal" class="btn btn-outline-secondary px-3">Berikutnya</button>
         </div>
       </div>
     </div>
@@ -191,7 +190,7 @@
       <div class="cbt-card p-3">
         <h6 class="fw-bold mb-3">Nomor Soal</h6>
         <div id="soalGridContainer" class="d-flex flex-wrap gap-2 mb-4"></div>
-        <button class="btn btn-danger w-100 py-2 fw-bold" onclick="window.finishExamPrompt()">Selesai Ujian</button>
+        <button id="btnFinishExam" class="btn btn-danger w-100 py-2 fw-bold">Selesai Ujian</button>
       </div>
     </div>
   </div>
@@ -206,7 +205,7 @@
         <h4 class="fw-bold">Ujian Selesai!</h4>
         <h1 class="display-3 fw-bold text-success my-3" id="resScore">0</h1>
         <p>Jawaban berhasil terekam ke sistem.</p>
-        <button class="btn btn-primary w-100" onclick="window.resetViews()">Kembali ke Halaman Utama</button>
+        <button id="btnBackHome" class="btn btn-primary w-100">Kembali ke Halaman Utama</button>
       </div>
     </div>
   </div>
@@ -214,22 +213,20 @@
 
 <!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
-  <!-- SIDEBAR PROYEK -->
   <div class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
       <span class="fw-bold text-primary"><i class="bi bi-kanban me-1"></i> DAFTAR PROJECT</span>
-      <button class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru" onclick="window.tambahProjectPrompt()"><i class="bi bi-plus"></i></button>
+      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru"><i class="bi bi-plus"></i></button>
     </div>
     
     <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH PROJECT AKTIF:</small>
     <div id="sidebarProjectList" class="flex-grow-1 overflow-auto mb-3"></div>
 
-    <button class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2" onclick="window.handleAdminLogout()">
+    <button id="btnAdminLogout" class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2">
       <i class="bi bi-box-arrow-left me-1"></i> Keluar Dashboard
     </button>
   </div>
 
-  <!-- KONTEN ADMIN -->
   <div class="admin-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
       <div>
@@ -237,12 +234,11 @@
         <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai di dalam project ini.</p>
       </div>
       <div>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2" onchange="window.renderBankSoalAdmin()"></select>
-        <button class="btn btn-success" onclick="window.downloadHasilExcel()"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
+        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2"></select>
+        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
 
-    <!-- 4 Action Cards -->
     <div class="row g-3 mb-4">
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalManualSoal">
@@ -266,7 +262,7 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="action-card" onclick="window.tambahMapelPrompt()">
+        <div class="action-card" id="btnAddMapelCard">
           <div class="action-icon bg-warning-subtle text-warning"><i class="bi bi-journal-plus"></i></div>
           <h6 class="fw-bold mb-1">Tambah Mapel</h6>
           <small class="text-muted">Registrasi mata pelajaran.</small>
@@ -274,7 +270,6 @@
       </div>
     </div>
 
-    <!-- Tabs Navigasi Data -->
     <ul class="nav nav-pills mb-3 gap-2">
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
@@ -283,7 +278,6 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -295,12 +289,11 @@
         </div>
       </div>
 
-      <!-- Tab 2: Data Siswa Terdaftar -->
       <div class="tab-pane fade" id="tab-peserta-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold mb-0">Manajemen Akun Siswa Peserta</h6>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSiswa()"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
+            <button id="btnHapusSemuaSiswa" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblPesertaAdmin">
@@ -313,7 +306,6 @@
         </div>
       </div>
 
-      <!-- Tab 3: Live Monitoring Anti Cheat -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Pelanggaran</h6>
@@ -328,7 +320,6 @@
         </div>
       </div>
 
-      <!-- Tab 4: Hasil Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <div class="table-responsive">
@@ -350,8 +341,8 @@
       <div class="modal-body p-4 text-center">
         <i class="bi bi-shield-lock-fill text-primary fs-1 mb-2"></i>
         <h6 class="fw-bold mb-3">PIN Proktor / Guru</h6>
-        <input type="password" id="admSecretPin" class="form-control mb-3 text-center" placeholder="PIN Default: 123456" onkeyup="if(event.key==='Enter') window.verifyAdminSecret()">
-        <button class="btn btn-primary w-100 fw-bold" onclick="window.verifyAdminSecret()">Masuk</button>
+        <input type="password" id="admSecretPin" class="form-control mb-3 text-center" placeholder="PIN Default: 123456">
+        <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold">Masuk</button>
       </div>
     </div>
   </div>
@@ -371,14 +362,14 @@
             <h6 class="fw-bold mb-1">1. Download Template Word</h6>
             <small class="text-muted">Mendukung gambar langsung di dalam tabel soal!</small>
           </div>
-          <button class="btn btn-outline-primary btn-sm fw-semibold" onclick="window.downloadWordTemplateClean()"><i class="bi bi-download me-1"></i> Download .doc</button>
+          <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
 
         <div class="p-4 border rounded-3 text-center border-dashed">
           <h6 class="fw-bold mb-2">2. Upload File Dokumen Word (.docx)</h6>
           <p class="text-muted small">Gambar yang di-paste ke tabel Word akan otomatis diekstrak ke sistem.</p>
-          <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc" onchange="window.processWordFile(event)">
-          <button class="btn btn-primary" onclick="document.getElementById('fileWordInput').click()"><i class="bi bi-upload me-1"></i> Pilih File Word</button>
+          <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc">
+          <button id="btnTriggerWordUpload" class="btn btn-primary"><i class="bi bi-upload me-1"></i> Pilih File Word</button>
           <div id="wordStatusMsg" class="mt-2 small fw-bold text-success"></div>
         </div>
       </div>
@@ -400,13 +391,13 @@
             <h6 class="fw-bold mb-1">1. Download Template Data Peserta (.xlsx)</h6>
             <small class="text-muted">Format spreadsheet berisi: username, password, nama, kelas.</small>
           </div>
-          <button class="btn btn-outline-success btn-sm fw-semibold" onclick="window.downloadSiswaExcelTemplate()"><i class="bi bi-download me-1"></i> Download Template Excel</button>
+          <button id="btnDownloadExcelTpl" class="btn btn-outline-success btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download Template Excel</button>
         </div>
 
         <div class="p-4 border rounded-3 text-center border-dashed mb-3">
           <h6 class="fw-bold mb-2">2. Upload File Excel Peserta (.xlsx)</h6>
-          <input type="file" id="fileExcelSiswaInput" class="hidden" accept=".xlsx, .xls, .csv" onchange="window.handleImportSiswa(event)">
-          <button class="btn btn-success" onclick="document.getElementById('fileExcelSiswaInput').click()"><i class="bi bi-upload me-1"></i> Upload File Siswa</button>
+          <input type="file" id="fileExcelSiswaInput" class="hidden" accept=".xlsx, .xls, .csv">
+          <button id="btnTriggerExcelUpload" class="btn btn-success"><i class="bi bi-upload me-1"></i> Upload File Siswa</button>
         </div>
       </div>
     </div>
@@ -485,16 +476,16 @@
           </div>
         </div>
 
-        <button class="btn btn-primary w-100 mt-3 py-2 fw-bold" onclick="window.saveManualSoalAction()">Simpan Butir Soal ke Database</button>
+        <button id="btnSaveManualSoal" class="btn btn-primary w-100 mt-3 py-2 fw-bold">Simpan Butir Soal ke Database</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bootstrap Script Pertama -->
+<!-- Bootstrap Script -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Firebase Module Script -->
+<!-- Firebase Module Script (Fully Bound) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
@@ -534,20 +525,18 @@
     initAdminDashboard();
   }
 
-  // Secret Click Handler Logo
-  window.handleSecretLogoClick = function() {
+  // --- EVENT BINDINGS (Mencegah kendala klik tidak merespons) ---
+  document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
     clearTimeout(logoClickTimer);
     logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 4000);
     if (logoClickCount >= 5) {
       logoClickCount = 0;
-      const modalEl = document.getElementById('modalSecretAdmin');
-      const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-      modalInst.show();
+      new bootstrap.Modal(document.getElementById('modalSecretAdmin')).show();
     }
-  };
+  });
 
-  window.verifyAdminSecret = function() {
+  function executeAdminLogin() {
     const pin = document.getElementById('admSecretPin').value;
     if (pin === "123456") {
       localStorage.setItem("cbt_admin_logged", "true");
@@ -561,36 +550,114 @@
     } else {
       alert("PIN Proktor Salah!");
     }
-  };
+  }
 
-  window.handleAdminLogout = function() {
+  document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
+  document.getElementById('admSecretPin').addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') executeAdminLogin();
+  });
+
+  document.getElementById('btnAdminLogout').addEventListener('click', () => {
     localStorage.removeItem("cbt_admin_logged");
-    window.resetViews();
-  };
+    resetViews();
+  });
 
-  window.showView = function(viewId) {
-    ['view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
-      document.getElementById(id).classList.add('hidden');
-    });
-    document.getElementById(viewId).classList.remove('hidden');
-  };
-
-  window.resetViews = function() {
-    if (timerInterval) clearInterval(timerInterval);
-    isExamActive = false;
-    document.getElementById('topNav').classList.remove('hidden');
-    showView('view-login');
-    loadStudentProjects();
-  };
-
-  // 1. PROJECT SIDEBAR
-  window.tambahProjectPrompt = async function() {
+  document.getElementById('btnAddProject').addEventListener('click', async () => {
     const name = prompt("Masukkan Nama Project / Sesi Ujian Baru:");
     if (name && name.trim()) {
       await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
       alert("Project baru berhasil dibuat!");
     }
-  };
+  });
+
+  document.getElementById('btnAddMapelCard').addEventListener('click', async () => {
+    const nama = prompt("Nama Mata Pelajaran Baru:");
+    const durasi = prompt("Durasi Ujian (Menit):", "60");
+    if (nama && durasi) {
+      await addDoc(collection(db, "mapel"), {
+        project: activeProjectId,
+        nama_mapel: nama.trim(),
+        durasi: parseInt(durasi)
+      });
+      alert("Mata pelajaran berhasil ditambahkan!");
+    }
+  });
+
+  document.getElementById('btnHapusSemuaSiswa').addEventListener('click', async () => {
+    if (confirm(`Yakin ingin menghapus seluruh data siswa di project [${activeProjectId}]?`)) {
+      const snap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+      snap.forEach(async (d) => await deleteDoc(doc(db, "users", d.id)));
+      alert("Semua data siswa berhasil dibersihkan!");
+    }
+  });
+
+  document.getElementById('btnDownloadExcelTpl').addEventListener('click', () => {
+    const dataContoh = [
+      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "XII-A" },
+      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "XII-A" },
+      { username: "1003", password: "123", nama: "Citra Lestari", kelas: "XII-B" }
+    ];
+    const ws = XLSX.utils.json_to_sheet(dataContoh);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data Peserta");
+    XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
+  });
+
+  document.getElementById('btnDownloadWordTpl').addEventListener('click', () => {
+    const tableHTML = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title>Template Soal</title></head>
+      <body>
+        <h3>TEMPLATE BANK SOAL CBT SCHOOL</h3>
+        <p>Anda bisa langsung menyisipkan (paste/insert) gambar ke dalam tabel di bawah ini.</p>
+        <table border="1" style="border-collapse:collapse; width:100%;">
+          <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
+          <tr><td>1</td><td>Siapakah Presiden Indonesia ke-3?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td></td></tr>
+          <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
+          <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
+          <tr><td>2</td><td>Pilihlah pulau besar di Indonesia!</td><td>2</td><td>A</td><td>Jawa</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>B</td><td>Sumatera</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>C</td><td>Madagaskar</td><td></td></tr>
+          <tr><td>3</td><td>Matahari terbit dari sebelah barat.</td><td>4</td><td></td><td></td><td>S</td></tr>
+        </table>
+      </body></html>`;
+    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Template_Soal_Word.doc";
+    a.click();
+  });
+
+  document.getElementById('btnTriggerExcelUpload').addEventListener('click', () => document.getElementById('fileExcelSiswaInput').click());
+  document.getElementById('fileExcelSiswaInput').addEventListener('change', handleImportSiswa);
+
+  document.getElementById('btnTriggerWordUpload').addEventListener('click', () => document.getElementById('fileWordInput').click());
+  document.getElementById('fileWordInput').addEventListener('change', processWordFile);
+
+  document.getElementById('btnSaveManualSoal').addEventListener('click', saveManualSoalAction);
+  document.getElementById('btnExportExcel').addEventListener('click', downloadHasilExcel);
+  document.getElementById('btnLoginSiswa').addEventListener('click', loginSiswaAction);
+  document.getElementById('btnStartExam').addEventListener('click', startSecureExam);
+  document.getElementById('btnPrevSoal').addEventListener('click', () => navigateSoal(-1));
+  document.getElementById('btnNextSoal').addEventListener('click', () => navigateSoal(1));
+  document.getElementById('btnFinishExam').addEventListener('click', finishExamPrompt);
+  document.getElementById('btnBackHome').addEventListener('click', resetViews);
+
+  function showView(viewId) {
+    ['view-login', 'view-confirm-exam', 'view-exam', 'view-result', 'view-admin'].forEach(id => {
+      document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById(viewId).classList.remove('hidden');
+  }
+
+  function resetViews() {
+    if (timerInterval) clearInterval(timerInterval);
+    isExamActive = false;
+    document.getElementById('topNav').classList.remove('hidden');
+    showView('view-login');
+    loadStudentProjects();
+  }
 
   function loadSidebarProjects() {
     onSnapshot(collection(db, "projects"), (snap) => {
@@ -622,7 +689,6 @@
     loadPesertaAdmin();
   };
 
-  // 2. DASHBOARD PROKTOR
   function initAdminDashboard() {
     loadSidebarProjects();
     loadMapelOptionsAdmin();
@@ -666,7 +732,6 @@
     tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
   };
 
-  // 3. TAB DATA SISWA
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     onSnapshot(qUsers, (snap) => {
@@ -705,14 +770,6 @@
     }
   };
 
-  window.hapusSemuaSiswa = async function() {
-    if (confirm(`Yakin ingin menghapus seluruh data siswa di project [${activeProjectId}]?`)) {
-      const snap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
-      snap.forEach(async (d) => await deleteDoc(doc(db, "users", d.id)));
-      alert("Semua data siswa berhasil dibersihkan!");
-    }
-  };
-
   function initMonitoringListener() {
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
     onSnapshot(qMon, (snap) => {
@@ -748,19 +805,6 @@
     });
   }
 
-  window.tambahMapelPrompt = async function() {
-    const nama = prompt("Nama Mata Pelajaran Baru:");
-    const durasi = prompt("Durasi Ujian (Menit):", "60");
-    if (nama && durasi) {
-      await addDoc(collection(db, "mapel"), {
-        project: activeProjectId,
-        nama_mapel: nama.trim(),
-        durasi: parseInt(durasi)
-      });
-      alert("Mata pelajaran berhasil ditambahkan!");
-    }
-  };
-
   window.delSoal = async (id) => {
     if (confirm("Hapus soal ini?")) { await deleteDoc(doc(db, "soal", id)); renderBankSoalAdmin(); }
   };
@@ -770,47 +814,7 @@
     alert("Pelanggaran siswa direset!");
   };
 
-  // 4. TEMPLATE ENGINE & DOWNLOAD
-  window.downloadSiswaExcelTemplate = function() {
-    const dataContoh = [
-      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "XII-A" },
-      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "XII-A" },
-      { username: "1003", password: "123", nama: "Citra Lestari", kelas: "XII-B" }
-    ];
-    const ws = XLSX.utils.json_to_sheet(dataContoh);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Data Peserta");
-    XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
-  };
-
-  window.downloadWordTemplateClean = function() {
-    const tableHTML = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><title>Template Soal</title></head>
-      <body>
-        <h3>TEMPLATE BANK SOAL CBT SCHOOL</h3>
-        <p>Anda bisa langsung menyisipkan (paste/insert) gambar ke dalam tabel di bawah ini.</p>
-        <table border="1" style="border-collapse:collapse; width:100%;">
-          <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
-          <tr><td>1</td><td>Siapakah Presiden Indonesia ke-3?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td></td></tr>
-          <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
-          <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
-          <tr><td>2</td><td>Pilihlah pulau besar di Indonesia!</td><td>2</td><td>A</td><td>Jawa</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>B</td><td>Sumatera</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>C</td><td>Madagaskar</td><td></td></tr>
-          <tr><td>3</td><td>Matahari terbit dari sebelah barat.</td><td>4</td><td></td><td></td><td>S</td></tr>
-        </table>
-      </body></html>`;
-    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "Template_Soal_Word.doc";
-    a.click();
-  };
-
-  // Import Siswa Excel
-  window.handleImportSiswa = function(event) {
+  function handleImportSiswa(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -839,10 +843,9 @@
       modalInst.hide();
     };
     reader.readAsArrayBuffer(file);
-  };
+  }
 
-  // Import Word Soal
-  window.processWordFile = function(event) {
+  function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -923,10 +926,9 @@
       });
     };
     reader.readAsArrayBuffer(file);
-  };
+  }
 
-  // Simpan Soal Manual
-  window.saveManualSoalAction = async function() {
+  async function saveManualSoalAction() {
     const targetMapel = document.getElementById('m_target_mapel').value;
     const no = parseInt(document.getElementById('m_no').value);
     const tipe = document.getElementById('m_tipe').value;
@@ -963,10 +965,9 @@
     const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
     modalInst.hide();
     renderBankSoalAdmin();
-  };
+  }
 
-  // Export Nilai
-  window.downloadHasilExcel = async function() {
+  async function downloadHasilExcel() {
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     let arr = [];
     snap.forEach(d => arr.push(d.data()));
@@ -976,9 +977,8 @@
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Rekap Hasil CBT");
     XLSX.writeFile(wb, `Rekap_Nilai_${activeProjectId}.xlsx`);
-  };
+  }
 
-  // 5. ALUR SISWA UJIAN
   async function loadStudentProjects() {
     const pSelect = document.getElementById('p_project_select');
     pSelect.innerHTML = '<option value="" disabled selected>-- Pilih Project Ujian --</option>';
@@ -990,8 +990,8 @@
   }
   loadStudentProjects();
 
-  window.handleStudentProjectChange = async function() {
-    const proj = document.getElementById('p_project_select').value;
+  document.getElementById('p_project_select').addEventListener('change', async function() {
+    const proj = this.value;
     const mSelect = document.getElementById('p_mapel_select');
     mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
     
@@ -1000,9 +1000,9 @@
       const m = d.data();
       mSelect.innerHTML += `<option value="${m.nama_mapel}" data-durasi="${m.durasi}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
     });
-  };
+  });
 
-  window.loginSiswaAction = async function() {
+  async function loginSiswaAction() {
     const proj = document.getElementById('p_project_select').value;
     const u = document.getElementById('p_user').value.trim();
     const p = document.getElementById('p_pass').value.trim();
@@ -1031,9 +1031,9 @@
     document.getElementById('confMapel').innerText = m;
     document.getElementById('confDurasi').innerText = `${currentDurasi} Menit`;
     showView('view-confirm-exam');
-  };
+  }
 
-  window.startSecureExam = async function() {
+  async function startSecureExam() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
@@ -1065,9 +1065,8 @@
     renderGridNumbers();
     renderSoalByIndex(0);
     startTimer(currentDurasi * 60);
-  };
+  }
 
-  // Anti Cheat Handler
   window.addEventListener('visibilitychange', () => { if (isExamActive && (document.hidden || !document.hasFocus())) triggerCheat(); });
   window.addEventListener('blur', () => { if (isExamActive) triggerCheat(); });
 
@@ -1096,10 +1095,11 @@
   }
 
   window.jumpSoal = (idx) => { currentSoalIndex = idx; renderSoalByIndex(idx); };
-  window.navigateSoal = (dir) => {
+
+  function navigateSoal(dir) {
     const t = currentSoalIndex + dir;
     if (t >= 0 && t < activeSoalList.length) { currentSoalIndex = t; renderSoalByIndex(t); }
-  };
+  }
 
   function renderSoalByIndex(idx) {
     const s = activeSoalList[idx];
@@ -1149,7 +1149,7 @@
     }, 1000);
   }
 
-  window.finishExamPrompt = () => { if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto(); };
+  function finishExamPrompt() { if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto(); }
 
   async function submitExamAuto() {
     isExamActive = false;
