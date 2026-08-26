@@ -19,7 +19,7 @@
       --primary-subtle: #eff6ff;
       --bg: #f8fafc;
       --border: #e2e8f0;
-      --sidebar-w: 280px;
+      --sidebar-w: 290px;
     }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: #0f172a; margin: 0; }
     .hidden { display: none !important; }
@@ -42,12 +42,12 @@
     }
     .project-item-box.active { border-color: var(--primary); background-color: var(--primary-subtle); }
 
-    .metric-card-1 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border-radius: 16px; padding: 24px; }
-    .metric-card-2 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border-radius: 16px; padding: 24px; }
-    .metric-card-3 { background: linear-gradient(135deg, #475569, #1e293b); color: white; border-radius: 16px; padding: 24px; }
-    .metric-card-4 { background: linear-gradient(135deg, #10b981, #047857); color: white; border-radius: 16px; padding: 24px; }
-    .metric-card-5 { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-radius: 16px; padding: 24px; }
-    .metric-card-6 { background: linear-gradient(135deg, #ec4899, #be185d); color: white; border-radius: 16px; padding: 24px; }
+    .metric-card-1 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border-radius: 16px; padding: 22px; }
+    .metric-card-2 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border-radius: 16px; padding: 22px; }
+    .metric-card-3 { background: linear-gradient(135deg, #475569, #1e293b); color: white; border-radius: 16px; padding: 22px; }
+    .metric-card-4 { background: linear-gradient(135deg, #10b981, #047857); color: white; border-radius: 16px; padding: 22px; }
+    .metric-card-5 { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-radius: 16px; padding: 22px; }
+    .metric-card-6 { background: linear-gradient(135deg, #ec4899, #be185d); color: white; border-radius: 16px; padding: 22px; }
 
     .action-card {
       border: 1px solid var(--border); border-radius: 12px; padding: 18px;
@@ -125,7 +125,7 @@
       <span>SIMULASI TKA <small class="text-muted fs-6 fw-normal d-none d-sm-inline">| KABUPATEN KLATEN</small></span>
     </div>
     <button class="btn btn-outline-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSecretAdmin">
-      <i class="bi bi-shield-lock me-1"></i> Login Proktor
+      <i class="bi bi-shield-lock me-1"></i> Login Proktor / Admin
     </button>
   </div>
 </nav>
@@ -143,11 +143,14 @@
         <hr class="my-4">
 
         <div class="text-start mb-4">
-          <label class="form-label fw-bold">Pilih Wilayah / Kawedanan & Kloter Ujian</label>
+          <label class="form-label fw-bold">Pilih Wilayah / Kawedanan - Sekolah</label>
           <select id="p1_project_select" class="form-select form-select-lg mb-3"></select>
           
-          <label class="form-label fw-bold">Pilih Mata Pelajaran</label>
-          <select id="p1_mapel_select" class="form-select form-select-lg"></select>
+          <label class="form-label fw-bold">Mata Pelajaran Ujian</label>
+          <select id="p1_mapel_select" class="form-select form-select-lg">
+            <option value="MATEMATIKA" data-durasi="60">MATEMATIKA (60 Menit)</option>
+            <option value="BAHASA INDONESIA" data-durasi="60">BAHASA INDONESIA (60 Menit)</option>
+          </select>
         </div>
 
         <button id="btnPage1Next" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">
@@ -207,7 +210,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-bold text-danger">Pilih Jenis Kelamin Anda (Wajib Sesuai Database)</label>
+          <label class="form-label small fw-bold text-danger">Pilih Jenis Kelamin Anda (Sesuai Database)</label>
           <select id="p3_jenis_kelamin" class="form-select">
             <option value="" disabled selected>-- Pilih Jenis Kelamin --</option>
             <option value="LAKI-LAKI">Laki-laki (L)</option>
@@ -221,7 +224,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-bold text-danger">Ketik Ulang Nama Lengkap Peserta (Wajib Input Sendiri)</label>
+          <label class="form-label small fw-bold text-danger">Ketik Ulang Nama Lengkap Peserta</label>
           <input id="p3_nama_input" class="form-control" placeholder="Ketik nama lengkap Anda di sini...">
         </div>
 
@@ -259,7 +262,7 @@
         </div>
 
         <div class="alert alert-info small mb-4">
-          <i class="bi bi-info-circle-fill me-1"></i> Setelah tombol <strong>MULAI</strong> diklik, paket soal acak Anda akan dibuka secara otomatis (Fullscreen) dan waktu ujian akan langsung berjalan.
+          <i class="bi bi-info-circle-fill me-1"></i> Sistem secara otomatis mengacak 1 dari 5 Paket Soal untuk Anda. Layar akan terkunci Fullscreen dan waktu ujian langsung berjalan.
         </div>
 
         <button id="btnPage4StartExam" class="btn btn-danger btn-lg w-100 py-3 fw-bold">
@@ -275,7 +278,7 @@
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
       <h5 class="fw-bold mb-0" id="examMapelTitle">Mata Pelajaran</h5>
-      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong> | Sesi: <span class="badge bg-secondary" id="examAssignedPaketBadge">Paket A</span></small>
+      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong> | <span class="badge bg-secondary" id="examAssignedPaketBadge">Paket A</span></small>
     </div>
     <div class="d-flex align-items-center gap-2">
       <div class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 rounded-pill fw-bold">
@@ -329,12 +332,12 @@
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
       <div class="d-flex align-items-center gap-2">
         <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar"><i class="bi bi-list fs-6"></i></button>
-        <span class="fw-bold text-primary small">KAWEDANAN / SESI</span>
+        <span class="fw-bold text-primary small">KAWEDANAN - SEKOLAH</span>
       </div>
-      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Sesi/Kawedanan Baru"><i class="bi bi-plus"></i></button>
+      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Tambah Project (Kawedanan - Sekolah)"><i class="bi bi-plus"></i></button>
     </div>
     
-    <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH KAWEDANAN / KLOTER AKTIF:</small>
+    <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH PROJECT AKTIF:</small>
     <div id="sidebarProjectList" class="flex-grow-1 overflow-auto mb-3"></div>
 
     <button id="btnTriggerAdminLogout" class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2">
@@ -347,21 +350,33 @@
       <div class="d-flex align-items-center gap-3">
         <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu"><i class="bi bi-list fs-5"></i></button>
         <div>
-          <h4 class="fw-bold mb-1">Wilayah / Sesi: <span id="currentProjectBadge" class="text-primary">-</span></h4>
-          <p class="text-muted small mb-0">Manajemen bank soal multi-paket, kloter sekolah, dan live monitoring.</p>
+          <h4 class="fw-bold mb-1">
+            Project: <span id="currentProjectBadge" class="text-primary">-</span> 
+            <span class="badge bg-primary ms-2" id="headerActiveMapelBadge">MATEMATIKA</span>
+            <span class="badge bg-dark ms-1" id="headerActivePaketBadge">PAKET A</span>
+          </h4>
+          <p class="text-muted small mb-0">Master bank soal 2 mata ujian, kelola peserta per sekolah, dan live monitoring.</p>
         </div>
       </div>
       
-      <!-- Selector Mapel Modern -->
+      <!-- Selector Mata Pelajaran Default (Matematika / Bahasa Indonesia) -->
       <div class="d-flex align-items-center gap-2">
         <div class="custom-mapel-selector">
           <button type="button" class="mapel-select-btn" id="btnMapelDropdown" onclick="window.toggleCustomMapelDropdown()">
             <i class="bi bi-journal-bookmark-fill"></i>
-            <span id="selectedMapelLabel">PILIH MAPEL</span>
+            <span id="selectedMapelLabel">MATEMATIKA</span>
             <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
           </button>
-          <div class="custom-mapel-dropdown" id="customMapelMenu"></div>
-          <input type="hidden" id="adminMapelFilter" value="">
+          <div class="custom-mapel-dropdown" id="customMapelMenu">
+            <div class="custom-mapel-item active" onclick="window.selectCustomMapel('MATEMATIKA')">
+              <span><i class="bi bi-calculator me-2"></i>MATEMATIKA</span>
+              <i class="bi bi-check-lg"></i>
+            </div>
+            <div class="custom-mapel-item" onclick="window.selectCustomMapel('BAHASA INDONESIA')">
+              <span><i class="bi bi-book me-2"></i>BAHASA INDONESIA</span>
+            </div>
+          </div>
+          <input type="hidden" id="adminMapelFilter" value="MATEMATIKA">
         </div>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
@@ -375,7 +390,7 @@
             <i class="bi bi-people fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalSiswa">0</h3>
-              <small class="opacity-75">Total Siswa Terdaftar</small>
+              <small class="opacity-75">Siswa Terdaftar (Project Ini)</small>
             </div>
           </div>
         </div>
@@ -386,7 +401,7 @@
             <i class="bi bi-person-badge fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalAdmin">0</h3>
-              <small class="opacity-75">Total Proktor / Pengawas</small>
+              <small class="opacity-75">Total Proktor / Guru</small>
             </div>
           </div>
         </div>
@@ -405,10 +420,10 @@
       <div class="col-md-4">
         <div class="metric-card-4">
           <div class="d-flex align-items-center gap-3">
-            <i class="bi bi-journal-text fs-1"></i>
+            <i class="bi bi-journal-check fs-1"></i>
             <div>
-              <h3 class="fw-bold mb-0" id="statTotalUjian">0</h3>
-              <small class="opacity-75">Total Mata Pelajaran</small>
+              <h3 class="fw-bold mb-0">2</h3>
+              <small class="opacity-75">Mata Ujian (MTK & B. INDO)</small>
             </div>
           </div>
         </div>
@@ -416,10 +431,10 @@
       <div class="col-md-4">
         <div class="metric-card-5">
           <div class="d-flex align-items-center gap-3">
-            <i class="bi bi-file-earmark-check fs-1"></i>
+            <i class="bi bi-file-earmark-text fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalSoal">0</h3>
-              <small class="opacity-75">Total Bank Soal (Semua Paket)</small>
+              <small class="opacity-75">Total Butir Soal di Master Bank</small>
             </div>
           </div>
         </div>
@@ -442,15 +457,15 @@
       <div class="col-md-3">
         <div class="action-card" onclick="window.bukaModalTambahSoal()">
           <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
-          <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
-          <small class="text-muted">Pilih paket & jenis soal.</small>
+          <h6 class="fw-bold mb-1">Input Soal Manual</h6>
+          <small class="text-muted">Pilih paket & tipe stimulus.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Upload .docx per Paket Soal.</small>
+          <small class="text-muted">Upload .docx per Paket A-E.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -461,26 +476,25 @@
         </div>
       </div>
       <div class="col-md-3">
-        <div class="action-card" id="btnAddMapelCard">
-          <div class="action-icon bg-warning-subtle text-warning"><i class="bi bi-journal-plus"></i></div>
-          <h6 class="fw-bold mb-1">Tambah Mapel</h6>
-          <small class="text-muted">Registrasi mata pelajaran.</small>
+        <div class="action-card" onclick="window.tambahProjectPrompt()">
+          <div class="action-icon bg-warning-subtle text-warning"><i class="bi bi-building-add"></i></div>
+          <h6 class="fw-bold mb-1">Tambah Project Sesi</h6>
+          <small class="text-muted">Input Kawedanan - Sekolah.</small>
         </div>
       </div>
     </div>
 
-    <!-- Navigasi Tab Admin -->
+    <!-- Navigasi Menu Dashboard yang Disederhanakan & Efisien -->
     <ul class="nav nav-pills mb-3 gap-2" id="adminNavTabs">
-      <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal & Paket</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Kelola Durasi Mapel</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
-      <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai & Review</button></li>
+      <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal"><i class="bi bi-archive-fill me-1"></i> Bank Soal & Paket</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list"><i class="bi bi-people-fill me-1"></i> Data Siswa Terdaftar</button></li>
+      <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list"><i class="bi bi-person-badge-fill me-1"></i> Daftar Guru / Proktor</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring"><i class="bi bi-display-fill me-1"></i> Live Monitoring Ujian</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai"><i class="bi bi-table me-1"></i> Rekap Nilai & Review</button></li>
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal & Filter Paket -->
+      <!-- Tab 1: Bank Soal & Manajemen 5 Paket -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
           <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
@@ -498,7 +512,7 @@
           </div>
           <div class="table-responsive">
             <table class="table align-middle" id="tblBankSoal">
-              <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>PAKET</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
+              <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>MAPEL</th><th>PAKET</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -506,28 +520,12 @@
         </div>
       </div>
 
-      <!-- Tab 2: Kelola Durasi Mapel -->
-      <div class="tab-pane fade" id="tab-mapel-list">
-        <div class="cbt-card p-4">
-          <h6 class="fw-bold mb-3">Daftar Mata Pelajaran & Edit Durasi Waktu</h6>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle" id="tblMapelAdmin">
-              <thead class="table-light">
-                <tr><th>Nama Mata Pelajaran</th><th>Durasi Ujian (Menit)</th><th>Aksi</th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMapel"></div>
-        </div>
-      </div>
-
-      <!-- Tab 3: Siswa -->
+      <!-- Tab 2: Siswa -->
       <div class="tab-pane fade" id="tab-peserta-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold mb-0">Manajemen Akun Siswa Peserta</h6>
-            <button id="btnHapusSemuaSiswa" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
+            <button id="btnHapusSemuaSiswa" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa di Project Ini</button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblPesertaAdmin">
@@ -541,17 +539,17 @@
         </div>
       </div>
 
-      <!-- Tab 4: Manajemen Admin -->
+      <!-- Tab 3: Daftar Guru / Proktor -->
       <div class="tab-pane fade" id="tab-admin-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0">Daftar Akun Admin / Guru Proktor</h6>
-            <button class="btn btn-sm btn-primary" onclick="window.tambahAdminPrompt()"><i class="bi bi-plus-lg me-1"></i> Tambah Admin Baru</button>
+            <h6 class="fw-bold mb-0">Daftar Guru & Proktor yang Memiliki Akses</h6>
+            <button class="btn btn-sm btn-primary" onclick="window.tambahAdminPrompt()"><i class="bi bi-plus-lg me-1"></i> Tambah Akun Guru Baru</button>
           </div>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblAdminList">
               <thead class="table-light">
-                <tr><th>Username Admin</th><th>Password</th><th>Nama Lengkap</th><th>Aksi</th></tr>
+                <tr><th>Username</th><th>Password</th><th>Nama Lengkap Guru / Proktor</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -560,14 +558,14 @@
         </div>
       </div>
 
-      <!-- Tab 5: Monitoring (Dilengkapi Penugasan Paket) -->
+      <!-- Tab 4: Monitoring -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblMonitoring">
               <thead class="table-light">
-                <tr><th>Username</th><th>Mata Pelajaran</th><th>Paket</th><th>Status</th><th>Progress</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
+                <tr><th>Username</th><th>Mata Pelajaran</th><th>Paket Acak</th><th>Status</th><th>Progress</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -576,7 +574,7 @@
         </div>
       </div>
 
-      <!-- Tab 6: Rekap Nilai -->
+      <!-- Tab 5: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -596,14 +594,14 @@
   </div>
 </div>
 
-<!-- ================= MODAL PERINGATAN LOGOUT PROKTOR ================= -->
+<!-- MODAL KONFIRMASI LOGOUT -->
 <div class="modal fade" id="modalConfirmLogout" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content" style="border-radius: 16px;">
       <div class="modal-body p-4 text-center">
         <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
         <h6 class="fw-bold mb-2">Konfirmasi Keluar</h6>
-        <p class="text-muted small mb-4">Apakah Anda yakin ingin mengakhiri sesi proktor dan keluar dari dashboard ujian?</p>
+        <p class="text-muted small mb-4">Apakah Anda yakin ingin mengakhiri sesi proktor dan keluar dari dashboard?</p>
         <div class="d-grid gap-2">
           <button id="btnConfirmLogoutYes" class="btn btn-danger fw-bold">Ya, Keluar Sesi</button>
           <button class="btn btn-light btn-sm text-muted" data-bs-dismiss="modal">Batalkan</button>
@@ -698,12 +696,12 @@
       </div>
       <div class="modal-body p-4">
         <div class="mb-3">
-          <label class="form-label small fw-bold">Username Admin</label>
-          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (Utama)">
+          <label class="form-label small fw-bold">Username</label>
+          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (Utama) atau Username Guru">
         </div>
         <div class="mb-3">
           <label class="form-label small fw-bold">Password / PIN</label>
-          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP (Utama)">
+          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP (Utama) atau Password Guru">
         </div>
         <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold py-2">Masuk Dashboard</button>
       </div>
@@ -722,21 +720,30 @@
       <div class="modal-body p-4">
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
-            <h6 class="fw-bold mb-1">1. Download Template Word (Model 1 Stimulus 3 Soal)[cite: 1]</h6>
-            <small class="text-muted">Mendukung PG Tunggal (1), PG Kompleks MCMA (2), & PG Kompleks Kategori B/S (3)[cite: 1].</small>
+            <h6 class="fw-bold mb-1">1. Download Template Word (1 Stimulus 3 Soal)[cite: 1]</h6>
+            <small class="text-muted">Mendukung PG Tunggal (1), PG Kompleks MCMA (2), & PG Kompleks Kategori (3)[cite: 1].</small>
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
         
-        <div class="mb-3">
-          <label class="form-label small fw-bold">Target Paket Soal Import:</label>
-          <select id="import_target_paket" class="form-select fw-bold">
-            <option value="Paket A">Paket A</option>
-            <option value="Paket B">Paket B</option>
-            <option value="Paket C">Paket C</option>
-            <option value="Paket D">Paket D</option>
-            <option value="Paket E">Paket E</option>
-          </select>
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Target Mata Ujian:</label>
+            <select id="import_target_mapel" class="form-select fw-bold">
+              <option value="MATEMATIKA">MATEMATIKA</option>
+              <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small fw-bold">Target Paket Soal:</label>
+            <select id="import_target_paket" class="form-select fw-bold">
+              <option value="Paket A">Paket A</option>
+              <option value="Paket B">Paket B</option>
+              <option value="Paket C">Paket C</option>
+              <option value="Paket D">Paket D</option>
+              <option value="Paket E">Paket E</option>
+            </select>
+          </div>
         </div>
 
         <div id="dropZoneWord" class="drop-zone">
@@ -781,7 +788,7 @@
   </div>
 </div>
 
-<!-- MODAL MANUAL SOAL (DENGAN PILIHAN PAKET) -->
+<!-- MODAL MANUAL SOAL (DENGAN 2 MAPEL & 5 PAKET) -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -793,8 +800,11 @@
         <input type="hidden" id="edit_doc_id" value="">
         <div class="row g-3 mb-3">
           <div class="col-md-4">
-            <label class="form-label small fw-bold">Mata Pelajaran Target</label>
-            <select id="m_target_mapel" class="form-select"></select>
+            <label class="form-label small fw-bold">Mata Ujian</label>
+            <select id="m_target_mapel" class="form-select fw-bold">
+              <option value="MATEMATIKA">MATEMATIKA</option>
+              <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
+            </select>
           </div>
           <div class="col-md-3">
             <label class="form-label small fw-bold">Paket Soal</label>
@@ -841,7 +851,7 @@
           <div id="containerDynamicOptions"></div>
         </div>
 
-        <button id="btnSaveManualSoal" class="btn btn-primary w-100 mt-3 py-2 fw-bold">Simpan Butir Soal ke Database</button>
+        <button id="btnSaveManualSoal" class="btn btn-primary w-100 mt-3 py-2 fw-bold">Simpan Butir Soal ke Database Master</button>
       </div>
     </div>
   </div>
@@ -871,7 +881,7 @@
   let activeProjectId = localStorage.getItem("cbt_active_project") || "Kawedanan Klaten Kota - Gelombang 1";
   let currentStudent = "";
   let currentStudentObj = {};
-  let currentMapel = "";
+  let currentMapel = "MATEMATIKA";
   let currentDurasi = 60;
   let activeSoalList = [];
   let currentAssignedPaket = "Paket A";
@@ -887,7 +897,6 @@
 
   let pageState = {
     bankSoal: 1,
-    mapel: 1,
     siswa: 1,
     admin: 1,
     monitoring: 1,
@@ -951,6 +960,7 @@
   window.selectCustomMapel = function(namaMapel) {
     document.getElementById('adminMapelFilter').value = namaMapel;
     document.getElementById('selectedMapelLabel').innerText = namaMapel.toUpperCase();
+    document.getElementById('headerActiveMapelBadge').innerText = namaMapel.toUpperCase();
     document.getElementById('customMapelMenu').classList.remove('show');
     pageState.bankSoal = 1;
     renderBankSoalAdmin();
@@ -975,7 +985,6 @@
   }
 
   window.setPageBankSoal = (p) => { pageState.bankSoal = p; renderBankSoalAdmin(); };
-  window.setPageMapel = (p) => { pageState.mapel = p; loadMapelOptionsAdmin(); };
   window.setPageSiswa = (p) => { pageState.siswa = p; loadPesertaAdmin(); };
   window.setPageAdmin = (p) => { pageState.admin = p; loadAdminList(); };
   window.setPageNilai = (p) => { pageState.nilai = p; initMonitoringListener(); };
@@ -1049,12 +1058,11 @@
 
     const mapel = document.getElementById('adminMapelFilter').value;
     const paket = document.getElementById('adminPaketFilter').value;
-    if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
 
     document.getElementById('m_target_mapel').value = mapel;
     document.getElementById('m_target_paket').value = paket;
 
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    const snap = await getDocs(collection(db, "soal"));
     let maxNo = 0;
     snap.forEach(d => {
       const dataSoal = d.data();
@@ -1147,30 +1155,11 @@
     
     if (snap.empty) {
       pSelect.innerHTML = '<option value="Kawedanan Klaten Kota - Gelombang 1">Kawedanan Klaten Kota - Gelombang 1</option>';
-      loadPage1Mapel("Kawedanan Klaten Kota - Gelombang 1");
     } else {
       snap.forEach(d => {
         const pName = d.data().nama_project;
         pSelect.innerHTML += `<option value="${pName}">${pName}</option>`;
       });
-      loadPage1Mapel(pSelect.value);
-    }
-  }
-
-  document.getElementById('p1_project_select').addEventListener('change', function() {
-    loadPage1Mapel(this.value);
-  });
-
-  async function loadPage1Mapel(projName) {
-    const mSelect = document.getElementById('p1_mapel_select');
-    mSelect.innerHTML = '';
-    const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", projName)));
-    snap.forEach(d => {
-      const m = d.data();
-      mSelect.innerHTML += `<option value="${m.nama_mapel}" data-durasi="${m.durasi}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
-    });
-    if (snap.empty) {
-      mSelect.innerHTML = '<option value="">Belum ada mapel</option>';
     }
   }
 
@@ -1266,14 +1255,13 @@
     startSecureExam();
   });
 
-  // --- LOGIKA PENGACAKAN PAKET SOAL OTOMATIS & EFISIEN ---
+  // --- LOGIKA PENGACAKAN PAKET DARI BANK SOAL MASTER ---
   async function startSecureExam() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
 
-    // Ambil daftar paket yang tersedia di database mapel ini
-    const snapMapelSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    const snapMapelSoal = await getDocs(collection(db, "soal"));
     let availablePakets = new Set();
     let allMapelSoal = [];
 
@@ -1286,16 +1274,14 @@
     });
 
     if (allMapelSoal.length === 0) {
-      alert("Belum ada butir soal pada mata pelajaran ini!");
+      alert(`Belum ada butir soal pada mata pelajaran [${currentMapel}] di Bank Soal Master!`);
       return;
     }
 
     const paketArr = Array.from(availablePakets);
-    // Algoritma deterministik/acak penugasan paket per siswa
     const charSum = currentStudent.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     currentAssignedPaket = paketArr[charSum % paketArr.length] || "Paket A";
 
-    // Filter hanya butir soal milik paket yang didapat siswa (Isi urutan tetap sama)
     activeSoalList = allMapelSoal.filter(s => (s.paket || "Paket A") === currentAssignedPaket);
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
@@ -1607,7 +1593,6 @@
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
   document.getElementById('admSecretPin').addEventListener('keyup', (e) => { if (e.key === 'Enter') executeAdminLogin(); });
 
-  // Peringatan Keluar Dashboard yang Baik & Santun
   document.getElementById('btnTriggerAdminLogout').addEventListener('click', () => {
     new bootstrap.Modal(document.getElementById('modalConfirmLogout')).show();
   });
@@ -1624,6 +1609,16 @@
     loadPage1Options();
   });
 
+  window.tambahProjectPrompt = async function() {
+    const name = prompt("Masukkan Nama Project Sesi Baru (Format: Kawedanan - Nama Sekolah):");
+    if (name && name.trim()) {
+      await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
+      alert("Project sesi baru berhasil didaftarkan!");
+    }
+  };
+
+  document.getElementById('btnAddProject').addEventListener('click', window.tambahProjectPrompt);
+
   window.tambahAdminPrompt = async function() {
     if (localStorage.getItem("cbt_super_admin") !== "true") {
       alert("Hanya Administrator Utama (ADMIN) yang dapat menambah akun admin/guru.");
@@ -1634,30 +1629,9 @@
     const nama = prompt("Nama Lengkap Guru/Admin:");
     if (uname && pass && nama) {
       await addDoc(collection(db, "admins"), { username: uname.trim(), password: pass.trim(), nama: nama.trim() });
-      alert("Akun Admin/Guru berhasil ditambahkan!");
+      alert("Akun Guru/Proktor berhasil ditambahkan!");
     }
   };
-
-  document.getElementById('btnAddProject').addEventListener('click', async () => {
-    const name = prompt("Masukkan Nama Wilayah Kawedanan & Sesi Baru (Contoh: Kawedanan Delanggu - Gelombang 1):");
-    if (name && name.trim()) {
-      await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
-      alert("Kawedanan/Sesi baru berhasil dibuat!");
-    }
-  });
-
-  document.getElementById('btnAddMapelCard').addEventListener('click', async () => {
-    const nama = prompt("Nama Mata Pelajaran Baru:");
-    const durasi = prompt("Durasi Ujian (Menit):", "60");
-    if (nama && durasi) {
-      await addDoc(collection(db, "mapel"), {
-        project: activeProjectId,
-        nama_mapel: nama.trim(),
-        durasi: parseInt(durasi)
-      });
-      alert("Mata pelajaran berhasil ditambahkan!");
-    }
-  });
 
   document.getElementById('btnHapusSemuaSiswa').addEventListener('click', async () => {
     if (confirm(`Yakin ingin menghapus seluruh data siswa di project [${activeProjectId}]?`)) {
@@ -1670,9 +1644,8 @@
   window.hapusSemuaSoalMapel = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const paket = document.getElementById('adminPaketFilter').value;
-    if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
-    if (confirm(`Yakin ingin menghapus seluruh butir soal pada [${paket}] mata pelajaran [${mapel}]?`)) {
-      const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    if (confirm(`Yakin ingin menghapus seluruh butir soal pada [${paket}] mata pelajaran [${mapel}] di Bank Soal Master?`)) {
+      const snap = await getDocs(collection(db, "soal"));
       snap.forEach(async (d) => {
         const dataSoal = d.data();
         const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
@@ -1813,13 +1786,12 @@
     activeProjectId = projectName;
     localStorage.setItem("cbt_active_project", projectName);
     loadSidebarProjects();
-    loadMapelOptionsAdmin();
     loadPesertaAdmin();
     updateDashboardMetrics();
   };
 
   window.hapusProject = async function(docId, projName) {
-    if (confirm(`Hapus wilayah/sesi [${projName}]?`)) {
+    if (confirm(`Hapus project [${projName}]?`)) {
       await deleteDoc(doc(db, "projects", docId));
     }
   };
@@ -1828,10 +1800,10 @@
     activeListeners.forEach(unsub => unsub());
     activeListeners = [];
     loadSidebarProjects();
-    loadMapelOptionsAdmin();
     loadPesertaAdmin();
     loadAdminList();
     initMonitoringListener();
+    renderBankSoalAdmin();
     updateDashboardMetrics();
 
     const isSuper = localStorage.getItem("cbt_super_admin") === "true";
@@ -1845,96 +1817,30 @@
   async function updateDashboardMetrics() {
     const qSiswa = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
     const qAdmin = await getDocs(collection(db, "admins"));
-    const qMapel = await getDocs(query(collection(db, "mapel"), where("project", "==", activeProjectId)));
-    const qSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    const qSoal = await getDocs(collection(db, "soal"));
     const qSelesai = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
 
     document.getElementById('statTotalSiswa').innerText = qSiswa.size;
     document.getElementById('statTotalAdmin').innerText = qAdmin.size + 1;
-    document.getElementById('statTotalUjian').innerText = qMapel.size;
     document.getElementById('statTotalSoal').innerText = qSoal.size;
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
-  function loadMapelOptionsAdmin() {
-    const qMapel = query(collection(db, "mapel"), where("project", "==", activeProjectId));
-    const unsub = onSnapshot(qMapel, (snap) => {
-      const sTarget = document.getElementById('m_target_mapel');
-      const tblMapelBody = document.querySelector('#tblMapelAdmin tbody');
-      const customMenu = document.getElementById('customMapelMenu');
-      const hiddenInput = document.getElementById('adminMapelFilter');
-      const selectedLabel = document.getElementById('selectedMapelLabel');
-
-      sTarget.innerHTML = '';
-      customMenu.innerHTML = '';
-      
-      let mapelList = [];
-      snap.forEach(d => {
-        mapelList.push({ idDoc: d.id, ...d.data() });
-      });
-
-      let firstMapel = "";
-      mapelList.forEach(m => {
-        if (!firstMapel) firstMapel = m.nama_mapel;
-        sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
-        
-        const isActive = (hiddenInput.value && hiddenInput.value.toLowerCase() === m.nama_mapel.toLowerCase());
-        customMenu.innerHTML += `
-          <div class="custom-mapel-item ${isActive ? 'active' : ''}" onclick="window.selectCustomMapel('${m.nama_mapel}')">
-            <span><i class="bi bi-journal-text me-2"></i>${m.nama_mapel.toUpperCase()}</span>
-            ${isActive ? '<i class="bi bi-check-lg"></i>' : ''}
-          </div>`;
-      });
-
-      if (!hiddenInput.value && firstMapel) {
-        hiddenInput.value = firstMapel;
-        selectedLabel.innerText = firstMapel.toUpperCase();
-      } else if (hiddenInput.value) {
-        selectedLabel.innerText = hiddenInput.value.toUpperCase();
-      }
-
-      const start = (pageState.mapel - 1) * PAGE_SIZE;
-      const paginatedMapel = mapelList.slice(start, start + PAGE_SIZE);
-
-      let mapelRows = '';
-      paginatedMapel.forEach(m => {
-        mapelRows += `<tr>
-          <td><strong>${m.nama_mapel}</strong></td>
-          <td><span class="badge bg-info text-dark fs-6">${m.durasi} Menit</span></td>
-          <td><button class="btn btn-sm btn-outline-primary" onclick="window.editDurasiMapel('${m.idDoc}', '${m.nama_mapel}', ${m.durasi})"><i class="bi bi-clock"></i> Edit Durasi</button></td>
-        </tr>`;
-      });
-      tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
-      renderPaginationControls('paginationMapel', mapelList.length, pageState.mapel, 'window.setPageMapel');
-
-      if (mapelList.length > 0) renderBankSoalAdmin();
-      updateDashboardMetrics();
-    });
-    activeListeners.push(unsub);
-  }
-
   window.handleAdminPaketFilterChange = function() {
+    const paket = document.getElementById('adminPaketFilter').value;
+    document.getElementById('headerActivePaketBadge').innerText = paket.toUpperCase();
     pageState.bankSoal = 1;
     renderBankSoalAdmin();
   };
 
-  window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
-    const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
-    if (baru && !isNaN(baru)) {
-      await updateDoc(doc(db, "mapel", mapelId), { durasi: parseInt(baru) });
-      alert("Durasi waktu ujian berhasil diperbarui!");
-    }
-  };
-
-  // --- RENDER BANK SOAL PER PAKET SOAL ---
+  // --- RENDER BANK SOAL MASTER ---
   window.renderBankSoalAdmin = async function() {
-    const mapel = document.getElementById('adminMapelFilter').value;
-    const paket = document.getElementById('adminPaketFilter').value;
+    const mapel = document.getElementById('adminMapelFilter').value || "MATEMATIKA";
+    const paket = document.getElementById('adminPaketFilter').value || "Paket A";
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
     window.cacheBankSoal = window.cacheBankSoal || {};
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    const snap = await getDocs(collection(db, "soal"));
     
     let soalArray = [];
     snap.forEach(docSnap => {
@@ -1967,6 +1873,7 @@
           <div>${d.pertanyaan}</div>
           ${formattedImg ? '<img src="'+formattedImg+'" style="max-height:45px;" class="rounded border mt-1">' : ''}
         </td>
+        <td><span class="badge bg-primary-subtle text-primary">${d.mapel}</span></td>
         <td><span class="badge bg-primary">${d.paket || 'Paket A'}</span></td>
         <td><span class="badge bg-secondary">${labelTipe}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
@@ -1977,7 +1884,7 @@
         </td>
       </tr>`;
     });
-    tblBody.innerHTML = rows || `<tr><td colspan="6" class="text-center text-muted">Belum ada butir soal pada ${paket} mapel ini.</td></tr>`;
+    tblBody.innerHTML = rows || `<tr><td colspan="7" class="text-center text-muted">Belum ada butir soal pada ${paket} mata pelajaran ${mapel}.</td></tr>`;
     renderPaginationControls('paginationBankSoal', soalArray.length, pageState.bankSoal, 'window.setPageBankSoal');
     updateDashboardMetrics();
   };
@@ -1992,7 +1899,7 @@
     if (tipeStr === '2') tipeLabel = 'PG Kompleks MCMA (2)';
     if (tipeStr === '3') tipeLabel = 'PG Kompleks Kategori B/S (3)';
 
-    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal} (${s.paket || 'Paket A'})</span> <span class="badge bg-secondary">${tipeLabel}</span></div>`;
+    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal} (${s.paket || 'Paket A'})</span> <span class="badge bg-info text-dark">${s.mapel}</span> <span class="badge bg-secondary">${tipeLabel}</span></div>`;
     if (s.stimulus) html += `<div class="stimulus-box mb-3"><strong>WACANA / STIMULUS:</strong><p class="mb-0 mt-1">${s.stimulus}</p></div>`;
     if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
     html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
@@ -2035,7 +1942,7 @@
 
     document.getElementById('edit_doc_id').value = docId;
     document.getElementById('modalSoalTitle').innerText = "Edit Butir Soal";
-    document.getElementById('m_target_mapel').value = s.mapel;
+    document.getElementById('m_target_mapel').value = s.mapel || 'MATEMATIKA';
     document.getElementById('m_target_paket').value = s.paket || "Paket A";
     document.getElementById('m_no').value = s.id_soal;
     document.getElementById('m_tipe').value = s.tipe_soal || '1';
@@ -2083,7 +1990,7 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di sesi kawedanan ini.</td></tr>';
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
       renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
@@ -2175,7 +2082,7 @@
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
     const unsubMon = onSnapshot(qMon, async (snap) => {
       let monList = [];
-      const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+      const soalSnap = await getDocs(collection(db, "soal"));
       let soalCountMap = {};
       soalSnap.forEach(s => {
         const d = s.data();
@@ -2208,7 +2115,7 @@
           <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${d.idDoc}')">Reset</button></td>
         </tr>`;
       });
-      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
+      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada aktivitas siswa di project ini.</td></tr>';
       renderPaginationControls('paginationMonitoring', monList.length, pageState.monitoring, 'window.setPageNilai');
     });
     activeListeners.push(unsubMon);
@@ -2248,14 +2155,13 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
+      document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada hasil ujian di project ini.</td></tr>';
       renderPaginationControls('paginationNilai', hasilList.length, pageState.nilai, 'window.setPageNilai');
       updateDashboardMetrics();
     });
     activeListeners.push(unsubHasil);
   }
 
-  // --- REVIEW JAWABAN LENGKAP SEMUA SOAL ---
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
@@ -2265,7 +2171,7 @@
     document.getElementById('revPaket').innerText = dataHasil.paket || "Paket A";
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
-    const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project)));
+    const soalSnap = await getDocs(collection(db, "soal"));
     let soalListReview = [];
     soalSnap.forEach(s => {
       const dataSoal = s.data();
@@ -2319,7 +2225,7 @@
   };
 
   window.delSoal = async (id) => {
-    if (confirm("Hapus soal ini?")) { await deleteDoc(doc(db, "soal", id)); renderBankSoalAdmin(); }
+    if (confirm("Hapus butir soal ini dari Bank Soal Master?")) { await deleteDoc(doc(db, "soal", id)); renderBankSoalAdmin(); }
   };
 
   window.resetCheat = async (id) => {
@@ -2354,7 +2260,7 @@
           });
         }
       });
-      alert(`Berhasil mengimpor ${json.length} data peserta!`);
+      alert(`Berhasil mengimpor ${json.length} data peserta ke project [${activeProjectId}]!`);
       const modalEl = document.getElementById('modalSiswaImport');
       const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modalInst.hide();
@@ -2362,14 +2268,12 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // --- PARSER WORD FIX DENGAN PILIHAN TARGET PAKET SOAL ---
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const targetMapel = document.getElementById('adminMapelFilter').value;
+    const targetMapel = document.getElementById('import_target_mapel').value;
     const targetPaket = document.getElementById('import_target_paket').value;
-    if (!targetMapel) { alert("Pilih mata pelajaran terlebih dahulu di dashboard!"); return; }
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -2386,7 +2290,7 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
 
-        const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+        const existingSnap = await getDocs(collection(db, "soal"));
         let maxExistingNo = 0;
         existingSnap.forEach(d => {
           const dataSoal = d.data();
@@ -2430,7 +2334,6 @@
             }
 
             cur = {
-              project: activeProjectId,
               id_soal: assignedNo,
               mapel: targetMapel,
               paket: targetPaket,
@@ -2499,7 +2402,6 @@
     }
 
     let payload = {
-      project: activeProjectId,
       id_soal: no,
       mapel: targetMapel,
       paket: targetPaket,
@@ -2547,7 +2449,7 @@
       alert("Soal berhasil diperbarui!");
     } else {
       await addDoc(collection(db, "soal"), payload);
-      alert("Soal baru berhasil disimpan!");
+      alert("Soal baru berhasil disimpan ke Bank Soal Master!");
     }
 
     const modalEl = document.getElementById('modalManualSoal');
@@ -2556,13 +2458,9 @@
     renderBankSoalAdmin();
   }
 
-  // --- EXPORT REKAP EXCEL DISESUAIKAN PER MAPEL & PAKET ---
+  // --- EXPORT REKAP EXCEL DISESUAIKAN PER PROJECT & MAPEL ---
   async function downloadHasilExcel() {
-    const targetMapel = document.getElementById('adminMapelFilter').value;
-    if (!targetMapel) {
-      alert("Pilih mata pelajaran terlebih dahulu untuk mendownload rekap nilai!");
-      return;
-    }
+    const targetMapel = document.getElementById('adminMapelFilter').value || "MATEMATIKA";
 
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
@@ -2579,7 +2477,7 @@
     });
 
     if (hasilFiltered.length === 0) {
-      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di sesi [${activeProjectId}]!`);
+      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di project [${activeProjectId}]!`);
       return;
     }
 
@@ -2591,8 +2489,8 @@
 
     let exportData = [
       ["REKAPITULASI HASIL SIMULASI TKA KABUPATEN KLATEN"],
-      [`KAWEDANAN / SESI: ${activeProjectId.toUpperCase()}`],
-      [`MATA PELAJARAN: ${targetMapel.toUpperCase()}`],
+      [`PROJECT / KAWEDANAN: ${activeProjectId.toUpperCase()}`],
+      [`MATA UJIAN: ${targetMapel.toUpperCase()}`],
       [`WAKTU EXPORT: ${new Date().toLocaleString('id-ID')} WIB`],
       [],
       [
