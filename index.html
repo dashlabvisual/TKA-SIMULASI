@@ -234,7 +234,7 @@
   </div>
 </div>
 
-<!-- ================= RUANG UJIAN (SOAL & JAWABAN) ================= -->
+<!-- ================= RUANG UJIAN ================= -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -286,7 +286,7 @@
   </div>
 </div>
 
-<!-- ================= DASHBOARD ADMIN / PROKTOR ================= -->
+<!-- ================= DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -396,21 +396,21 @@
         <div class="action-card" onclick="window.bukaModalTambahSoal()">
           <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
           <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
-          <small class="text-muted">Editor opsi & pilihan dinamis.</small>
+          <small class="text-muted">PG Sederhana (4 Opsi) & MCMA (3 Opsi).</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Drag & drop .docx otomatis.</small>
+          <small class="text-muted">Upload .docx (Template 2 Tipe Soal).</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Drag & drop Excel peserta.</small>
+          <small class="text-muted">Upload Excel peserta.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -597,8 +597,8 @@
       <div class="modal-body p-4">
         <div class="p-3 bg-light rounded-3 mb-3 d-flex justify-content-between align-items-center border">
           <div>
-            <h6 class="fw-bold mb-1">1. Download Template Word</h6>
-            <small class="text-muted">Mendukung gambar langsung di dalam tabel soal!</small>
+            <h6 class="fw-bold mb-1">1. Download Template Resmi (2 Tipe Soal)</h6>
+            <small class="text-muted">Template berisi: PG Sederhana (4 Opsi) & PG Kompleks MCMA (3 Opsi).</small>
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
@@ -644,7 +644,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL MANUAL SOAL ================= -->
+<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (2 TIPE SOAL SAJA) ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -665,17 +665,16 @@
           </div>
           <div class="col-md-3">
             <label class="form-label small fw-bold">Tipe Soal</label>
-            <select id="m_tipe" class="form-select">
-              <option value="PG">Pilihan Ganda (PG)</option>
-              <option value="KOMPLEKS">PG Kompleks (Multi Kunci)</option>
-              <option value="BS">Benar / Salah (BS)</option>
+            <select id="m_tipe" class="form-select" onchange="window.handleTipeSoalChange()">
+              <option value="PG">1. Pilihan Ganda Sederhana (4 Opsi, 1 Kunci)</option>
+              <option value="MCMA">2. Pilihan Ganda Kompleks (MCMA - 3 Opsi, Multi Kunci)</option>
             </select>
           </div>
           <div class="col-12">
-            <label class="form-label small fw-bold">Gambar Soal (Link URL / Google Drive / Upload Komputer)</label>
+            <label class="form-label small fw-bold">Gambar Soal (Link Drive / URL / Komputer - Auto-Compress < 150KB)</label>
             <div class="input-group">
-              <input id="m_img" class="form-control" placeholder="Tempel link URL / Google Drive / tag img...">
-              <input type="file" id="m_img_file" class="hidden" accept="image/*" onchange="window.handleLocalImageUpload(event, 'm_img')">
+              <input id="m_img" class="form-control" placeholder="Tempel link URL / Google Drive di sini...">
+              <input type="file" id="m_img_file" class="hidden" accept="image/*" onchange="window.handleCompressImageUpload(event, 'm_img')">
               <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('m_img_file').click()"><i class="bi bi-upload"></i> Upload</button>
             </div>
           </div>
@@ -686,10 +685,7 @@
         </div>
 
         <div id="sectionOptions">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold small text-muted text-uppercase mb-0">Opsi Jawaban & Kunci (Centang Benar)</h6>
-            <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.tambahOpsiDinamis()"><i class="bi bi-plus"></i> Tambah Opsi</button>
-          </div>
+          <h6 class="fw-bold small text-muted text-uppercase mb-2">Opsi Jawaban & Kunci Jawaban Benar</h6>
           <div id="containerDynamicOptions"></div>
         </div>
 
@@ -707,14 +703,15 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
+  // API KEY & FIREBASE CONFIG ANDA
   const firebaseConfig = {
     apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
-  authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
-  projectId: "aplikasi-tka-sekolah",
-  storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
-  messagingSenderId: "495658059611",
-  appId: "1:495658059611:web:cb64503e2448331affbc7e",
-  measurementId: "G-R1W64C1X98"
+    authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
+    projectId: "aplikasi-tka-sekolah",
+    storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
+    messagingSenderId: "495658059611",
+    appId: "1:495658059611:web:cb64503e2448331affbc7e",
+    measurementId: "G-R1W64C1X98"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -744,6 +741,40 @@
     loadPage1Options();
   }
 
+  // --- AUTO-COMPRESS CLIENT SIDE (< 150KB UNTUK 5000 SISWA) ---
+  window.handleCompressImageUpload = function(event, targetInputId) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 800; // Resolusi optimal web
+        if (width > height && width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // Kompresi kualitas JPEG 0.7 (Rata-rata 50KB - 120KB)
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+        document.getElementById(targetInputId).value = compressedBase64;
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Parser URL Gambar Google Drive
   function formatImageUrl(url) {
     if (!url) return "";
     let cleanUrl = url.trim();
@@ -768,15 +799,63 @@
     return cleanUrl;
   }
 
-  window.handleLocalImageUpload = function(event, targetInputId) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById(targetInputId).value = e.target.result;
-    };
-    reader.readAsDataURL(file);
+  // --- RENDER FORM OPSI SESUAI 2 TIPE SOAL ---
+  window.handleTipeSoalChange = function() {
+    const tipe = document.getElementById('m_tipe').value;
+    const hurufArr = tipe === 'MCMA' ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
+    renderDynamicOptions(hurufArr, {});
   };
+
+  window.bukaModalTambahSoal = async function() {
+    document.getElementById('edit_doc_id').value = "";
+    document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
+    document.getElementById('m_img').value = "";
+    document.getElementById('m_tanya').value = "";
+
+    const mapel = document.getElementById('adminMapelFilter').value;
+    if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
+
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
+    let maxNo = 0;
+    snap.forEach(d => {
+      let num = parseInt(d.data().id_soal) || 0;
+      if (num > maxNo) maxNo = num;
+    });
+    document.getElementById('m_no').value = maxNo + 1;
+    document.getElementById('m_tipe').value = "PG";
+
+    renderDynamicOptions(['A', 'B', 'C', 'D'], {});
+    new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
+  };
+
+  function renderDynamicOptions(hurufArr, dataOpsiVal) {
+    const container = document.getElementById('containerDynamicOptions');
+    container.innerHTML = '';
+    hurufArr.forEach(h => {
+      const val = dataOpsiVal['opsi_' + h.toLowerCase()] || "";
+      const imgVal = dataOpsiVal['img_' + h.toLowerCase()] || "";
+      appendOptionRow(h, val, imgVal, dataOpsiVal.kunci || "");
+    });
+  }
+
+  function appendOptionRow(huruf, teksVal, imgVal, kunciStr) {
+    const container = document.getElementById('containerDynamicOptions');
+    const isChecked = kunciStr.includes(huruf) ? 'checked' : '';
+    const row = document.createElement('div');
+    row.className = 'border rounded-3 p-3 mb-2 bg-light dynamic-option-row';
+    row.innerHTML = `
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <input type="checkbox" name="correct_chk" value="${huruf}" class="form-check-input mt-0 fs-5" ${isChecked}>
+        <span class="badge bg-primary">${huruf}</span>
+        <input type="text" id="opt_text_${huruf}" class="form-control option-text-val" placeholder="Teks Opsi ${huruf}" value="${teksVal}">
+      </div>
+      <div class="input-group input-group-sm">
+        <input type="text" id="opt_img_${huruf}" class="form-control option-img-val" placeholder="Link Gambar Opsi ${huruf} / Upload" value="${imgVal}">
+        <input type="file" id="opt_file_${huruf}" class="hidden" accept="image/*" onchange="window.handleCompressImageUpload(event, 'opt_img_${huruf}')">
+        <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('opt_file_${huruf}').click()"><i class="bi bi-upload"></i> Gambar Opsi</button>
+      </div>`;
+    container.appendChild(row);
+  }
 
   // --- ALUR 4 PAGE SISWA ---
   async function loadPage1Options() {
@@ -813,7 +892,6 @@
     }
   }
 
-  // PAGE 1 -> PAGE 2
   document.getElementById('btnPage1Next').addEventListener('click', () => {
     activeProjectId = document.getElementById('p1_project_select').value;
     const mSelect = document.getElementById('p1_mapel_select');
@@ -826,7 +904,6 @@
 
     const opt = mSelect.options[mSelect.selectedIndex];
     currentDurasi = parseInt(opt.getAttribute('data-durasi')) || 60;
-
     showView('page-2');
   });
 
@@ -834,32 +911,21 @@
     showView('page-1');
   });
 
-  // PAGE 2 -> PAGE 3 (LOGIN CHECK)
   document.getElementById('btnPage2Login').addEventListener('click', async () => {
     const u = document.getElementById('p2_username').value.trim();
     const p = document.getElementById('p2_password').value.trim();
 
-    if (!u || !p) {
-      alert("Masukkan Username dan Password!");
-      return;
-    }
+    if (!u || !p) { alert("Masukkan Username dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) {
-      alert("Akun peserta tidak ditemukan!");
-      return;
-    }
+    if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
 
     const userData = userSnap.docs[0].data();
-    if (userData.status === "Diblokir") {
-      alert("AKUN ANDA DIBLOKIR! Hubungi proktor.");
-      return;
-    }
+    if (userData.status === "Diblokir") { alert("AKUN ANDA DIBLOKIR!"); return; }
 
     currentStudent = u;
     currentStudentName = userData.nama || u;
 
-    // Isi Data ke PAGE 3
     document.getElementById('p3_kode_user').value = u;
     document.getElementById('p3_nama_lengkap_disp').value = `${u} - ${currentStudentName}`;
     document.getElementById('p3_mata_ujian').value = currentMapel;
@@ -868,21 +934,15 @@
     showView('page-3');
   });
 
-  // PAGE 3 -> PAGE 4 (SUBMIT DATA PESERTA)
   document.getElementById('btnPage3Submit').addEventListener('click', () => {
     const namaInput = document.getElementById('p3_nama_input').value.trim();
     const tglLahir = document.getElementById('p3_tgl_lahir').value;
 
-    if (!namaInput || !tglLahir) {
-      alert("Lengkapi konfirmasi Nama Peserta dan Tanggal Lahir!");
-      return;
-    }
+    if (!namaInput || !tglLahir) { alert("Lengkapi konfirmasi Nama Peserta dan Tanggal Lahir!"); return; }
 
-    // Ambil Jam Submit Real-Time
     const now = new Date();
     const waktuSubmitStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
 
-    // Isi Data ke PAGE 4
     document.getElementById('p4_nama_tes').innerText = `SIMULASI TKA - ${currentMapel}`;
     document.getElementById('p4_waktu_tes').innerText = waktuSubmitStr;
     document.getElementById('p4_alokasi_waktu').innerText = `${currentDurasi} Menit`;
@@ -890,7 +950,6 @@
     showView('page-4');
   });
 
-  // PAGE 4 -> RUANG UJIAN (START EXAM)
   document.getElementById('btnPage4StartExam').addEventListener('click', () => {
     startSecureExam();
   });
@@ -901,7 +960,7 @@
     }
 
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", currentMapel)));
-    if (snap.empty) { alert("Belum ada bank soal untuk mata pelajaran ini!"); return; }
+    if (snap.empty) { alert("Belum ada bank soal untuk mapel ini!"); return; }
 
     activeSoalList = [];
     snap.forEach(d => activeSoalList.push(d.data()));
@@ -930,7 +989,7 @@
     startTimer(currentDurasi * 60);
   }
 
-  // --- CONTROLLER SOAL & UJIAN ---
+  // --- CONTROLLER SOAL SISWA ---
   function renderGridNumbers() {
     const c = document.getElementById('soalGridContainer');
     c.innerHTML = '';
@@ -957,43 +1016,75 @@
     });
 
     const formattedImg = formatImageUrl(s.link_gambar);
+    const tipeLabel = s.tipe_soal === 'MCMA' ? 'PG Kompleks (Jawaban Lebih dari 1)' : 'PG Sederhana';
+
     let html = `<div class="d-flex justify-content-between align-items-center mb-3">
       <span class="badge bg-primary fs-6">Nomor ${idx + 1}</span>
-      <span class="badge bg-secondary">${s.tipe_soal}</span>
+      <span class="badge bg-secondary">${tipeLabel}</span>
     </div>`;
 
     if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="soal-inline-img img-fluid"></div>`;
     html += `<p class="fs-6 fw-bold mb-4">${s.pertanyaan}</p>`;
 
-    const saved = userAnswers[s.id_soal];
+    const saved = userAnswers[s.id_soal] || (s.tipe_soal === 'MCMA' ? [] : '');
+    const maxOpsi = s.tipe_soal === 'MCMA' ? ['a', 'b', 'c'] : ['a', 'b', 'c', 'd'];
 
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
+    maxOpsi.forEach((h, idxOpt) => {
       const huruf = window.opsiHurufList[idxOpt];
       const val = s['opsi_' + h];
       const imgOpt = formatImageUrl(s['img_' + h]);
       if (val || imgOpt) {
-        const isSel = saved === huruf ? 'selected' : '';
-        html += `<div class="option-item ${isSel}" onclick="window.pickAns('${s.id_soal}', '${huruf}')">
-          <span class="badge bg-primary">${huruf}</span>
-          <div class="flex-grow-1">
-            ${val ? `<div class="fw-semibold">${val}</div>` : ''}
-            ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
-          </div>
-        </div>`;
+        if (s.tipe_soal === 'MCMA') {
+          // Pilihan Ganda Kompleks (Multi Select Checklist)
+          const isSel = Array.isArray(saved) && saved.includes(huruf);
+          html += `<div class="option-item ${isSel ? 'selected' : ''}" onclick="window.pickAnsKompleks('${s.id_soal}', '${huruf}')">
+            <input type="checkbox" class="form-check-input mt-0 fs-5" ${isSel ? 'checked' : ''}>
+            <span class="badge bg-primary">${huruf}</span>
+            <div class="flex-grow-1">
+              ${val ? `<div class="fw-semibold">${val}</div>` : ''}
+              ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
+            </div>
+          </div>`;
+        } else {
+          // Pilihan Ganda Sederhana (Single Pick)
+          const isSel = saved === huruf ? 'selected' : '';
+          html += `<div class="option-item ${isSel}" onclick="window.pickAnsSingle('${s.id_soal}', '${huruf}')">
+            <span class="badge bg-primary">${huruf}</span>
+            <div class="flex-grow-1">
+              ${val ? `<div class="fw-semibold">${val}</div>` : ''}
+              ${imgOpt ? `<img src="${imgOpt}" class="img-fluid rounded mt-1" style="max-height:100px;">` : ''}
+            </div>
+          </div>`;
+        }
       }
     });
 
     document.getElementById('soalContainer').innerHTML = html;
   }
 
-  window.pickAns = async (id, val) => {
+  window.pickAnsSingle = (id, val) => {
     userAnswers[id] = val;
+    saveAndSyncAnswer();
+  };
+
+  window.pickAnsKompleks = (id, val) => {
+    let arr = Array.isArray(userAnswers[id]) ? userAnswers[id] : [];
+    if (arr.includes(val)) {
+      arr = arr.filter(x => x !== val);
+    } else {
+      arr.push(val);
+    }
+    userAnswers[id] = arr.sort();
+    saveAndSyncAnswer();
+  };
+
+  function saveAndSyncAnswer() {
     localStorage.setItem(`cbt_ans_${activeProjectId}_${currentStudent}_${currentMapel}`, JSON.stringify(userAnswers));
     renderSoalByIndex(currentSoalIndex);
     try {
-      await updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
+      updateDoc(doc(db, "monitoring", `${activeProjectId}_${currentStudent}`), { jawaban: userAnswers });
     } catch (e) {}
-  };
+  }
 
   function startTimer(sec) {
     let t = sec;
@@ -1009,13 +1100,30 @@
     if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto();
   });
 
+  // SUBMIT EXAM & SISTEM NILAI DIKOTOMIS (ALL OR NOTHING)
   async function submitExamAuto() {
     isExamActive = false;
     if (timerInterval) clearInterval(timerInterval);
     if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
 
     let benar = 0;
-    activeSoalList.forEach(s => { if (userAnswers[s.id_soal] === s.kunci) benar++; });
+    activeSoalList.forEach(s => {
+      const userAns = userAnswers[s.id_soal];
+      if (s.tipe_soal === 'MCMA') {
+        // Penilaian Dikotomis (All or Nothing): Semua kunci harus cocok persis
+        const kunciArr = (s.kunci || "").split(',').map(x => x.trim().toUpperCase()).sort();
+        const userArr = (Array.isArray(userAns) ? userAns : []).map(x => x.trim().toUpperCase()).sort();
+        if (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr)) {
+          benar++;
+        }
+      } else {
+        // PG Sederhana: 1 Kunci
+        if (String(userAns).trim().toUpperCase() === String(s.kunci).trim().toUpperCase()) {
+          benar++;
+        }
+      }
+    });
+
     const skor = activeSoalList.length > 0 ? Math.round((benar / activeSoalList.length) * 100) : 0;
 
     await addDoc(collection(db, "hasil"), {
@@ -1061,94 +1169,7 @@
     }
   }
 
-  // --- DASHBOARD ADMIN ACTIONS ---
-  window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-
-  window.bukaModalTambahSoal = async function() {
-    document.getElementById('edit_doc_id').value = "";
-    document.getElementById('modalSoalTitle').innerText = "Tambah Soal Manual";
-    document.getElementById('m_img').value = "";
-    document.getElementById('m_tanya').value = "";
-
-    const mapel = document.getElementById('adminMapelFilter').value;
-    if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
-
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
-    let maxNo = 0;
-    snap.forEach(d => {
-      let num = parseInt(d.data().id_soal) || 0;
-      if (num > maxNo) maxNo = num;
-    });
-    document.getElementById('m_no').value = maxNo + 1;
-
-    renderDynamicOptions(['A', 'B', 'C', 'D'], {});
-    new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
-  };
-
-  window.tambahOpsiDinamis = function() {
-    const container = document.getElementById('containerDynamicOptions');
-    const count = container.querySelectorAll('.dynamic-option-row').length;
-    if (count >= window.opsiHurufList.length) { alert("Maksimal opsi tercapai!"); return; }
-    const huruf = window.opsiHurufList[count];
-    appendOptionRow(huruf, "", "", "");
-  };
-
-  function renderDynamicOptions(hurufArr, dataOpsiVal) {
-    const container = document.getElementById('containerDynamicOptions');
-    container.innerHTML = '';
-    hurufArr.forEach(h => {
-      const val = dataOpsiVal['opsi_' + h.toLowerCase()] || "";
-      const imgVal = dataOpsiVal['img_' + h.toLowerCase()] || "";
-      appendOptionRow(h, val, imgVal, dataOpsiVal.kunci || "");
-    });
-  }
-
-  function appendOptionRow(huruf, teksVal, imgVal, kunciStr) {
-    const container = document.getElementById('containerDynamicOptions');
-    const isChecked = kunciStr.includes(huruf) ? 'checked' : '';
-    const row = document.createElement('div');
-    row.className = 'border rounded-3 p-3 mb-2 bg-light dynamic-option-row';
-    row.innerHTML = `
-      <div class="d-flex align-items-center gap-2 mb-2">
-        <input type="checkbox" name="correct_chk" value="${huruf}" class="form-check-input mt-0 fs-5" ${isChecked}>
-        <span class="badge bg-primary">${huruf}</span>
-        <input type="text" id="opt_text_${huruf}" class="form-control option-text-val" placeholder="Teks Opsi ${huruf}" value="${teksVal}">
-      </div>
-      <div class="input-group input-group-sm">
-        <input type="text" id="opt_img_${huruf}" class="form-control option-img-val" placeholder="Link URL Gambar Opsi ${huruf} / Upload" value="${imgVal}">
-        <input type="file" id="opt_file_${huruf}" class="hidden" accept="image/*" onchange="window.handleLocalImageUpload(event, 'opt_img_${huruf}')">
-        <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('opt_file_${huruf}').click()"><i class="bi bi-upload"></i> Gambar Opsi</button>
-      </div>`;
-    container.appendChild(row);
-  }
-
-  // Drag and Drop Helper
-  function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
-    const dropZone = document.getElementById(dropZoneId);
-    const fileInput = document.getElementById(fileInputId);
-    if (!dropZone || !fileInput) return;
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
-    });
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
-    });
-    dropZone.addEventListener('drop', (e) => {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      if (files.length > 0) {
-        fileInput.files = files;
-        processCallback({ target: { files: files } });
-      }
-    }, false);
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    setupDragAndDrop('dropZoneWord', 'fileWordInput', processWordFile);
-    setupDragAndDrop('dropZoneSiswa', 'fileExcelSiswaInput', handleImportSiswa);
-  });
-
+  // --- DASHBOARD ADMIN LOGIC ---
   // Secret Click Logo
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
@@ -1169,7 +1190,6 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
-  // Otentikasi Admin
   async function executeAdminLogin() {
     const uInput = document.getElementById('admUsername').value.trim();
     const pInput = document.getElementById('admSecretPin').value.trim();
@@ -1179,10 +1199,7 @@
       return;
     }
 
-    if (!uInput || !pInput) {
-      alert("Masukkan Username dan Password Admin/Guru!");
-      return;
-    }
+    if (!uInput || !pInput) { alert("Masukkan Username dan Password!"); return; }
 
     const adminSnap = await getDocs(query(collection(db, "admins"), where("username", "==", uInput), where("password", "==", pInput)));
     if (!adminSnap.empty) {
@@ -1220,7 +1237,7 @@
 
   window.tambahAdminPrompt = async function() {
     if (localStorage.getItem("cbt_super_admin") !== "true") {
-      alert("Akses ditolak! Hanya Administrator Utama (ADMIN) yang dapat menambah akun admin/guru.");
+      alert("Hanya Administrator Utama (ADMIN) yang dapat menambah akun admin/guru.");
       return;
     }
     const uname = prompt("Masukkan Username Guru/Admin Baru:");
@@ -1272,11 +1289,43 @@
     }
   };
 
+  // --- TEMPLATE WORD (2 TIPE SOAL: PG SEDERHANA & MCMA) ---
+  document.getElementById('btnDownloadWordTpl').addEventListener('click', () => {
+    const tableHTML = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title>Template Soal TKA</title></head>
+      <body>
+        <h3>TEMPLATE BANK SOAL CBT SCHOOL (2 TIPE SOAL)</h3>
+        <p><strong>Keterangan Kolom JENIS:</strong><br>
+        1 = Pilihan Ganda Sederhana (4 Opsi: A, B, C, D | 1 Kunci bertanda 'V')<br>
+        2 = Pilihan Ganda Kompleks MCMA (3 Opsi: A, B, C | Multi Kunci bertanda 'V')</p>
+        
+        <table border="1" style="border-collapse:collapse; width:100%;">
+          <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
+          
+          <!-- Contoh 1: PG Sederhana (4 Opsi, 1 Kunci) -->
+          <tr><td>1</td><td>Siapakah Presiden Pertama Republik Indonesia?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
+          <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td></td></tr>
+          <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
+
+          <!-- Contoh 2: PG Kompleks MCMA (3 Opsi, Multi Kunci) -->
+          <tr><td>2</td><td>Pilihlah pulau besar yang berada di wilayah Indonesia!</td><td>2</td><td>A</td><td>Pulau Jawa</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>B</td><td>Pulau Sumatera</td><td>V</td></tr>
+          <tr><td></td><td></td><td></td><td>C</td><td>Pulau Madagaskar</td><td></td></tr>
+        </table>
+      </body></html>`;
+    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Template_Soal_TKA.doc";
+    a.click();
+  });
+
   document.getElementById('btnDownloadExcelTpl').addEventListener('click', () => {
     const dataContoh = [
-      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "XII-A" },
-      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "XII-A" },
-      { username: "1003", password: "123", nama: "Citra Lestari", kelas: "XII-B" }
+      { username: "1001", password: "123", nama: "Ahmad Siswa", kelas: "VI-A" },
+      { username: "1002", password: "123", nama: "Budi Santoso", kelas: "VI-A" }
     ];
     const ws = XLSX.utils.json_to_sheet(dataContoh);
     const wb = XLSX.utils.book_new();
@@ -1284,26 +1333,31 @@
     XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
   });
 
-  document.getElementById('btnDownloadWordTpl').addEventListener('click', () => {
-    const tableHTML = `
-      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-      <head><title>Template Soal</title></head>
-      <body>
-        <h3>TEMPLATE BANK SOAL CBT SCHOOL</h3>
-        <p>Anda bisa langsung menyisipkan gambar ke dalam tabel di bawah ini.</p>
-        <table border="1" style="border-collapse:collapse; width:100%;">
-          <tr style="background:#f2f2f2;"><th>NO</th><th>SOAL</th><th>JENIS</th><th>OPSI</th><th>JAWABAN</th><th>KUNCI</th></tr>
-          <tr><td>1</td><td>Siapakah Presiden Indonesia ke-3?</td><td>1</td><td>A</td><td>Ir. Soekarno</td><td></td></tr>
-          <tr><td></td><td></td><td></td><td>B</td><td>Soeharto</td><td></td></tr>
-          <tr><td></td><td></td><td></td><td>C</td><td>B. J. Habibie</td><td>V</td></tr>
-          <tr><td></td><td></td><td></td><td>D</td><td>Abdurrahman Wahid</td><td></td></tr>
-        </table>
-      </body></html>`;
-    const blob = new Blob(['\ufeff' + tableHTML], { type: 'application/msword' });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "Template_Soal_Word.doc";
-    a.click();
+  // Drag & Drop Setup
+  function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
+    const dropZone = document.getElementById(dropZoneId);
+    const fileInput = document.getElementById(fileInputId);
+    if (!dropZone || !fileInput) return;
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        processCallback({ target: { files: files } });
+      }
+    }, false);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    setupDragAndDrop('dropZoneWord', 'fileWordInput', processWordFile);
+    setupDragAndDrop('dropZoneSiswa', 'fileExcelSiswaInput', handleImportSiswa);
   });
 
   document.getElementById('btnTriggerExcelUpload').addEventListener('click', () => document.getElementById('fileExcelSiswaInput').click());
@@ -1338,7 +1392,7 @@
             <span class="fw-semibold text-truncate" style="cursor:pointer; max-width:140px;" onclick="window.selectProject('${proj}')" title="${proj}">
               <i class="bi bi-folder2-open me-1"></i>${proj}
             </span>
-            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Keluar / Hapus Project" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Project" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
           </div>`;
       });
       document.getElementById('currentProjectBadge').innerText = activeProjectId;
@@ -1355,7 +1409,7 @@
   };
 
   window.hapusProject = async function(docId, projName) {
-    if (confirm(`Keluar/Hapus project [${projName}] dari daftar?`)) {
+    if (confirm(`Hapus project [${projName}]?`)) {
       await deleteDoc(doc(db, "projects", docId));
     }
   };
@@ -1443,10 +1497,11 @@
     soalArray.forEach((d) => {
       window.cacheBankSoal[d.idDoc] = d;
       const formattedImg = formatImageUrl(d.link_gambar);
+      const labelTipe = d.tipe_soal === 'MCMA' ? 'PG Kompleks (3 Opsi)' : 'PG Sederhana (4 Opsi)';
       rows += `<tr>
         <td><strong>${d.id_soal}</strong></td>
         <td>${d.pertanyaan} ${formattedImg ? '<br><img src="'+formattedImg+'" style="max-height:50px;" class="rounded border mt-1">' : ''}</td>
-        <td><span class="badge bg-secondary">${d.tipe_soal}</span></td>
+        <td><span class="badge bg-secondary">${labelTipe}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td>
           <button class="btn btn-sm btn-outline-success me-1" onclick="window.previewSoalManual('${d.idDoc}')"><i class="bi bi-eye"></i> Preview</button>
@@ -1464,11 +1519,13 @@
     if (!s) return;
 
     const formattedImg = formatImageUrl(s.link_gambar);
-    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${s.tipe_soal}</span></div>`;
+    const labelTipe = s.tipe_soal === 'MCMA' ? 'PG Kompleks (3 Opsi)' : 'PG Sederhana (4 Opsi)';
+    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${labelTipe}</span></div>`;
     if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
     html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
 
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idxOpt) => {
+    const maxOpsi = s.tipe_soal === 'MCMA' ? ['a', 'b', 'c'] : ['a', 'b', 'c', 'd'];
+    maxOpsi.forEach((h, idxOpt) => {
       const huruf = window.opsiHurufList[idxOpt];
       const val = s['opsi_' + h];
       const imgOpt = formatImageUrl(s['img_' + h]);
@@ -1483,7 +1540,7 @@
       }
     });
 
-    html += `<div class="mt-3 p-2 bg-success-subtle border border-success rounded text-success small fw-bold">Kunci Jawaban: ${s.kunci}</div>`;
+    html += `<div class="mt-3 p-2 bg-success-subtle border border-success rounded text-success small fw-bold">Kunci Jawaban Benar: ${s.kunci}</div>`;
     document.getElementById('previewSoalBody').innerHTML = html;
     new bootstrap.Modal(document.getElementById('modalPreviewSoal')).show();
   };
@@ -1502,23 +1559,21 @@
 
     let opsiVal = {};
     let opsiImgVal = {};
-    let hurufAktif = ['A', 'B', 'C', 'D'];
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
-      const huruf = window.opsiHurufList[idx];
-      if (s['opsi_' + h] || s['img_' + h]) {
-        opsiVal['opsi_' + h] = s['opsi_' + h] || '';
-        opsiImgVal['img_' + h] = s['img_' + h] || '';
-        if (!hurufAktif.includes(huruf)) hurufAktif.push(huruf);
-      }
+    const hurufAktif = s.tipe_soal === 'MCMA' ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
+    
+    hurufAktif.forEach(h => {
+      const hLower = h.toLowerCase();
+      opsiVal['opsi_' + hLower] = s['opsi_' + hLower] || '';
+      opsiImgVal['img_' + hLower] = s['img_' + hLower] || '';
     });
 
     renderDynamicOptions(hurufAktif, { kunci: s.kunci, ...opsiVal, ...opsiImgVal });
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].forEach((h, idx) => {
-      const huruf = window.opsiHurufList[idx];
-      const elemText = document.getElementById('opt_text_' + huruf);
-      const elemImg = document.getElementById('opt_img_' + huruf);
-      if (elemText && s['opsi_' + h]) elemText.value = s['opsi_' + h];
-      if (elemImg && s['img_' + h]) elemImg.value = s['img_' + h];
+    hurufAktif.forEach(h => {
+      const hLower = h.toLowerCase();
+      const elemText = document.getElementById('opt_text_' + h);
+      const elemImg = document.getElementById('opt_img_' + h);
+      if (elemText && s['opsi_' + hLower]) elemText.value = s['opsi_' + hLower];
+      if (elemImg && s['img_' + hLower]) elemImg.value = s['img_' + hLower];
     });
 
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
@@ -1656,18 +1711,26 @@
 
     let no = 1;
     for (const [idSoal, ans] of Object.entries(jawabanSiswa)) {
-      const soal = soalMap[idSoal] || { pertanyaan: "Soal tidak ditemukan", kunci: "?" };
-      const isBenar = String(ans).trim().toUpperCase() === String(soal.kunci).trim().toUpperCase();
+      const soal = soalMap[idSoal] || { pertanyaan: "Soal tidak ditemukan", kunci: "?", tipe_soal: "PG" };
+      let isBenar = false;
+
+      if (soal.tipe_soal === 'MCMA') {
+        const kunciArr = (soal.kunci || "").split(',').map(x => x.trim().toUpperCase()).sort();
+        const userArr = (Array.isArray(ans) ? ans : []).map(x => x.trim().toUpperCase()).sort();
+        isBenar = (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr));
+      } else {
+        isBenar = (String(ans).trim().toUpperCase() === String(soal.kunci).trim().toUpperCase());
+      }
 
       containerHTML += `
         <div class="p-3 mb-3 border rounded-3 ${isBenar ? 'bg-success-subtle border-success' : 'bg-danger-subtle border-danger'}">
           <div class="d-flex justify-content-between mb-1">
-            <strong>Soal No. ${no++}</strong>
-            <span class="badge ${isBenar ? 'bg-success' : 'bg-danger'}">${isBenar ? 'BENAR' : 'SALAH'}</span>
+            <strong>Soal No. ${no++} (${soal.tipe_soal === 'MCMA' ? 'PG Kompleks' : 'PG Sederhana'})</strong>
+            <span class="badge ${isBenar ? 'bg-success' : 'bg-danger'}">${isBenar ? 'BENAR (1)' : 'SALAH (0)'}</span>
           </div>
           <p class="mb-2 fw-semibold">${soal.pertanyaan}</p>
           <div class="small">
-            <div>Jawaban Siswa: <span class="fw-bold">${ans}</span></div>
+            <div>Jawaban Siswa: <span class="fw-bold">${Array.isArray(ans) ? ans.join(', ') : ans}</span></div>
             <div>Kunci Jawaban: <span class="fw-bold text-success">${soal.kunci}</span></div>
           </div>
         </div>`;
@@ -1717,6 +1780,7 @@
     reader.readAsArrayBuffer(file);
   }
 
+  // Import Word Sesuai 2 Tipe Soal (PG Sederhana = 1, PG Kompleks = 2)
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1770,10 +1834,10 @@
               project: activeProjectId,
               id_soal: assignedNo,
               mapel: targetMapel,
-              tipe_soal: jenis === '4' ? 'BS' : (jenis === '2' ? 'KOMPLEKS' : 'PG'),
+              tipe_soal: jenis === '2' ? 'MCMA' : 'PG',
               pertanyaan: soalText,
               link_gambar: extractedImg,
-              opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '', opsi_e: '',
+              opsi_a: '', opsi_b: '', opsi_c: '', opsi_d: '',
               kunci: ''
             };
           }
@@ -1783,13 +1847,14 @@
             const optImgSrc = optImg ? optImg.src : '';
 
             const opKey = opsi.toLowerCase();
-            if (['a','b','c','d','e','f','g','h'].includes(opKey)) {
+            if (['a','b','c','d'].includes(opKey)) {
               cur['opsi_' + opKey] = jawabanText;
               cur['img_' + opKey] = optImgSrc;
             }
             
-            if (kunci.toUpperCase() === 'V') cur.kunci = cur.kunci ? cur.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
-            if (cur.tipe_soal === 'BS' && (kunci.toUpperCase() === 'B' || kunci.toUpperCase() === 'S')) cur.kunci = kunci.toUpperCase() === 'B' ? 'BENAR' : 'SALAH';
+            if (kunci.toUpperCase() === 'V') {
+              cur.kunci = cur.kunci ? cur.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
+            }
           }
         }
         if (cur) list.push(cur);
@@ -1798,7 +1863,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal secara kelanjutan!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
@@ -1833,13 +1898,13 @@
       kunci: checkedBoxes.join(',')
     };
 
-    const rows = document.querySelectorAll('.dynamic-option-row');
-    rows.forEach((r, idx) => {
-      const huruf = window.opsiHurufList[idx].toLowerCase();
-      const val = r.querySelector('.option-text-val').value.trim();
-      const imgVal = r.querySelector('.option-img-val').value.trim();
-      payload['opsi_' + huruf] = val;
-      payload['img_' + huruf] = formatImageUrl(imgVal);
+    const maxOpsiArr = tipe === 'MCMA' ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
+    maxOpsiArr.forEach(h => {
+      const hLower = h.toLowerCase();
+      const val = document.getElementById('opt_text_' + h) ? document.getElementById('opt_text_' + h).value.trim() : '';
+      const imgVal = document.getElementById('opt_img_' + h) ? document.getElementById('opt_img_' + h).value.trim() : '';
+      payload['opsi_' + hLower] = val;
+      payload['img_' + hLower] = formatImageUrl(imgVal);
     });
 
     if (editId) {
