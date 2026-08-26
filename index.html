@@ -26,7 +26,6 @@
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
-    /* Layout Admin */
     .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
@@ -43,7 +42,6 @@
     }
     .project-item-box.active { border-color: var(--primary); background-color: var(--primary-subtle); }
 
-    /* Dashboard Metric Cards Murni Referensi */
     .metric-card-1 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border-radius: 16px; padding: 24px; }
     .metric-card-2 { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: white; border-radius: 16px; padding: 24px; }
     .metric-card-3 { background: linear-gradient(135deg, #475569, #1e293b); color: white; border-radius: 16px; padding: 24px; }
@@ -130,8 +128,8 @@
           <select id="p_project_select" class="form-select"></select>
         </div>
         <div class="text-start mb-3">
-          <label class="form-label small fw-bold">Pilih Mata Pelajaran</label>
-          <select id="p_mapel_select" class="form-select"></select>
+          <label class="form-label small fw-bold text-primary"><i class="bi bi-journal-check me-1"></i> Pilih Mata Ujian</label>
+          <select id="p_mapel_select" class="form-select border-primary"></select>
         </div>
         <div class="text-start mb-3">
           <label class="form-label small fw-bold">Username / NISN</label>
@@ -225,7 +223,7 @@
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN (GAYA GAMBAR REFERENSI) ================= -->
+<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -254,12 +252,13 @@
         </div>
       </div>
       <div>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2"></select>
+        <label class="small fw-bold text-muted me-1">Pilih Mata Ujian:</label>
+        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2 border-primary fw-bold text-primary"></select>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
 
-    <!-- 6 Kotak Metrik Ringkasan Aktivitas (Sesuai Gambar Referensi) -->
+    <!-- 6 Kotak Metrik Ringkasan -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="metric-card-1">
@@ -361,10 +360,11 @@
       </div>
     </div>
 
-    <ul class="nav nav-pills mb-3 gap-2">
+    <ul class="nav nav-pills mb-3 gap-2" id="adminNavTabs">
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Daftar & Edit Waktu Mapel</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
+      <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai & Review</button></li>
     </ul>
@@ -382,7 +382,20 @@
         </div>
       </div>
 
-      <!-- Tab 2: Siswa -->
+      <!-- Tab 2: Daftar Mapel & Edit Waktu Ujian -->
+      <div class="tab-pane fade" id="tab-mapel-list">
+        <div class="cbt-card p-4">
+          <h6 class="fw-bold mb-3">Pengaturan Waktu Ujian Tiap Mata Pelajaran</h6>
+          <div class="table-responsive">
+            <table class="table align-middle" id="tblMapelList">
+              <thead class="table-light"><tr><th>Mata Pelajaran</th><th>Durasi Ujian (Menit)</th><th>Aksi</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Siswa -->
       <div class="tab-pane fade" id="tab-peserta-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -400,7 +413,7 @@
         </div>
       </div>
 
-      <!-- Tab 3: Manajemen Admin / Guru (Tambah Username & Password) -->
+      <!-- Tab 4: Manajemen Admin (Hanya Tampil Jika ADMIN / 123SIAP) -->
       <div class="tab-pane fade" id="tab-admin-list">
         <div class="cbt-card p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -418,7 +431,7 @@
         </div>
       </div>
 
-      <!-- Tab 4: Monitoring -->
+      <!-- Tab 5: Monitoring -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
@@ -433,7 +446,7 @@
         </div>
       </div>
 
-      <!-- Tab 5: Rekap Nilai -->
+      <!-- Tab 6: Rekap Nilai -->
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Rekap Nilai & Review Jawaban Siswa</h6>
@@ -449,7 +462,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL REVIEW JAWABAN SISWA ================= -->
+<!-- ================= MODAL REVIEW JAWABAN ================= -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -468,7 +481,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL LOGIN ADMIN (PIN ATAU USERNAME & PASSWORD) ================= -->
+<!-- ================= MODAL LOGIN ADMIN (ADMIN / 123SIAP) ================= -->
 <div class="modal fade" id="modalSecretAdmin" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -478,12 +491,12 @@
       </div>
       <div class="modal-body p-4">
         <div class="mb-3">
-          <label class="form-label small fw-bold">Username Admin / Guru</label>
-          <input type="text" id="admUsername" class="form-control" placeholder="Kosongkan jika pakai PIN default">
+          <label class="form-label small fw-bold">Username Admin</label>
+          <input type="text" id="admUsername" class="form-control" placeholder="ADMIN (atau kosong jika pakai PIN)">
         </div>
         <div class="mb-3">
           <label class="form-label small fw-bold">Password / PIN</label>
-          <input type="password" id="admSecretPin" class="form-control" placeholder="PIN Default: 123456">
+          <input type="password" id="admSecretPin" class="form-control" placeholder="123SIAP atau 123456">
         </div>
         <button id="btnSubmitAdminLogin" class="btn btn-primary w-100 fw-bold py-2">Masuk Dashboard</button>
       </div>
@@ -544,7 +557,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL ================= -->
+<!-- ================= MODAL EDITOR SOAL MANUAL ================= -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -604,7 +617,7 @@
   import { getFirestore, collection, addDoc, getDocs, doc, setDoc, updateDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
+   apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
   authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
   projectId: "aplikasi-tka-sekolah",
   storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
@@ -634,11 +647,26 @@
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
+    checkAdminRoleUI();
   } else {
     showView('view-role-selector');
   }
 
-  // --- DINAMIK OPSI JAWABAN ---
+  function checkAdminRoleUI() {
+    const roleAdmin = localStorage.getItem("cbt_admin_username");
+    const navTabAdminList = document.getElementById('navTabAdminList');
+    const tabAdminContent = document.getElementById('tab-admin-list');
+    
+    // Jika login bukan ADMIN utama, sembunyikan manajemen admin/guru
+    if (roleAdmin !== "ADMIN") {
+      if (navTabAdminList) navTabAdminList.classList.add('hidden');
+      if (tabAdminContent) tabAdminContent.classList.remove('active', 'show');
+    } else {
+      if (navTabAdminList) navTabAdminList.classList.remove('hidden');
+    }
+  }
+
+  // --- OPSI DINAMIS ---
   window.opsiHurufList = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   window.bukaModalTambahSoal = function() {
     document.getElementById('edit_doc_id').value = "";
@@ -710,13 +738,13 @@
     document.getElementById('btnShowSidebarTop').classList.add('hidden');
   });
 
-  // Otentikasi Multi-Admin (Username & Password ATAU PIN Default)
+  // Otentikasi Admin (ADMIN / 123SIAP atau Database Guru)
   async function executeAdminLogin() {
-    const uInput = document.getElementById('admUsername').value.trim();
+    const uInput = document.getElementById('admUsername').value.trim().toUpperCase();
     const pInput = document.getElementById('admSecretPin').value.trim();
 
-    if (pInput === "123456" && !uInput) {
-      successAdminLogin("Administrator Utama");
+    if ((uInput === "ADMIN" && pInput === "123SIAP") || (pInput === "123456" && !uInput)) {
+      successAdminLogin("ADMIN", "Administrator Utama");
       return;
     }
 
@@ -728,14 +756,15 @@
     const adminSnap = await getDocs(query(collection(db, "admins"), where("username", "==", uInput), where("password", "==", pInput)));
     if (!adminSnap.empty) {
       const adminData = adminSnap.docs[0].data();
-      successAdminLogin(adminData.nama || uInput);
+      successAdminLogin(uInput, adminData.nama || uInput);
     } else {
       alert("Username atau Password Admin salah!");
     }
   }
 
-  function successAdminLogin(namaAdmin) {
+  function successAdminLogin(username, namaAdmin) {
     localStorage.setItem("cbt_admin_logged", "true");
+    localStorage.setItem("cbt_admin_username", username);
     localStorage.setItem("cbt_admin_name", namaAdmin);
     const modalEl = document.getElementById('modalSecretAdmin');
     const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
@@ -745,6 +774,7 @@
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
     initAdminDashboard();
+    checkAdminRoleUI();
   }
 
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
@@ -752,18 +782,18 @@
 
   document.getElementById('btnAdminLogout').addEventListener('click', () => {
     localStorage.removeItem("cbt_admin_logged");
+    localStorage.removeItem("cbt_admin_username");
     localStorage.removeItem("cbt_admin_name");
     resetViews();
   });
 
-  // Tambah Akun Admin Baru
   window.tambahAdminPrompt = async function() {
     const uname = prompt("Masukkan Username Admin Baru:");
     const pass = prompt("Masukkan Password Admin:");
     const nama = prompt("Nama Lengkap Admin / Guru:");
     if (uname && pass && nama) {
       await addDoc(collection(db, "admins"), {
-        username: uname.trim(),
+        username: uname.trim().toUpperCase(),
         password: pass.trim(),
         nama: nama.trim()
       });
@@ -912,7 +942,6 @@
     updateDashboardMetrics();
   }
 
-  // Update Metrik Kartu Dashboard Sesuai Gambar Referensi
   async function updateDashboardMetrics() {
     const qSiswa = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
     const qAdmin = await getDocs(collection(db, "admins"));
@@ -921,7 +950,7 @@
     const qSelesai = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
 
     document.getElementById('statTotalSiswa').innerText = qSiswa.size;
-    document.getElementById('statTotalAdmin').innerText = qAdmin.size + 1; // Termasuk admin utama
+    document.getElementById('statTotalAdmin').innerText = qAdmin.size + 1;
     document.getElementById('statTotalUjian').innerText = qMapel.size;
     document.getElementById('statTotalSoal').innerText = qSoal.size;
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
@@ -932,22 +961,38 @@
     onSnapshot(qMapel, (snap) => {
       const sMapel = document.getElementById('adminMapelFilter');
       const sTarget = document.getElementById('m_target_mapel');
-      sMapel.innerHTML = ''; sTarget.innerHTML = '';
+      sMapel.innerHTML = '<option value="" disabled selected>-- Pilih Mata Ujian --</option>';
+      sTarget.innerHTML = '';
       
+      let mapelRows = '';
       snap.forEach(d => {
-        const m = d.data().nama_mapel;
-        sMapel.innerHTML += `<option value="${m}">${m}</option>`;
-        sTarget.innerHTML += `<option value="${m}">${m}</option>`;
+        const m = d.data();
+        sMapel.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
+        sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
+        
+        mapelRows += `<tr>
+          <td><strong>${m.nama_mapel}</strong></td>
+          <td><input type="number" id="durasi_${d.id}" class="form-control form-control-sm w-50" value="${m.durasi}"></td>
+          <td><button class="btn btn-sm btn-primary" onclick="window.updateDurasiMapel('${d.id}')"><i class="bi bi-save me-1"></i> Simpan Waktu</button></td>
+        </tr>`;
       });
+      document.querySelector('#tblMapelList tbody').innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mapel.</td></tr>';
       renderBankSoalAdmin();
       updateDashboardMetrics();
     });
   }
 
+  window.updateDurasiMapel = async function(mapelId) {
+    const newDurasi = parseInt(document.getElementById(`durasi_${mapelId}`).value);
+    if (!newDurasi || newDurasi <= 0) { alert("Masukkan waktu durasi yang valid!"); return; }
+    await updateDoc(doc(db, "mapel", mapelId), { durasi: newDurasi });
+    alert("Waktu ujian berhasil diperbarui!");
+  };
+
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
+    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Silakan pilih Mata Ujian di atas terlebih dahulu.</td></tr>'; return; }
     
     window.cacheBankSoal = window.cacheBankSoal || {};
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId), where("mapel", "==", mapel)));
@@ -966,7 +1011,7 @@
         </td>
       </tr>`;
     });
-    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal.</td></tr>';
+    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mata ujian ini.</td></tr>';
     updateDashboardMetrics();
   };
 
@@ -1030,7 +1075,7 @@
 
   function loadAdminList() {
     onSnapshot(collection(db, "admins"), (snap) => {
-      let rows = `<tr><td><strong>Administrator Utama</strong></td><td><code>123456 (PIN)</code></td><td>System Root</td><td>-</td></tr>`;
+      let rows = `<tr><td><strong>ADMIN (Utama)</strong></td><td><code>123SIAP</code></td><td>System Root</td><td>-</td></tr>`;
       snap.forEach(docSnap => {
         const a = docSnap.data();
         rows += `<tr>
@@ -1202,7 +1247,7 @@
     if (!file) return;
 
     const targetMapel = document.getElementById('adminMapelFilter').value;
-    if (!targetMapel) { alert("Pilih mata pelajaran terlebih dahulu di dashboard!"); return; }
+    if (!targetMapel) { alert("Pilih Mata Ujian terlebih dahulu di bagian atas dashboard!"); return; }
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1369,7 +1414,7 @@
   document.getElementById('p_project_select').addEventListener('change', async function() {
     const proj = this.value;
     const mSelect = document.getElementById('p_mapel_select');
-    mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Pelajaran --</option>';
+    mSelect.innerHTML = '<option value="" disabled selected>-- Pilih Mata Ujian --</option>';
     
     const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", proj)));
     snap.forEach(d => {
@@ -1385,7 +1430,7 @@
     const mSelect = document.getElementById('p_mapel_select');
     const m = mSelect.value;
 
-    if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Pelajaran, Username, dan Password!"); return; }
+    if (!proj || !u || !p || !m) { alert("Lengkapi Project, Mata Ujian, Username, dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", proj), where("username", "==", u), where("password", "==", p)));
     if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
