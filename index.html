@@ -27,13 +27,17 @@
     
     .cbt-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
     
-    /* Layout Admin */
-    .admin-wrapper { display: flex; min-height: 100vh; }
+    /* Layout Admin dengan Fitur Hide & See Sidebar */
+    .admin-wrapper { display: flex; min-height: 100vh; position: relative; }
     .admin-sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
       display: flex; flex-direction: column; padding: 20px 14px; flex-shrink: 0;
+      transition: all 0.3s ease; z-index: 100;
     }
-    .admin-content { flex-grow: 1; padding: 28px; overflow-y: auto; }
+    .admin-sidebar.collapsed {
+      margin-left: calc(-1 * var(--sidebar-w));
+    }
+    .admin-content { flex-grow: 1; padding: 28px; overflow-y: auto; transition: all 0.3s ease; }
     
     .project-item-btn {
       padding: 10px 14px; border-radius: 10px; border: 1px solid transparent;
@@ -86,7 +90,7 @@
   </div>
 </nav>
 
-<!-- ================= VIEW 0: HALAMAN UTAMA PEMILIHAN PERAN (ROLE SELECTOR) ================= -->
+<!-- ================= VIEW 0: HALAMAN UTAMA PEMILIHAN PERAN ================= -->
 <div id="view-role-selector" class="container py-5">
   <div class="row justify-content-center pt-5">
     <div class="col-md-5">
@@ -233,11 +237,12 @@
   </div>
 </div>
 
-<!-- ================= VIEW 5: DASHBOARD ADMIN ================= -->
+<!-- ================= VIEW 5: DASHBOARD ADMIN DENGAN SIDEBAR HIDE/SHOW ================= -->
 <div id="view-admin" class="admin-wrapper hidden">
-  <div class="admin-sidebar">
+  <!-- SIDEBAR PROYEK (Bisa disembunyikan/dimunculkan) -->
+  <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
-      <span class="fw-bold text-primary"><i class="bi bi-kanban me-1"></i> DAFTAR PROJECT</span>
+      <span class="fw-bold text-primary small"><i class="bi bi-kanban me-1"></i> DAFTAR PROJECT</span>
       <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru"><i class="bi bi-plus"></i></button>
     </div>
     
@@ -249,11 +254,18 @@
     </button>
   </div>
 
+  <!-- KONTEN ADMIN -->
   <div class="admin-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-      <div>
-        <h4 class="fw-bold mb-1">Project: <span id="currentProjectBadge" class="text-primary">-</span></h4>
-        <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai di dalam project ini.</p>
+      <div class="d-flex align-items-center gap-3">
+        <!-- Tombol Toggle Hide / See Sidebar -->
+        <button id="btnToggleSidebar" class="btn btn-outline-primary btn-sm" title="Sembunyikan/Tampilkan Menu Project">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+        <div>
+          <h4 class="fw-bold mb-1">Project: <span id="currentProjectBadge" class="text-primary">-</span></h4>
+          <p class="text-muted small mb-0">Kelola bank soal, peserta ujian, serta monitor nilai di dalam project ini.</p>
+        </div>
       </div>
       <div>
         <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2"></select>
@@ -296,7 +308,7 @@
       <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
-      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai & Review</button></li>
     </ul>
 
     <div class="tab-content">
@@ -344,13 +356,33 @@
 
       <div class="tab-pane fade" id="tab-hasil-nilai">
         <div class="cbt-card p-4">
+          <h6 class="fw-bold mb-3">Rekap Nilai & Review Jawaban Siswa</h6>
           <div class="table-responsive">
             <table class="table align-middle" id="tblHasilNilai">
-              <thead class="table-light"><tr><th>Username</th><th>Mata Pelajaran</th><th>Skor</th><th>Benar / Total</th><th>Waktu</th></tr></thead>
+              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Skor</th><th>Benar / Total</th><th>Aksi Review</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL REVIEW JAWABAN SISWA ================= -->
+<div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Review Jawaban: <span id="revNamaSiswa" class="text-primary"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="mb-3 p-3 bg-light rounded-3 d-flex justify-content-between">
+          <span>Mapel: <strong id="revMapel"></strong></span>
+          <span>Skor: <strong id="revSkor" class="text-success"></strong></span>
+        </div>
+        <div id="revContainerSoal" style="max-height: 450px; overflow-y: auto;"></div>
       </div>
     </div>
   </div>
@@ -389,7 +421,6 @@
 
         <div class="p-4 border rounded-3 text-center border-dashed">
           <h6 class="fw-bold mb-2">2. Upload File Dokumen Word (.docx)</h6>
-          <p class="text-muted small">Gambar yang di-paste ke tabel Word akan otomatis diekstrak ke sistem.</p>
           <input type="file" id="fileWordInput" class="hidden" accept=".docx, .doc">
           <button id="btnTriggerWordUpload" class="btn btn-primary"><i class="bi bi-upload me-1"></i> Pilih File Word</button>
           <div id="wordStatusMsg" class="mt-2 small fw-bold text-success"></div>
@@ -514,13 +545,12 @@
 
   // MASUKKAN KONFIGURASI FIREBASE ANDA
   const firebaseConfig = {
-    apiKey: "AIzaSyAXNUlBJYvOcjV4TAO3wzPZjQ-BLPjzM5o",
-  authDomain: "aplikasi-tka-sekolah.firebaseapp.com",
-  projectId: "aplikasi-tka-sekolah",
-  storageBucket: "aplikasi-tka-sekolah.firebasestorage.app",
-  messagingSenderId: "495658059611",
-  appId: "1:495658059611:web:cb64503e2448331affbc7e",
-  measurementId: "G-R1W64C1X98"
+    apiKey: "GANTI_DENGAN_API_KEY_ANDA",
+    authDomain: "GANTI_DENGAN_AUTH_DOMAIN_ANDA",
+    projectId: "GANTI_DENGAN_PROJECT_ID_ANDA",
+    storageBucket: "GANTI_DENGAN_STORAGE_BUCKET_ANDA",
+    messagingSenderId: "GANTI_DENGAN_SENDER_ID_ANDA",
+    appId: "GANTI_DENGAN_APP_ID_ANDA"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -540,7 +570,6 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
-  // Auto Login Admin jika Session Tersimpan
   if (localStorage.getItem("cbt_admin_logged") === "true") {
     showView('view-admin');
     document.getElementById('topNav').classList.add('hidden');
@@ -567,6 +596,11 @@
 
   document.getElementById('btnBackToRole').addEventListener('click', () => {
     showView('view-role-selector');
+  });
+
+  // Fitur Hide & See Sidebar Proyek
+  document.getElementById('btnToggleSidebar').addEventListener('click', () => {
+    document.getElementById('adminSidebar').classList.toggle('collapsed');
   });
 
   function executeAdminLogin() {
@@ -820,22 +854,75 @@
       document.querySelector('#tblMonitoring tbody').innerHTML = rows;
     });
 
+    // Listener Rekap Nilai dengan Tombol Review & Nama Siswa
     const qHasil = query(collection(db, "hasil"), where("project", "==", activeProjectId));
-    onSnapshot(qHasil, (snap) => {
+    onSnapshot(qHasil, async (snap) => {
       let rows = '';
+      const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+      let userMap = {};
+      userSnap.forEach(u => { userMap[u.data().username] = u.data(); });
+
       snap.forEach(d => {
         const data = d.data();
+        const infoSiswa = userMap[data.username] || {};
+        const namaLengkap = infoSiswa.nama || "Siswa (Tidak terdaftar)";
+        
+        // Simpan data ke atribut tombol review
+        window.allHasilCache = window.allHasilCache || {};
+        window.allHasilCache[d.id] = data;
+
         rows += `<tr>
           <td><strong>${data.username}</strong></td>
+          <td>${namaLengkap}</td>
           <td>${data.mapel}</td>
           <td><span class="badge bg-primary fs-6">${data.skor}</span></td>
           <td>${data.benar} / ${data.total}</td>
-          <td>${data.waktu}</td>
+          <td><button class="btn btn-sm btn-outline-info" onclick="window.bukaModalReview('${d.id}', '${namaLengkap}')"><i class="bi bi-eye"></i> Review</button></td>
         </tr>`;
       });
-      document.querySelector('#tblHasilNilai tbody').innerHTML = rows;
+      document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
     });
   }
+
+  // Fungsi Membuka Modal Review Jawaban Detail Siswa
+  window.bukaModalReview = async function(hasilId, namaSiswa) {
+    const dataHasil = window.allHasilCache[hasilId];
+    if (!dataHasil) return;
+
+    document.getElementById('revNamaSiswa').innerText = `${namaSiswa} (${dataHasil.username})` ;
+    document.getElementById('revMapel').innerText = dataHasil.mapel;
+    document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
+
+    // Ambil soal mapel tersebut untuk dicocokkan
+    const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project), where("mapel", "==", dataHasil.mapel)));
+    let soalMap = {};
+    soalSnap.forEach(s => { soalMap[s.data().id_soal] = s.data(); });
+
+    let containerHTML = '';
+    const jawabanSiswa = dataHasil.jawaban || {};
+
+    let no = 1;
+    for (const [idSoal, ans] of Object.entries(jawabanSiswa)) {
+      const soal = soalMap[idSoal] || { pertanyaan: "Soal tidak ditemukan", kunci: "?" };
+      const isBenar = String(ans).trim().toUpperCase() === String(soal.kunci).trim().toUpperCase();
+
+      containerHTML += `
+        <div class="p-3 mb-3 border rounded-3 ${isBenar ? 'bg-success-subtle border-success' : 'bg-danger-subtle border-danger'}">
+          <div class="d-flex justify-content-between mb-1">
+            <strong>Soal No. ${no++}</strong>
+            <span class="badge ${isBenar ? 'bg-success' : 'bg-danger'}">${isBenar ? 'BENAR' : 'SALAH'}</span>
+          </div>
+          <p class="mb-2 fw-semibold">${soal.pertanyaan}</p>
+          <div class="small">
+            <div>Jawaban Siswa: <span class="fw-bold">${ans}</span></div>
+            <div>Kunci Jawaban: <span class="fw-bold text-success">${soal.kunci}</span></div>
+          </div>
+        </div>`;
+    }
+
+    document.getElementById('revContainerSoal').innerHTML = containerHTML || '<p class="text-muted">Tidak ada rincian jawaban tersimpan.</p>';
+    new bootstrap.Modal(document.getElementById('modalReviewSiswa')).show();
+  };
 
   window.delSoal = async (id) => {
     if (confirm("Hapus soal ini?")) { await deleteDoc(doc(db, "soal", id)); renderBankSoalAdmin(); }
@@ -863,8 +950,8 @@
             project: activeProjectId,
             username: String(u),
             password: String(p),
-            nama: row.nama || "",
-            kelas: row.kelas || "",
+            nama: row.nama || row.Nama || "",
+            kelas: row.kelas || row.Kelas || "",
             status: "Aktif"
           });
         }
@@ -999,10 +1086,29 @@
     renderBankSoalAdmin();
   }
 
+  // Export Nilai ke Excel (Dilengkapi Nama Siswa dan Kelas)
   async function downloadHasilExcel() {
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
+    const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
+    let userMap = {};
+    userSnap.forEach(u => { userMap[u.data().username] = u.data(); });
+
     let arr = [];
-    snap.forEach(d => arr.push(d.data()));
+    snap.forEach(d => {
+      const data = d.data();
+      const infoSiswa = userMap[data.username] || {};
+      arr.push({
+        Username: data.username,
+        "Nama Siswa": infoSiswa.nama || "-",
+        Kelas: infoSiswa.kelas || "-",
+        "Mata Pelajaran": data.mapel,
+        Skor: data.skor,
+        "Jawaban Benar": data.benar,
+        "Total Soal": data.total,
+        "Waktu Selesai": data.waktu
+      });
+    });
+
     if (arr.length === 0) { alert("Belum ada data nilai!"); return; }
 
     const ws = XLSX.utils.json_to_sheet(arr);
@@ -1198,6 +1304,7 @@
       skor: skor,
       benar: benar,
       total: activeSoalList.length,
+      jawaban: userAnswers,
       waktu: new Date().toLocaleString('id-ID')
     });
 
