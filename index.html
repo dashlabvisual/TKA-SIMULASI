@@ -82,6 +82,83 @@
       background: #f8fafc; cursor: pointer; transition: all 0.2s;
     }
     .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-subtle); }
+
+    /* Custom Stylish Mapel Dropdown */
+    .custom-mapel-selector {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .mapel-select-btn {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      transition: all 0.25s ease;
+    }
+
+    .mapel-select-btn:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+    }
+
+    .custom-mapel-dropdown {
+      position: absolute;
+      top: 115%;
+      right: 0;
+      min-width: 230px;
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 6px;
+      z-index: 1050;
+      display: none;
+      animation: fadeInDown 0.2s ease-out forwards;
+    }
+
+    .custom-mapel-dropdown.show {
+      display: block;
+    }
+
+    .custom-mapel-item {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .custom-mapel-item:hover {
+      background-color: #eff6ff;
+      color: #2563eb;
+    }
+
+    .custom-mapel-item.active {
+      background-color: #2563eb;
+      color: #ffffff;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -319,8 +396,18 @@
           <p class="text-muted small mb-0">Kelola bank soal 1 Stimulus, peserta ujian, serta monitor nilai.</p>
         </div>
       </div>
-      <div>
-        <select id="adminMapelFilter" class="form-select d-inline-block w-auto me-2" onchange="window.handleAdminMapelFilterChange()"></select>
+      
+      <!-- Custom Pill-Badge Dropdown Mapel Baru -->
+      <div class="d-flex align-items-center gap-2">
+        <div class="custom-mapel-selector">
+          <button type="button" class="mapel-select-btn" id="btnMapelDropdown" onclick="window.toggleCustomMapelDropdown()">
+            <i class="bi bi-journal-bookmark-fill"></i>
+            <span id="selectedMapelLabel">PILIH MAPEL</span>
+            <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+          </button>
+          <div class="custom-mapel-dropdown" id="customMapelMenu"></div>
+          <input type="hidden" id="adminMapelFilter" value="">
+        </div>
         <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
@@ -750,7 +837,6 @@
   let logoClickCount = 0;
   let logoClickTimer = null;
 
-  // Pagination Pages State
   let pageState = {
     bankSoal: 1,
     mapel: 1,
@@ -770,7 +856,27 @@
     loadPage1Options();
   }
 
-  // --- HELPER PAGINASI REUSABLE ---
+  // --- DROPDOWN MAPEL CUSTOM LOGIC ---
+  window.toggleCustomMapelDropdown = function() {
+    document.getElementById('customMapelMenu').classList.toggle('show');
+  };
+
+  document.addEventListener('click', function(e) {
+    const container = document.querySelector('.custom-mapel-selector');
+    if (container && !container.contains(e.target)) {
+      document.getElementById('customMapelMenu')?.classList.remove('show');
+    }
+  });
+
+  window.selectCustomMapel = function(namaMapel) {
+    document.getElementById('adminMapelFilter').value = namaMapel;
+    document.getElementById('selectedMapelLabel').innerText = namaMapel.toUpperCase();
+    document.getElementById('customMapelMenu').classList.remove('show');
+    pageState.bankSoal = 1;
+    renderBankSoalAdmin();
+  };
+
+  // --- HELPER PAGINASI ---
   function renderPaginationControls(containerId, totalItems, currentPage, onPageChange) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -1615,28 +1721,42 @@
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
+  // --- RENDER MAPEL ADMIN DENGAN CUSTOM SELECTOR MENU ---
   function loadMapelOptionsAdmin() {
     const qMapel = query(collection(db, "mapel"), where("project", "==", activeProjectId));
     onSnapshot(qMapel, (snap) => {
-      const sMapel = document.getElementById('adminMapelFilter');
       const sTarget = document.getElementById('m_target_mapel');
       const tblMapelBody = document.querySelector('#tblMapelAdmin tbody');
-      
-      const currentSelected = sMapel.value;
-      sMapel.innerHTML = ''; sTarget.innerHTML = '';
+      const customMenu = document.getElementById('customMapelMenu');
+      const hiddenInput = document.getElementById('adminMapelFilter');
+      const selectedLabel = document.getElementById('selectedMapelLabel');
+
+      sTarget.innerHTML = '';
+      customMenu.innerHTML = '';
       
       let mapelList = [];
       snap.forEach(d => {
         mapelList.push({ idDoc: d.id, ...d.data() });
       });
 
+      let firstMapel = "";
       mapelList.forEach(m => {
-        sMapel.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
+        if (!firstMapel) firstMapel = m.nama_mapel;
         sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
+        
+        const isActive = (hiddenInput.value && hiddenInput.value.toLowerCase() === m.nama_mapel.toLowerCase());
+        customMenu.innerHTML += `
+          <div class="custom-mapel-item ${isActive ? 'active' : ''}" onclick="window.selectCustomMapel('${m.nama_mapel}')">
+            <span><i class="bi bi-journal-text me-2"></i>${m.nama_mapel.toUpperCase()}</span>
+            ${isActive ? '<i class="bi bi-check-lg"></i>' : ''}
+          </div>`;
       });
 
-      if (currentSelected && sMapel.querySelector(`option[value="${currentSelected}"]`)) {
-        sMapel.value = currentSelected;
+      if (!hiddenInput.value && firstMapel) {
+        hiddenInput.value = firstMapel;
+        selectedLabel.innerText = firstMapel.toUpperCase();
+      } else if (hiddenInput.value) {
+        selectedLabel.innerText = hiddenInput.value.toUpperCase();
       }
 
       // Paginasi Mapel
@@ -1654,15 +1774,10 @@
       tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
       renderPaginationControls('paginationMapel', mapelList.length, pageState.mapel, 'window.setPageMapel');
 
-      if (sMapel.options.length > 0) renderBankSoalAdmin();
+      if (mapelList.length > 0) renderBankSoalAdmin();
       updateDashboardMetrics();
     });
   }
-
-  window.handleAdminMapelFilterChange = function() {
-    pageState.bankSoal = 1;
-    renderBankSoalAdmin();
-  };
 
   window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
     const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
@@ -1672,7 +1787,7 @@
     }
   };
 
-  // --- RENDER BANK SOAL FIX CASE-INSENSITIVE & PAGINASI 10 DATA ---
+  // --- RENDER BANK SOAL FIX CASE-INSENSITIVE ---
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
@@ -1684,7 +1799,6 @@
     let soalArray = [];
     snap.forEach(docSnap => {
       const dataSoal = docSnap.data();
-      // Case-Insensitive matching agar tidak tertukar antar-mapel
       if (String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
         soalArray.push({ idDoc: docSnap.id, ...dataSoal });
       }
@@ -1692,7 +1806,6 @@
 
     soalArray.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
-    // Slice 10 items
     const start = (pageState.bankSoal - 1) * PAGE_SIZE;
     const paginatedSoal = soalArray.slice(start, start + PAGE_SIZE);
 
@@ -2106,7 +2219,7 @@
             cur = {
               project: activeProjectId,
               id_soal: assignedNo,
-              mapel: targetMapel, // Mengunci mapel yang terpilih
+              mapel: targetMapel,
               tipe_soal: String(detectedJenis),
               stimulus: stimulusText || lastStimulus,
               pertanyaan: soalText,
