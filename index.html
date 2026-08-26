@@ -99,7 +99,7 @@
   </div>
 </nav>
 
-<!-- ================= PAGE 1: MENU AWAL SIMULASI TKA ================= -->
+<!-- PAGE 1: MENU AWAL SIMULASI TKA -->
 <div id="page-1" class="container py-5">
   <div class="row justify-content-center pt-4">
     <div class="col-md-7 text-center">
@@ -127,7 +127,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 2: LOGIN USERNAME & PASSWORD ================= -->
+<!-- PAGE 2: LOGIN PESERTA -->
 <div id="page-2" class="container py-5 hidden">
   <div class="row justify-content-center pt-4">
     <div class="col-md-5">
@@ -158,7 +158,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 3: KONFIRMASI DATA PESERTA ================= -->
+<!-- PAGE 3: KONFIRMASI DATA PESERTA -->
 <div id="page-3" class="container py-5 hidden">
   <div class="row justify-content-center pt-3">
     <div class="col-md-6">
@@ -204,7 +204,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 4: KONFIRMASI TES ================= -->
+<!-- PAGE 4: KONFIRMASI TES -->
 <div id="page-4" class="container py-5 hidden">
   <div class="row justify-content-center pt-4">
     <div class="col-md-6">
@@ -238,7 +238,7 @@
   </div>
 </div>
 
-<!-- ================= RUANG UJIAN (1 STIMULUS MULTI-SOAL) ================= -->
+<!-- RUANG UJIAN -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
@@ -258,9 +258,7 @@
   <div class="row g-3">
     <div class="col-lg-8">
       <div class="cbt-card p-4">
-        <!-- Box Stimulus / Wacana Bersama jika ada -->
         <div id="examStimulusBox" class="stimulus-box hidden"></div>
-        <!-- Kontainer Butir Pertanyaan & Pilihan Jawaban -->
         <div id="soalContainer"></div>
         <div class="d-flex justify-content-between mt-4 pt-3 border-top">
           <button id="btnPrevSoal" class="btn btn-outline-secondary px-3">Sebelumnya</button>
@@ -278,7 +276,7 @@
   </div>
 </div>
 
-<!-- ================= HASIL NILAI ================= -->
+<!-- HASIL NILAI -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -293,7 +291,7 @@
   </div>
 </div>
 
-<!-- ================= DASHBOARD ADMIN ================= -->
+<!-- DASHBOARD ADMIN -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
@@ -538,7 +536,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL PREVIEW SOAL ================= -->
+<!-- MODAL PREVIEW SOAL -->
 <div class="modal fade" id="modalPreviewSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -551,7 +549,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL REVIEW JAWABAN ================= -->
+<!-- MODAL REVIEW JAWABAN -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -570,7 +568,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL LOGIN ADMIN ================= -->
+<!-- MODAL LOGIN ADMIN -->
 <div class="modal fade" id="modalSecretAdmin" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-md modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -593,7 +591,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT WORD ================= -->
+<!-- MODAL IMPORT WORD -->
 <div class="modal fade" id="modalWordImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -622,7 +620,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL IMPORT SISWA ================= -->
+<!-- MODAL IMPORT SISWA -->
 <div class="modal fade" id="modalSiswaImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content" style="border-radius: 16px;">
@@ -651,7 +649,7 @@
   </div>
 </div>
 
-<!-- ================= MODAL 3: INPUT / EDIT SOAL MANUAL (1 STIMULUS & 3 TIPE SOAL) ================= -->
+<!-- MODAL MANUAL SOAL -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -680,7 +678,7 @@
           </div>
           <div class="col-12">
             <label class="form-label small fw-bold">Teks Stimulus / Wacana Bacaan Bersama (Opsional)</label>
-            <textarea id="m_stimulus" class="form-control" rows="3" placeholder="Tuliskan teks wacana/stimulus di sini (dapat digunakan untuk 3 butir soal berturut-turut)..."></textarea>
+            <textarea id="m_stimulus" class="form-control" rows="3" placeholder="Tuliskan teks wacana/stimulus di sini..."></textarea>
           </div>
           <div class="col-12">
             <label class="form-label small fw-bold">Gambar Soal / Stimulus (Link Drive / URL / Komputer - Auto Compress < 150KB)</label>
@@ -752,7 +750,6 @@
     loadPage1Options();
   }
 
-  // --- AUTO-COMPRESS CLIENT SIDE (< 150KB UNTUK 5000 SISWA) ---
   window.handleCompressImageUpload = function(event, targetInputId) {
     const file = event.target.files[0];
     if (!file) return;
@@ -808,9 +805,8 @@
     return cleanUrl;
   }
 
-  // --- RENDER FORM INPUT MANUAL SESUAI 3 FORMAT LAYOUT ---
   window.handleTipeSoalChange = function() {
-    const tipe = document.getElementById('m_tipe').value;
+    const tipe = String(document.getElementById('m_tipe').value);
     renderLayoutOpsiInput(tipe, {});
   };
 
@@ -840,9 +836,9 @@
   function renderLayoutOpsiInput(tipe, dataVal) {
     const container = document.getElementById('containerDynamicOptions');
     container.innerHTML = '';
+    const tipeStr = String(tipe);
 
-    if (tipe === "3") {
-      // FORMAT LAYOUT JENIS 3: TABEL 3 BARIS PERNYATAAN BENAR / SALAH
+    if (tipeStr === "3") {
       let tableHTML = `
         <div class="table-responsive">
           <table class="table table-bordered align-middle bg-white">
@@ -880,8 +876,7 @@
       container.innerHTML = tableHTML;
 
     } else {
-      // FORMAT LAYOUT JENIS 1 (PG 4 OPSI) & JENIS 2 (MCMA 3 OPSI)
-      const hurufArr = tipe === "2" ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
+      const hurufArr = tipeStr === "2" ? ['A', 'B', 'C'] : ['A', 'B', 'C', 'D'];
       hurufArr.forEach(h => {
         const val = dataVal['opsi_' + h.toLowerCase()] || "";
         const imgVal = dataVal['img_' + h.toLowerCase()] || "";
@@ -891,7 +886,7 @@
         row.className = 'border rounded-3 p-3 mb-2 bg-light dynamic-option-row';
         row.innerHTML = `
           <div class="d-flex align-items-center gap-2 mb-2">
-            <input type="${tipe === '1' ? 'radio' : 'checkbox'}" name="correct_chk" value="${h}" class="form-check-input mt-0 fs-5" ${isChecked}>
+            <input type="${tipeStr === '1' ? 'radio' : 'checkbox'}" name="correct_chk" value="${h}" class="form-check-input mt-0 fs-5" ${isChecked}>
             <span class="badge bg-primary">${h}</span>
             <input type="text" id="opt_text_${h}" class="form-control option-text-val" placeholder="Teks Opsi ${h}" value="${val}">
           </div>
@@ -905,7 +900,7 @@
     }
   }
 
-  // --- ALUR 4 PAGE SISWA ---
+  // --- ALUR SISWA ---
   async function loadPage1Options() {
     const pSelect = document.getElementById('p1_project_select');
     pSelect.innerHTML = '';
@@ -1037,7 +1032,6 @@
     startTimer(currentDurasi * 60);
   }
 
-  // --- CONTROLLER LEMBAR SOAL SISWA (1 STIMULUS 3 TAMPILAN) ---
   function renderGridNumbers() {
     const c = document.getElementById('soalGridContainer');
     c.innerHTML = '';
@@ -1063,7 +1057,6 @@
       if (i === idx) el.classList.add('active');
     });
 
-    // Cek Box Stimulus / Wacana Bersama
     const stimBox = document.getElementById('examStimulusBox');
     if (s.stimulus && s.stimulus.trim() !== "") {
       stimBox.innerHTML = `<strong><i class="bi bi-file-text me-1"></i> WACANA / STIMULUS:</strong><p class="mt-2 mb-0" style="white-space: pre-line;">${s.stimulus}</p>`;
@@ -1073,9 +1066,10 @@
     }
 
     const formattedImg = formatImageUrl(s.link_gambar);
+    const tipeStr = String(s.tipe_soal);
     let tipeLabel = 'PG Tunggal';
-    if (s.tipe_soal === '2') tipeLabel = 'PG Kompleks MCMA (Pilih lebih dari 1)';
-    if (s.tipe_soal === '3') tipeLabel = 'PG Kompleks Kategori (Tabel Benar/Salah)';
+    if (tipeStr === '2') tipeLabel = 'PG Kompleks MCMA (Pilih lebih dari 1)';
+    if (tipeStr === '3') tipeLabel = 'PG Kompleks Kategori (Tabel Benar/Salah)';
 
     let html = `<div class="d-flex justify-content-between align-items-center mb-3">
       <span class="badge bg-primary fs-6">Nomor ${idx + 1}</span>
@@ -1087,8 +1081,7 @@
 
     const saved = userAnswers[s.id_soal];
 
-    if (s.tipe_soal === '3') {
-      // TAMPILAN SISWA: TABEL 3 BARIS PERNYATAAN BENAR / SALAH
+    if (tipeStr === '3') {
       const savedObj = (typeof saved === 'object' && saved !== null && !Array.isArray(saved)) ? saved : {};
 
       html += `<div class="table-responsive">
@@ -1119,11 +1112,10 @@
 
       html += `</tbody></table></div>`;
 
-    } else if (s.tipe_soal === '2') {
-      // TAMPILAN SISWA: PG KOMPLEKS MCMA (3 OPSI CHECKLIST)
+    } else if (tipeStr === '2') {
       const savedArr = Array.isArray(saved) ? saved : [];
       ['a', 'b', 'c'].forEach((h, idxOpt) => {
-        const huruf = window.opsiHurufList[idxOpt];
+        const huruf = ['A', 'B', 'C'][idxOpt];
         const val = s['opsi_' + h];
         const imgOpt = formatImageUrl(s['img_' + h]);
         if (val || imgOpt) {
@@ -1140,9 +1132,8 @@
       });
 
     } else {
-      // TAMPILAN SISWA: PG TUNGGAL (4 OPSI RADIO BUTTON)
       ['a', 'b', 'c', 'd'].forEach((h, idxOpt) => {
-        const huruf = window.opsiHurufList[idxOpt];
+        const huruf = ['A', 'B', 'C', 'D'][idxOpt];
         const val = s['opsi_' + h];
         const imgOpt = formatImageUrl(s['img_' + h]);
         if (val || imgOpt) {
@@ -1203,7 +1194,6 @@
     if (confirm("Yakin ingin menyelesaikan ujian?")) submitExamAuto();
   });
 
-  // --- LOGIKA PENSKORAN DIKOTOMIS (ALL-OR-NOTHING PUSMENDIK) ---
   async function submitExamAuto() {
     isExamActive = false;
     if (timerInterval) clearInterval(timerInterval);
@@ -1212,9 +1202,9 @@
     let benar = 0;
     activeSoalList.forEach(s => {
       const userAns = userAnswers[s.id_soal];
+      const tipeStr = String(s.tipe_soal);
       
-      if (s.tipe_soal === '3') {
-        // PG KOMPLEKS KATEGORI B/S (3 PERNYATAAN): ALL OR NOTHING
+      if (tipeStr === '3') {
         const kunciArr = (s.kunci || "").split(',').map(x => x.trim().toUpperCase());
         const userObj = (typeof userAns === 'object' && userAns !== null && !Array.isArray(userAns)) ? userAns : {};
         const userKombinasi = [userObj[1] || '', userObj[2] || '', userObj[3] || ''];
@@ -1222,15 +1212,13 @@
         if (kunciArr.length === 3 && JSON.stringify(kunciArr) === JSON.stringify(userKombinasi)) {
           benar++;
         }
-      } else if (s.tipe_soal === '2') {
-        // PG KOMPLEKS MCMA (3 OPSI): ALL OR NOTHING
+      } else if (tipeStr === '2') {
         const kunciArr = (s.kunci || "").split(',').map(x => x.trim().toUpperCase()).sort();
         const userArr = (Array.isArray(userAns) ? userAns : []).map(x => x.trim().toUpperCase()).sort();
         if (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr)) {
           benar++;
         }
       } else {
-        // PG TUNGGAL (4 OPSI): 1 KUNCI
         if (String(userAns).trim().toUpperCase() === String(s.kunci).trim().toUpperCase()) {
           benar++;
         }
@@ -1262,7 +1250,6 @@
     loadPage1Options();
   });
 
-  // Anti Cheat Handler
   window.addEventListener('visibilitychange', () => { if (isExamActive && (document.hidden || !document.hasFocus())) triggerCheat(); });
   window.addEventListener('blur', () => { if (isExamActive) triggerCheat(); });
 
@@ -1282,7 +1269,7 @@
     }
   }
 
-  // --- DASHBOARD ADMIN LOGIC ---
+  // --- DASHBOARD PROKTOR ---
   document.getElementById('logoBrand').addEventListener('click', () => {
     logoClickCount++;
     clearTimeout(logoClickTimer);
@@ -1401,7 +1388,6 @@
     }
   };
 
-  // --- TEMPLATE WORD (MODEL 1 STIMULUS 3 BUTIR SOAL) ---
   document.getElementById('btnDownloadWordTpl').addEventListener('click', () => {
     const tableHTML = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -1475,7 +1461,6 @@
     XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
   });
 
-  // Drag & Drop Setup
   function setupDragAndDrop(dropZoneId, fileInputId, processCallback) {
     const dropZone = document.getElementById(dropZoneId);
     const fileInput = document.getElementById(fileInputId);
@@ -1639,9 +1624,10 @@
     soalArray.forEach((d) => {
       window.cacheBankSoal[d.idDoc] = d;
       const formattedImg = formatImageUrl(d.link_gambar);
+      const tipeStr = String(d.tipe_soal);
       let labelTipe = 'PG Tunggal (1)';
-      if (d.tipe_soal === '2') labelTipe = 'PG Kompleks MCMA (2)';
-      if (d.tipe_soal === '3') labelTipe = 'PG Kompleks Kategori B/S (3)';
+      if (tipeStr === '2') labelTipe = 'PG Kompleks MCMA (2)';
+      if (tipeStr === '3') labelTipe = 'PG Kompleks Kategori B/S (3)';
 
       rows += `<tr>
         <td><strong>${d.id_soal}</strong></td>
@@ -1668,16 +1654,17 @@
     if (!s) return;
 
     const formattedImg = formatImageUrl(s.link_gambar);
+    const tipeStr = String(s.tipe_soal);
     let tipeLabel = 'PG Tunggal (1)';
-    if (s.tipe_soal === '2') tipeLabel = 'PG Kompleks MCMA (2)';
-    if (s.tipe_soal === '3') tipeLabel = 'PG Kompleks Kategori B/S (3)';
+    if (tipeStr === '2') tipeLabel = 'PG Kompleks MCMA (2)';
+    if (tipeStr === '3') tipeLabel = 'PG Kompleks Kategori B/S (3)';
 
     let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${tipeLabel}</span></div>`;
-    if (s.stimulus) html += `<div class="stimulus-box mb-3"><strong>WACANA:</strong><p class="mb-0 mt-1">${s.stimulus}</p></div>`;
+    if (s.stimulus) html += `<div class="stimulus-box mb-3"><strong>WACANA / STIMULUS:</strong><p class="mb-0 mt-1">${s.stimulus}</p></div>`;
     if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
     html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
 
-    if (s.tipe_soal === '3') {
+    if (tipeStr === '3') {
       const kunciArr = (s.kunci || "B,S,S").split(',');
       html += `<div class="table-responsive"><table class="table table-bordered align-middle bg-white"><thead class="table-light"><tr><th>Pernyataan</th><th class="text-center">Kunci Respon</th></tr></thead><tbody>`;
       [1, 2, 3].forEach(pIdx => {
@@ -1687,9 +1674,9 @@
       });
       html += `</tbody></table></div>`;
     } else {
-      const maxOpsi = s.tipe_soal === '2' ? ['a', 'b', 'c'] : ['a', 'b', 'c', 'd'];
+      const maxOpsi = tipeStr === '2' ? ['a', 'b', 'c'] : ['a', 'b', 'c', 'd'];
       maxOpsi.forEach((h, idxOpt) => {
-        const huruf = window.opsiHurufList[idxOpt];
+        const huruf = ['A', 'B', 'C', 'D'][idxOpt];
         const val = s['opsi_' + h];
         const imgOpt = formatImageUrl(s['img_' + h]);
         if (val || imgOpt) {
@@ -1860,13 +1847,14 @@
     for (const [idSoal, ans] of Object.entries(jawabanSiswa)) {
       const soal = soalMap[idSoal] || { pertanyaan: "Soal tidak ditemukan", kunci: "?", tipe_soal: "1" };
       let isBenar = false;
+      const tipeStr = String(soal.tipe_soal);
 
-      if (soal.tipe_soal === '3') {
+      if (tipeStr === '3') {
         const kunciArr = (soal.kunci || "").split(',').map(x => x.trim().toUpperCase());
         const userObj = (typeof ans === 'object' && ans !== null && !Array.isArray(ans)) ? ans : {};
         const userKombinasi = [userObj[1] || '', userObj[2] || '', userObj[3] || ''];
         isBenar = (kunciArr.length === 3 && JSON.stringify(kunciArr) === JSON.stringify(userKombinasi));
-      } else if (soal.tipe_soal === '2') {
+      } else if (tipeStr === '2') {
         const kunciArr = (soal.kunci || "").split(',').map(x => x.trim().toUpperCase()).sort();
         const userArr = (Array.isArray(ans) ? ans : []).map(x => x.trim().toUpperCase()).sort();
         isBenar = (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr));
@@ -1933,7 +1921,7 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // --- IMPORT WORD PARSER (1 STIMULUS 3 TIPE SOAL) ---
+  // --- PARSER WORD FIX LENGKAP DENGAN KUNCI TIPE SOAL ---
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -1974,7 +1962,7 @@
           const no = cols[0].innerText.trim();
           const stimulusText = cols[1].innerText.trim();
           const soalText = cols[2].innerText.trim();
-          const jenis = cols[3].innerText.trim();
+          const jenisText = cols[3].innerText.trim();
           const opsi = cols[4].innerText.trim();
           const jawabanText = cols[5].innerText.trim();
           const kunci = cols[6].innerText.trim();
@@ -1984,14 +1972,23 @@
 
           if (stimulusText !== "") lastStimulus = stimulusText;
 
+          // JIKA BARIS ADALAH AWAL NOMOR BARU
           if (no !== "") {
             if (cur) list.push(cur);
             let assignedNo = maxExistingNo + (parseInt(no) || (list.length + 1));
+            
+            // Default jika jenis kosong: cek apakah opsi nomor/angka (tipe 3) atau huruf (tipe 1)
+            let detectedJenis = jenisText;
+            if (!detectedJenis) {
+              if (['1', '2', '3'].includes(opsi)) detectedJenis = '3';
+              else detectedJenis = '1';
+            }
+
             cur = {
               project: activeProjectId,
               id_soal: assignedNo,
               mapel: targetMapel,
-              tipe_soal: jenis || '1',
+              tipe_soal: String(detectedJenis),
               stimulus: stimulusText || lastStimulus,
               pertanyaan: soalText,
               link_gambar: extractedImg,
@@ -2006,21 +2003,19 @@
             const optImgSrc = optImg ? optImg.src : '';
 
             if (cur.tipe_soal === "3") {
-              // Format Kategori B/S (3 Pernyataan)
-              const pIdx = parseInt(opsi) || 1;
+              const pIdx = parseInt(opsi) || (cur.pernyataan_1 ? (cur.pernyataan_2 ? 3 : 2) : 1);
               cur['pernyataan_' + pIdx] = jawabanText;
               const kVal = kunci.toUpperCase().includes('B') ? 'B' : 'S';
-              let kArr = cur.kunci ? cur.kunci.split(',') : [];
+              let kArr = cur.kunci ? cur.kunci.split(',') : ['S', 'S', 'S'];
               kArr[pIdx - 1] = kVal;
               cur.kunci = kArr.join(',');
             } else {
-              // Format PG Tunggal & MCMA
               const opKey = opsi.toLowerCase();
               if (['a','b','c','d'].includes(opKey)) {
                 cur['opsi_' + opKey] = jawabanText;
                 cur['img_' + opKey] = optImgSrc;
               }
-              if (kunci.toUpperCase() === 'V') {
+              if (kunci.toUpperCase().includes('V')) {
                 cur.kunci = cur.kunci ? cur.kunci + ',' + opsi.toUpperCase() : opsi.toUpperCase();
               }
             }
@@ -2042,12 +2037,11 @@
     reader.readAsArrayBuffer(file);
   }
 
-  // Simpan / Update Soal Manual
   async function saveManualSoalAction() {
     const editId = document.getElementById('edit_doc_id').value;
     const targetMapel = document.getElementById('m_target_mapel').value;
     const no = parseInt(document.getElementById('m_no').value);
-    const tipe = document.getElementById('m_tipe').value;
+    const tipe = String(document.getElementById('m_tipe').value);
     const stimulus = document.getElementById('m_stimulus').value.trim();
     const tanya = document.getElementById('m_tanya').value.trim();
     const linkImg = document.getElementById('m_img').value.trim();
@@ -2069,7 +2063,6 @@
     };
 
     if (tipe === "3") {
-      // Validasi Kunci Kategori Benar/Salah (3 Baris)
       let p1 = document.getElementById('pernyataan_text_1').value.trim();
       let p2 = document.getElementById('pernyataan_text_2').value.trim();
       let p3 = document.getElementById('pernyataan_text_3').value.trim();
@@ -2084,7 +2077,6 @@
       payload.kunci = `${k1},${k2},${k3}`;
 
     } else {
-      // Validasi PG Tunggal (4 Opsi) & MCMA (3 Opsi)
       const checkedBoxes = Array.from(document.querySelectorAll('input[name="correct_chk"]:checked')).map(c => c.value);
       if (checkedBoxes.length === 0) {
         alert("Pilih minimal 1 kunci jawaban benar!");
