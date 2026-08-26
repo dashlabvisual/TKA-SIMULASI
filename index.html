@@ -35,13 +35,6 @@
     .admin-sidebar.collapsed { margin-left: calc(-1 * var(--sidebar-w)); }
     .admin-content { flex-grow: 1; padding: 28px; overflow-y: auto; transition: all 0.3s ease; }
     
-    .nav-main-menu .nav-link {
-      font-weight: 700; color: #475569; padding: 10px 16px; border-radius: 10px; margin-bottom: 6px;
-      display: flex; align-items: center; gap: 10px; transition: all 0.2s;
-    }
-    .nav-main-menu .nav-link:hover { background-color: var(--primary-subtle); color: var(--primary); }
-    .nav-main-menu .nav-link.active { background-color: var(--primary); color: #ffffff; }
-
     .project-item-box {
       padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
@@ -102,6 +95,24 @@
       background: linear-gradient(135deg, #1d4ed8, #1e40af);
       transform: translateY(-2px); box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
     }
+    .custom-mapel-dropdown {
+      position: absolute; top: 115%; right: 0; min-width: 230px; background: #ffffff;
+      border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 6px; z-index: 1050; display: none; animation: fadeInDown 0.2s ease-out forwards;
+    }
+    .custom-mapel-dropdown.show { display: block; }
+    .custom-mapel-item {
+      padding: 10px 14px; border-radius: 10px; font-weight: 600; font-size: 0.88rem;
+      color: #334155; display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    .custom-mapel-item:hover { background-color: #eff6ff; color: #2563eb; }
+    .custom-mapel-item.active { background-color: #2563eb; color: #ffffff; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
@@ -119,7 +130,7 @@
   </div>
 </nav>
 
-<!-- ================= PAGE 1: MENU AWAL SIMULASI TKA ================= -->
+<!-- PAGE 1: MENU AWAL SIMULASI TKA -->
 <div id="page-1" class="container py-5">
   <div class="row justify-content-center pt-4">
     <div class="col-md-7 text-center">
@@ -132,14 +143,11 @@
         <hr class="my-4">
 
         <div class="text-start mb-4">
-          <label class="form-label fw-bold">Pilih Kawedanan - Nama Sekolah</label>
+          <label class="form-label fw-bold">Pilih Wilayah / Kawedanan & Kloter Ujian</label>
           <select id="p1_project_select" class="form-select form-select-lg mb-3"></select>
           
           <label class="form-label fw-bold">Pilih Mata Pelajaran</label>
-          <select id="p1_mapel_select" class="form-select form-select-lg">
-            <option value="MATEMATIKA">MATEMATIKA</option>
-            <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
-          </select>
+          <select id="p1_mapel_select" class="form-select form-select-lg"></select>
         </div>
 
         <button id="btnPage1Next" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm">
@@ -150,7 +158,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 2: LOGIN PESERTA ================= -->
+<!-- PAGE 2: LOGIN PESERTA -->
 <div id="page-2" class="container py-5 hidden">
   <div class="row justify-content-center pt-4">
     <div class="col-md-5">
@@ -181,7 +189,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 3: KONFIRMASI DATA PESERTA ================= -->
+<!-- PAGE 3: KONFIRMASI DATA PESERTA -->
 <div id="page-3" class="container py-5 hidden">
   <div class="row justify-content-center pt-3">
     <div class="col-md-6">
@@ -213,7 +221,7 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label small fw-bold text-danger">Ketik Ulang Nama Lengkap Peserta</label>
+          <label class="form-label small fw-bold text-danger">Ketik Ulang Nama Lengkap Peserta (Wajib Input Sendiri)</label>
           <input id="p3_nama_input" class="form-control" placeholder="Ketik nama lengkap Anda di sini...">
         </div>
 
@@ -228,7 +236,7 @@
   </div>
 </div>
 
-<!-- ================= PAGE 4: KONFIRMASI TES ================= -->
+<!-- PAGE 4: KONFIRMASI TES -->
 <div id="page-4" class="container py-5 hidden">
   <div class="row justify-content-center pt-4">
     <div class="col-md-6">
@@ -262,12 +270,12 @@
   </div>
 </div>
 
-<!-- ================= RUANG UJIAN ================= -->
+<!-- RUANG UJIAN -->
 <div id="view-exam" class="container py-4 hidden">
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
       <h5 class="fw-bold mb-0" id="examMapelTitle">Mata Pelajaran</h5>
-      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong></small>
+      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong> | Sesi: <span class="badge bg-secondary" id="examAssignedPaketBadge">Paket A</span></small>
     </div>
     <div class="d-flex align-items-center gap-2">
       <div class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 rounded-pill fw-bold">
@@ -300,7 +308,7 @@
   </div>
 </div>
 
-<!-- ================= HASIL NILAI ================= -->
+<!-- HASIL NILAI -->
 <div id="view-result" class="container py-5 hidden">
   <div class="row justify-content-center">
     <div class="col-md-5">
@@ -315,34 +323,19 @@
   </div>
 </div>
 
-<!-- ================= DASHBOARD ADMIN (3 MENU UTAMA BARU) ================= -->
+<!-- DASHBOARD ADMIN -->
 <div id="view-admin" class="admin-wrapper hidden">
   <div id="adminSidebar" class="admin-sidebar">
-    <div class="d-flex align-items-center justify-content-between mb-4 pb-2 border-bottom">
+    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
       <div class="d-flex align-items-center gap-2">
         <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar"><i class="bi bi-list fs-6"></i></button>
-        <span class="fw-bold text-primary small">MENU UTAMA</span>
+        <span class="fw-bold text-primary small">KAWEDANAN / SESI</span>
       </div>
+      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Sesi/Kawedanan Baru"><i class="bi bi-plus"></i></button>
     </div>
     
-    <!-- 3 Navigasi Menu Utama -->
-    <ul class="nav nav-pills flex-column nav-main-menu mb-4" id="mainAdminNav">
-      <li class="nav-item">
-        <a class="nav-link active" href="#" onclick="window.switchMainMenu('menu-project')">
-          <i class="bi bi-kanban fs-5"></i> 1. PROJECT
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" onclick="window.switchMainMenu('menu-bank-soal')">
-          <i class="bi bi-journal-check fs-5"></i> 2. BANK SOAL
-        </a>
-      </li>
-      <li class="nav-item" id="navItemDaftarGuru">
-        <a class="nav-link" href="#" onclick="window.switchMainMenu('menu-daftar-guru')">
-          <i class="bi bi-people-fill fs-5"></i> 3. DAFTAR GURU
-        </a>
-      </li>
-    </ul>
+    <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH KAWEDANAN / KLOTER AKTIF:</small>
+    <div id="sidebarProjectList" class="flex-grow-1 overflow-auto mb-3"></div>
 
     <button id="btnTriggerAdminLogout" class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2">
       <i class="bi bi-box-arrow-left me-1"></i> Keluar Dashboard
@@ -350,215 +343,256 @@
   </div>
 
   <div class="admin-content">
-    
-    <!-- ================= MENU 1: PROJECT ================= -->
-    <div id="section-menu-project">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-        <div class="d-flex align-items-center gap-3">
-          <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu"><i class="bi bi-list fs-5"></i></button>
-          <div>
-            <h4 class="fw-bold mb-1">Project Aktif: <span id="currentProjectBadge" class="text-primary">-</span></h4>
-            <p class="text-muted small mb-0">Manajemen Kawedanan - Sekolah, Peserta, Monitoring & Nilai.</p>
-          </div>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-primary" onclick="window.tambahProjectKawedanan()"><i class="bi bi-plus-circle me-1"></i> Tambah Project</button>
-          <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
-        </div>
-      </div>
-
-      <!-- Metrik Project -->
-      <div class="row g-3 mb-4">
-        <div class="col-md-3">
-          <div class="metric-card-1">
-            <h3 class="fw-bold mb-0" id="statTotalSiswa">0</h3>
-            <small class="opacity-75">Siswa Terdaftar</small>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="metric-card-4">
-            <h3 class="fw-bold mb-0" id="statTotalSelesai">0</h3>
-            <small class="opacity-75">Siswa Selesai Ujian</small>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="metric-card-2">
-            <h3 class="fw-bold mb-0" id="statTotalAdmin">0</h3>
-            <small class="opacity-75">Total Guru Proktor</small>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="metric-card-5">
-            <h3 class="fw-bold mb-0" id="statTotalProjects">0</h3>
-            <small class="opacity-75">Total Project Sekolah</small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Cards Project -->
-      <div class="row g-3 mb-4">
-        <div class="col-md-6">
-          <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
-            <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
-            <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-            <small class="text-muted">Upload Excel Data Peserta Sekolah Ini.</small>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="action-card" onclick="window.switchMainMenu('menu-bank-soal')">
-            <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-journal-bookmark-fill"></i></div>
-            <h6 class="fw-bold mb-1">Lihat Bank Soal (5 Paket)</h6>
-            <small class="text-muted">Master Soal Matematika & Bahasa Indonesia.</small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sub Tabs Menu Project -->
-      <ul class="nav nav-pills mb-3 gap-2">
-        <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#subtab-project-list">Daftar Project (Kawedanan - Sekolah)</button></li>
-        <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#subtab-peserta-list">Data Siswa Terdaftar</button></li>
-        <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#subtab-monitoring">Live Monitoring Ujian</button></li>
-        <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#subtab-hasil-nilai">Rekap Nilai Siswa</button></li>
-      </ul>
-
-      <div class="tab-content">
-        <!-- SubTab 1: Daftar Project -->
-        <div class="tab-pane fade show active" id="subtab-project-list">
-          <div class="cbt-card p-4">
-            <h6 class="fw-bold mb-3">Daftar Kawedanan & Sekolah Terdaftar</h6>
-            <div class="table-responsive">
-              <table class="table table-hover align-middle" id="tblProjectsAdmin">
-                <thead class="table-light"><tr><th>Nama Project (Kawedanan - Sekolah)</th><th>Status</th><th>Aksi Pilih</th></tr></thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- SubTab 2: Peserta -->
-        <div class="tab-pane fade" id="subtab-peserta-list">
-          <div class="cbt-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="fw-bold mb-0">Peserta di Project Aktif</h6>
-              <button id="btnHapusSemuaSiswa" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
-            </div>
-            <div class="table-responsive">
-              <table class="table table-hover align-middle" id="tblPesertaAdmin">
-                <thead class="table-light">
-                  <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>L/P</th><th>Kelas</th><th>Tgl Lahir</th><th>Status</th><th>Aksi</th></tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3" id="paginationSiswa"></div>
-          </div>
-        </div>
-
-        <!-- SubTab 3: Monitoring -->
-        <div class="tab-pane fade" id="subtab-monitoring">
-          <div class="cbt-card p-4">
-            <h6 class="fw-bold mb-3">Live Monitoring Pengerjaan Siswa (Progress Soal)</h6>
-            <div class="table-responsive">
-              <table class="table table-hover align-middle" id="tblMonitoring">
-                <thead class="table-light">
-                  <tr><th>Username</th><th>Mata Pelajaran</th><th>Paket Acak</th><th>Status</th><th>Progress</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMonitoring"></div>
-          </div>
-        </div>
-
-        <!-- SubTab 4: Rekap Nilai -->
-        <div class="tab-pane fade" id="subtab-hasil-nilai">
-          <div class="cbt-card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="fw-bold mb-0">Rekap Nilai Siswa</h6>
-              <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaNilai()"><i class="bi bi-trash me-1"></i> Hapus Rekap Nilai</button>
-            </div>
-            <div class="table-responsive">
-              <table class="table align-middle" id="tblHasilNilai">
-                <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Paket</th><th>Skor</th><th>Benar / Total</th><th>Aksi</th></tr></thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-3" id="paginationNilai"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= MENU 2: BANK SOAL (MASTER 2 MAPEL & 5 PAKET) ================= -->
-    <div id="section-menu-bank-soal" class="hidden">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+      <div class="d-flex align-items-center gap-3">
+        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu"><i class="bi bi-list fs-5"></i></button>
         <div>
-          <h4 class="fw-bold mb-1">Master Bank Soal Terpusat</h4>
-          <p class="text-muted small mb-0">Master 5 Paket Soal Matematika & Bahasa Indonesia untuk seluruh sekolah.</p>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-primary" onclick="window.bukaModalTambahSoal()"><i class="bi bi-pencil-square me-1"></i> Tambah Manual</button>
-          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalWordImport"><i class="bi bi-file-earmark-word me-1"></i> Import Word</button>
+          <h4 class="fw-bold mb-1">Wilayah / Sesi: <span id="currentProjectBadge" class="text-primary">-</span></h4>
+          <p class="text-muted small mb-0">Manajemen bank soal multi-paket, kloter sekolah, dan live monitoring.</p>
         </div>
       </div>
-
-      <div class="cbt-card p-4 mb-4">
-        <div class="row g-3 align-items-center mb-3">
-          <div class="col-md-5">
-            <label class="form-label small fw-bold">MATA UJIAN:</label>
-            <select id="masterMapelFilter" class="form-select fw-bold" onchange="window.renderMasterBankSoal()">
-              <option value="MATEMATIKA">MATEMATIKA</option>
-              <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
-            </select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label small fw-bold">PILIH PAKET SOAL:</label>
-            <select id="masterPaketFilter" class="form-select fw-bold" onchange="window.renderMasterBankSoal()">
-              <option value="Paket A">Paket A</option>
-              <option value="Paket B">Paket B</option>
-              <option value="Paket C">Paket C</option>
-              <option value="Paket D">Paket D</option>
-              <option value="Paket E">Paket E</option>
-            </select>
-          </div>
-          <div class="col-md-3 text-end pt-4">
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSoalMapel()"><i class="bi bi-trash me-1"></i> Hapus Paket Ini</button>
-          </div>
+      
+      <!-- Selector Mapel Modern -->
+      <div class="d-flex align-items-center gap-2">
+        <div class="custom-mapel-selector">
+          <button type="button" class="mapel-select-btn" id="btnMapelDropdown" onclick="window.toggleCustomMapelDropdown()">
+            <i class="bi bi-journal-bookmark-fill"></i>
+            <span id="selectedMapelLabel">PILIH MAPEL</span>
+            <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+          </button>
+          <div class="custom-mapel-dropdown" id="customMapelMenu"></div>
+          <input type="hidden" id="adminMapelFilter" value="">
         </div>
-
-        <div class="table-responsive">
-          <table class="table align-middle" id="tblMasterBankSoal">
-            <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>TIPE SOAL</th><th>KUNCI</th><th>AKSI</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-3" id="paginationBankSoal"></div>
+        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
 
-    <!-- ================= MENU 3: DAFTAR GURU ================= -->
-    <div id="section-menu-daftar-guru" class="hidden">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-        <div>
-          <h4 class="fw-bold mb-1">Daftar Guru & Proktor Pengawas</h4>
-          <p class="text-muted small mb-0">Kelola akun guru dan proktor yang memiliki hak akses dashboard ujian.</p>
+    <!-- Metrik Dashboard -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="metric-card-1">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-people fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSiswa">0</h3>
+              <small class="opacity-75">Total Siswa Terdaftar</small>
+            </div>
+          </div>
         </div>
-        <button class="btn btn-primary" onclick="window.tambahAdminPrompt()"><i class="bi bi-person-plus-fill me-1"></i> Tambah Guru Baru</button>
       </div>
-
-      <div class="cbt-card p-4">
-        <div class="table-responsive">
-          <table class="table table-hover align-middle" id="tblAdminList">
-            <thead class="table-light">
-              <tr><th>Username</th><th>Password</th><th>Nama Lengkap Guru</th><th>Aksi</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+      <div class="col-md-4">
+        <div class="metric-card-2">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-person-badge fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalAdmin">0</h3>
+              <small class="opacity-75">Total Proktor / Pengawas</small>
+            </div>
+          </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-3" id="paginationAdmin"></div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-3">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-shield-lock fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statActiveSesi">1</h3>
+              <small class="opacity-75">Sesi Aktif</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-4">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-journal-text fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalUjian">0</h3>
+              <small class="opacity-75">Total Mata Pelajaran</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-5">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-file-earmark-check fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSoal">0</h3>
+              <small class="opacity-75">Total Bank Soal (Semua Paket)</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card-6">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-award fs-1"></i>
+            <div>
+              <h3 class="fw-bold mb-0" id="statTotalSelesai">0</h3>
+              <small class="opacity-75">Siswa Selesai Ujian</small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Action Cards -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-3">
+        <div class="action-card" onclick="window.bukaModalTambahSoal()">
+          <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
+          <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
+          <small class="text-muted">Pilih paket & jenis soal.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
+          <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
+          <h6 class="fw-bold mb-1">Import Soal Word</h6>
+          <small class="text-muted">Upload .docx per Paket Soal.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
+          <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
+          <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
+          <small class="text-muted">Upload Excel per sekolah/kloter.</small>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="action-card" id="btnAddMapelCard">
+          <div class="action-icon bg-warning-subtle text-warning"><i class="bi bi-journal-plus"></i></div>
+          <h6 class="fw-bold mb-1">Tambah Mapel</h6>
+          <small class="text-muted">Registrasi mata pelajaran.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigasi Tab Admin -->
+    <ul class="nav nav-pills mb-3 gap-2" id="adminNavTabs">
+      <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal & Paket</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Kelola Durasi Mapel</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
+      <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-monitoring">Live Monitoring Ujian</button></li>
+      <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-hasil-nilai">Rekap Nilai & Review</button></li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Tab 1: Bank Soal & Filter Paket -->
+      <div class="tab-pane fade show active" id="tab-bank-soal">
+        <div class="cbt-card p-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <label class="form-label small fw-bold mb-0">PILIH PAKET SOAL:</label>
+              <select id="adminPaketFilter" class="form-select form-select-sm w-auto fw-bold" onchange="window.handleAdminPaketFilterChange()">
+                <option value="Paket A">Paket A</option>
+                <option value="Paket B">Paket B</option>
+                <option value="Paket C">Paket C</option>
+                <option value="Paket D">Paket D</option>
+                <option value="Paket E">Paket E</option>
+              </select>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSoalMapel()"><i class="bi bi-trash me-1"></i> Hapus Paket Soal Ini</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle" id="tblBankSoal">
+              <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>PAKET</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationBankSoal"></div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Kelola Durasi Mapel -->
+      <div class="tab-pane fade" id="tab-mapel-list">
+        <div class="cbt-card p-4">
+          <h6 class="fw-bold mb-3">Daftar Mata Pelajaran & Edit Durasi Waktu</h6>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblMapelAdmin">
+              <thead class="table-light">
+                <tr><th>Nama Mata Pelajaran</th><th>Durasi Ujian (Menit)</th><th>Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMapel"></div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Siswa -->
+      <div class="tab-pane fade" id="tab-peserta-list">
+        <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Manajemen Akun Siswa Peserta</h6>
+            <button id="btnHapusSemuaSiswa" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i> Hapus Semua Siswa</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblPesertaAdmin">
+              <thead class="table-light">
+                <tr><th>Username</th><th>Password</th><th>Nama Siswa</th><th>L/P</th><th>Kelas</th><th>Tgl Lahir</th><th>Status</th><th>Aksi Pengawas</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationSiswa"></div>
+        </div>
+      </div>
+
+      <!-- Tab 4: Manajemen Admin -->
+      <div class="tab-pane fade" id="tab-admin-list">
+        <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Daftar Akun Admin / Guru Proktor</h6>
+            <button class="btn btn-sm btn-primary" onclick="window.tambahAdminPrompt()"><i class="bi bi-plus-lg me-1"></i> Tambah Admin Baru</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblAdminList">
+              <thead class="table-light">
+                <tr><th>Username Admin</th><th>Password</th><th>Nama Lengkap</th><th>Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationAdmin"></div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Monitoring (Dilengkapi Penugasan Paket) -->
+      <div class="tab-pane fade" id="tab-monitoring">
+        <div class="cbt-card p-4">
+          <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle" id="tblMonitoring">
+              <thead class="table-light">
+                <tr><th>Username</th><th>Mata Pelajaran</th><th>Paket</th><th>Status</th><th>Progress</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationMonitoring"></div>
+        </div>
+      </div>
+
+      <!-- Tab 6: Rekap Nilai -->
+      <div class="tab-pane fade" id="tab-hasil-nilai">
+        <div class="cbt-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0">Rekap Nilai & Review Jawaban Siswa</h6>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaNilai()"><i class="bi bi-trash me-1"></i> Hapus Semua Rekap Nilai</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle" id="tblHasilNilai">
+              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Paket</th><th>Skor</th><th>Benar / Total</th><th>Aksi</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-3" id="paginationNilai"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -694,24 +728,15 @@
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
         
-        <div class="row g-3 mb-3">
-          <div class="col-md-6">
-            <label class="form-label small fw-bold">Target Mata Ujian:</label>
-            <select id="import_target_mapel" class="form-select fw-bold">
-              <option value="MATEMATIKA">MATEMATIKA</option>
-              <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label small fw-bold">Target Paket Soal Import:</label>
-            <select id="import_target_paket" class="form-select fw-bold">
-              <option value="Paket A">Paket A</option>
-              <option value="Paket B">Paket B</option>
-              <option value="Paket C">Paket C</option>
-              <option value="Paket D">Paket D</option>
-              <option value="Paket E">Paket E</option>
-            </select>
-          </div>
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Target Paket Soal Import:</label>
+          <select id="import_target_paket" class="form-select fw-bold">
+            <option value="Paket A">Paket A</option>
+            <option value="Paket B">Paket B</option>
+            <option value="Paket C">Paket C</option>
+            <option value="Paket D">Paket D</option>
+            <option value="Paket E">Paket E</option>
+          </select>
         </div>
 
         <div id="dropZoneWord" class="drop-zone">
@@ -756,7 +781,7 @@
   </div>
 </div>
 
-<!-- MODAL MANUAL SOAL -->
+<!-- MODAL MANUAL SOAL (DENGAN PILIHAN PAKET) -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -769,10 +794,7 @@
         <div class="row g-3 mb-3">
           <div class="col-md-4">
             <label class="form-label small fw-bold">Mata Pelajaran Target</label>
-            <select id="m_target_mapel" class="form-select fw-bold">
-              <option value="MATEMATIKA">MATEMATIKA</option>
-              <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
-            </select>
+            <select id="m_target_mapel" class="form-select"></select>
           </div>
           <div class="col-md-3">
             <label class="form-label small fw-bold">Paket Soal</label>
@@ -846,10 +868,10 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let activeProjectId = localStorage.getItem("cbt_active_project") || "Kawedanan Klaten Kota - SD Negeri 1 Klaten";
+  let activeProjectId = localStorage.getItem("cbt_active_project") || "Kawedanan Klaten Kota - Gelombang 1";
   let currentStudent = "";
   let currentStudentObj = {};
-  let currentMapel = "MATEMATIKA";
+  let currentMapel = "";
   let currentDurasi = 60;
   let activeSoalList = [];
   let currentAssignedPaket = "Paket A";
@@ -865,6 +887,7 @@
 
   let pageState = {
     bankSoal: 1,
+    mapel: 1,
     siswa: 1,
     admin: 1,
     monitoring: 1,
@@ -881,27 +904,6 @@
     loadPage1Options();
   }
 
-  // --- SWITCH MENU UTAMA DASHBOARD ---
-  window.switchMainMenu = function(menuId) {
-    document.querySelectorAll('.nav-main-menu .nav-link').forEach(el => el.classList.remove('active'));
-    document.getElementById('section-menu-project').classList.add('hidden');
-    document.getElementById('section-menu-bank-soal').classList.add('hidden');
-    document.getElementById('section-menu-daftar-guru').classList.add('hidden');
-
-    if (menuId === 'menu-project') {
-      document.querySelector('.nav-main-menu .nav-link:nth-child(1)').classList.add('active');
-      document.getElementById('section-menu-project').classList.remove('hidden');
-    } else if (menuId === 'menu-bank-soal') {
-      document.querySelector('.nav-main-menu li:nth-child(2) .nav-link').classList.add('active');
-      document.getElementById('section-menu-bank-soal').classList.remove('hidden');
-      renderMasterBankSoal();
-    } else if (menuId === 'menu-daftar-guru') {
-      document.querySelector('#navItemDaftarGuru .nav-link').classList.add('active');
-      document.getElementById('section-menu-daftar-guru').classList.remove('hidden');
-      loadAdminList();
-    }
-  };
-
   function normalizeGender(gStr) {
     if (!gStr) return "LAKI-LAKI";
     const s = String(gStr).trim().toUpperCase();
@@ -916,8 +918,11 @@
     if (dateStr.includes("/")) dateStr = dateStr.replace(/\//g, "-");
     if (dateStr.includes("-")) {
       const parts = dateStr.split("-");
-      if (parts[0].length === 4) return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
-      else if (parts[2].length === 4) return `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
+      if (parts[0].length === 4) {
+        return `${parts[2].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[0]}`;
+      } else if (parts[2].length === 4) {
+        return `${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}-${parts[2]}`;
+      }
     }
     return dateStr;
   }
@@ -926,7 +931,9 @@
     if (!dateStr) return "";
     const norm = normalizeDateStr(dateStr);
     const parts = norm.split("-");
-    if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
     return dateStr;
   }
 
@@ -945,7 +952,8 @@
     document.getElementById('adminMapelFilter').value = namaMapel;
     document.getElementById('selectedMapelLabel').innerText = namaMapel.toUpperCase();
     document.getElementById('customMapelMenu').classList.remove('show');
-    renderMasterBankSoal();
+    pageState.bankSoal = 1;
+    renderBankSoalAdmin();
   };
 
   function renderPaginationControls(containerId, totalItems, currentPage, onPageChange) {
@@ -966,7 +974,8 @@
     container.innerHTML = html;
   }
 
-  window.setPageBankSoal = (p) => { pageState.bankSoal = p; renderMasterBankSoal(); };
+  window.setPageBankSoal = (p) => { pageState.bankSoal = p; renderBankSoalAdmin(); };
+  window.setPageMapel = (p) => { pageState.mapel = p; loadMapelOptionsAdmin(); };
   window.setPageSiswa = (p) => { pageState.siswa = p; loadPesertaAdmin(); };
   window.setPageAdmin = (p) => { pageState.admin = p; loadAdminList(); };
   window.setPageNilai = (p) => { pageState.nilai = p; initMonitoringListener(); };
@@ -1038,18 +1047,19 @@
     document.getElementById('m_img').value = "";
     document.getElementById('m_tanya').value = "";
 
-    const mapel = document.getElementById('masterMapelFilter')?.value || "MATEMATIKA";
-    const paket = document.getElementById('masterPaketFilter')?.value || "Paket A";
+    const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
+    if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
 
     document.getElementById('m_target_mapel').value = mapel;
     document.getElementById('m_target_paket').value = paket;
 
-    const snap = await getDocs(collection(db, "master_soal"));
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     let maxNo = 0;
     snap.forEach(d => {
       const dataSoal = d.data();
-      const matchMapel = String(dataSoal.mapel).trim().toUpperCase() === String(mapel).trim().toUpperCase();
-      const matchPaket = String(dataSoal.paket || "Paket A").trim().toUpperCase() === String(paket).trim().toUpperCase();
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
       if (matchMapel && matchPaket) {
         let num = parseInt(dataSoal.id_soal) || 0;
         if (num > maxNo) maxNo = num;
@@ -1129,32 +1139,53 @@
     }
   }
 
-  // --- ALUR SISWA (2 MAPEL DIKUNCI) ---
+  // --- ALUR SISWA ---
   async function loadPage1Options() {
     const pSelect = document.getElementById('p1_project_select');
     pSelect.innerHTML = '';
     const snap = await getDocs(collection(db, "projects"));
     
     if (snap.empty) {
-      pSelect.innerHTML = '<option value="Kawedanan Klaten Kota - SD Negeri 1 Klaten">Kawedanan Klaten Kota - SD Negeri 1 Klaten</option>';
+      pSelect.innerHTML = '<option value="Kawedanan Klaten Kota - Gelombang 1">Kawedanan Klaten Kota - Gelombang 1</option>';
+      loadPage1Mapel("Kawedanan Klaten Kota - Gelombang 1");
     } else {
       snap.forEach(d => {
         const pName = d.data().nama_project;
         pSelect.innerHTML += `<option value="${pName}">${pName}</option>`;
       });
+      loadPage1Mapel(pSelect.value);
+    }
+  }
+
+  document.getElementById('p1_project_select').addEventListener('change', function() {
+    loadPage1Mapel(this.value);
+  });
+
+  async function loadPage1Mapel(projName) {
+    const mSelect = document.getElementById('p1_mapel_select');
+    mSelect.innerHTML = '';
+    const snap = await getDocs(query(collection(db, "mapel"), where("project", "==", projName)));
+    snap.forEach(d => {
+      const m = d.data();
+      mSelect.innerHTML += `<option value="${m.nama_mapel}" data-durasi="${m.durasi}">${m.nama_mapel} (${m.durasi} Menit)</option>`;
+    });
+    if (snap.empty) {
+      mSelect.innerHTML = '<option value="">Belum ada mapel</option>';
     }
   }
 
   document.getElementById('btnPage1Next').addEventListener('click', () => {
     activeProjectId = document.getElementById('p1_project_select').value;
-    currentMapel = document.getElementById('p1_mapel_select').value;
+    const mSelect = document.getElementById('p1_mapel_select');
+    currentMapel = mSelect.value;
     
     if (!activeProjectId || !currentMapel) {
-      alert("Pilih Kawedanan - Sekolah dan Mata Pelajaran terlebih dahulu!");
+      alert("Pilih wilayah/kawedanan dan mata pelajaran terlebih dahulu!");
       return;
     }
 
-    currentDurasi = 60; // Default 60 Menit
+    const opt = mSelect.options[mSelect.selectedIndex];
+    currentDurasi = parseInt(opt.getAttribute('data-durasi')) || 60;
     showView('page-2');
   });
 
@@ -1169,7 +1200,7 @@
     if (!u || !p) { alert("Masukkan Username dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) { alert("Akun peserta tidak ditemukan pada sesi Kawedanan - Sekolah ini!"); return; }
+    if (userSnap.empty) { alert("Akun peserta tidak ditemukan pada sesi kawedanan ini!"); return; }
 
     const userData = userSnap.docs[0].data();
     if (userData.status === "Diblokir") { alert("AKUN ANDA DIBLOKIR!"); return; }
@@ -1235,35 +1266,36 @@
     startSecureExam();
   });
 
-  // --- LOGIKA PENGACAKAN 5 PAKET DI TINGKAT INDIVIDU SISWA ---
+  // --- LOGIKA PENGACAKAN PAKET SOAL OTOMATIS & EFISIEN ---
   async function startSecureExam() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
 
-    // Ambil butir master soal terpusat untuk mapel ini
-    const snapMaster = await getDocs(collection(db, "master_soal"));
-    let allMapelSoal = [];
+    // Ambil daftar paket yang tersedia di database mapel ini
+    const snapMapelSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     let availablePakets = new Set();
+    let allMapelSoal = [];
 
-    snapMaster.forEach(d => {
+    snapMapelSoal.forEach(d => {
       const dataSoal = d.data();
-      if (String(dataSoal.mapel).trim().toUpperCase() === String(currentMapel).trim().toUpperCase()) {
+      if (String(dataSoal.mapel).trim().toLowerCase() === String(currentMapel).trim().toLowerCase()) {
         allMapelSoal.push(dataSoal);
         availablePakets.add(dataSoal.paket || "Paket A");
       }
     });
 
     if (allMapelSoal.length === 0) {
-      alert(`Belum ada bank soal untuk mata pelajaran [${currentMapel}]! Hubungi Proktor.`);
+      alert("Belum ada butir soal pada mata pelajaran ini!");
       return;
     }
 
     const paketArr = Array.from(availablePakets);
-    // Pengacakan murni di level nomor peserta siswa
+    // Algoritma deterministik/acak penugasan paket per siswa
     const charSum = currentStudent.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     currentAssignedPaket = paketArr[charSum % paketArr.length] || "Paket A";
 
+    // Filter hanya butir soal milik paket yang didapat siswa (Isi urutan tetap sama)
     activeSoalList = allMapelSoal.filter(s => (s.paket || "Paket A") === currentAssignedPaket);
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
@@ -1285,6 +1317,7 @@
     showView('view-exam');
     document.getElementById('examMapelTitle').innerText = currentMapel;
     document.getElementById('examStudentUser').innerText = `${currentStudent} - ${currentStudentObj.nama || currentStudent}`;
+    document.getElementById('examAssignedPaketBadge').innerText = currentAssignedPaket;
 
     renderGridNumbers();
     renderSoalByIndex(0);
@@ -1574,6 +1607,7 @@
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
   document.getElementById('admSecretPin').addEventListener('keyup', (e) => { if (e.key === 'Enter') executeAdminLogin(); });
 
+  // Peringatan Keluar Dashboard yang Baik & Santun
   document.getElementById('btnTriggerAdminLogout').addEventListener('click', () => {
     new bootstrap.Modal(document.getElementById('modalConfirmLogout')).show();
   });
@@ -1592,7 +1626,7 @@
 
   window.tambahAdminPrompt = async function() {
     if (localStorage.getItem("cbt_super_admin") !== "true") {
-      alert("Hanya Administrator Utama (ADMIN) yang dapat menambah akun guru proktor.");
+      alert("Hanya Administrator Utama (ADMIN) yang dapat menambah akun admin/guru.");
       return;
     }
     const uname = prompt("Masukkan Username Guru/Admin Baru:");
@@ -1600,17 +1634,30 @@
     const nama = prompt("Nama Lengkap Guru/Admin:");
     if (uname && pass && nama) {
       await addDoc(collection(db, "admins"), { username: uname.trim(), password: pass.trim(), nama: nama.trim() });
-      alert("Akun Guru berhasil ditambahkan!");
+      alert("Akun Admin/Guru berhasil ditambahkan!");
     }
   };
 
-  window.tambahProjectKawedanan = async function() {
-    const name = prompt("Masukkan Nama Project Sesi (Contoh: Kawedanan Jogonalan - SD Negeri 2 Gondang):");
+  document.getElementById('btnAddProject').addEventListener('click', async () => {
+    const name = prompt("Masukkan Nama Wilayah Kawedanan & Sesi Baru (Contoh: Kawedanan Delanggu - Gelombang 1):");
     if (name && name.trim()) {
       await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
-      alert("Project Kawedanan - Sekolah baru berhasil dibuat!");
+      alert("Kawedanan/Sesi baru berhasil dibuat!");
     }
-  };
+  });
+
+  document.getElementById('btnAddMapelCard').addEventListener('click', async () => {
+    const nama = prompt("Nama Mata Pelajaran Baru:");
+    const durasi = prompt("Durasi Ujian (Menit):", "60");
+    if (nama && durasi) {
+      await addDoc(collection(db, "mapel"), {
+        project: activeProjectId,
+        nama_mapel: nama.trim(),
+        durasi: parseInt(durasi)
+      });
+      alert("Mata pelajaran berhasil ditambahkan!");
+    }
+  });
 
   document.getElementById('btnHapusSemuaSiswa').addEventListener('click', async () => {
     if (confirm(`Yakin ingin menghapus seluruh data siswa di project [${activeProjectId}]?`)) {
@@ -1621,20 +1668,21 @@
   });
 
   window.hapusSemuaSoalMapel = async function() {
-    const mapel = document.getElementById('masterMapelFilter').value;
-    const paket = document.getElementById('masterPaketFilter').value;
-    if (confirm(`Yakin ingin menghapus seluruh butir soal pada [${paket}] mata ujian [${mapel}]?`)) {
-      const snap = await getDocs(collection(db, "master_soal"));
+    const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
+    if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
+    if (confirm(`Yakin ingin menghapus seluruh butir soal pada [${paket}] mata pelajaran [${mapel}]?`)) {
+      const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
       snap.forEach(async (d) => {
         const dataSoal = d.data();
-        const matchMapel = String(dataSoal.mapel).trim().toUpperCase() === String(mapel).trim().toUpperCase();
-        const matchPaket = String(dataSoal.paket || "Paket A").trim().toUpperCase() === String(paket).trim().toUpperCase();
+        const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+        const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
         if (matchMapel && matchPaket) {
-          await deleteDoc(doc(db, "master_soal", d.id));
+          await deleteDoc(doc(db, "soal", d.id));
         }
       });
       alert(`Semua butir soal pada ${paket} berhasil dihapus!`);
-      renderMasterBankSoal();
+      renderBankSoalAdmin();
     }
   };
 
@@ -1739,34 +1787,24 @@
 
   function loadSidebarProjects() {
     const unsub = onSnapshot(collection(db, "projects"), (snap) => {
-      const tblBody = document.querySelector('#tblProjectsAdmin tbody');
-      let pList = [];
-      snap.forEach(d => {
-        pList.push({ idDoc: d.id, ...d.data() });
-      });
-
+      const listContainer = document.getElementById('sidebarProjectList');
+      listContainer.innerHTML = '';
       if (snap.empty) {
-        setDoc(doc(db, "projects", "default"), { nama_project: "Kawedanan Klaten Kota - SD Negeri 1 Klaten" });
+        setDoc(doc(db, "projects", "default"), { nama_project: "Kawedanan Klaten Kota - Gelombang 1" });
         return;
       }
-
-      let rows = '';
-      pList.forEach(proj => {
-        const isActive = proj.nama_project === activeProjectId;
-        rows += `<tr>
-          <td><strong>${proj.nama_project}</strong></td>
-          <td><span class="badge ${isActive ? 'bg-success' : 'bg-secondary'}">${isActive ? 'Aktif Terpilih' : 'Tersedia'}</span></td>
-          <td>
-            <button class="btn btn-sm ${isActive ? 'btn-primary' : 'btn-outline-primary'} me-1" onclick="window.selectProject('${proj.nama_project}')">
-              ${isActive ? '<i class="bi bi-check-circle-fill"></i> Terpilih' : 'Pilih Sesi Ini'}
-            </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusProject('${proj.idDoc}', '${proj.nama_project}')"><i class="bi bi-trash"></i></button>
-          </td>
-        </tr>`;
+      snap.forEach(d => {
+        const proj = d.data().nama_project;
+        const isActive = proj === activeProjectId;
+        listContainer.innerHTML += `
+          <div class="project-item-box ${isActive ? 'border-primary bg-primary-subtle' : ''}">
+            <span class="fw-semibold text-truncate" style="cursor:pointer; max-width:140px;" onclick="window.selectProject('${proj}')" title="${proj}">
+              <i class="bi bi-geo-alt-fill text-primary me-1"></i>${proj}
+            </span>
+            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Sesi" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
+          </div>`;
       });
-      if (tblBody) tblBody.innerHTML = rows;
       document.getElementById('currentProjectBadge').innerText = activeProjectId;
-      document.getElementById('statTotalProjects').innerText = pList.length;
     });
     activeListeners.push(unsub);
   }
@@ -1774,14 +1812,14 @@
   window.selectProject = function(projectName) {
     activeProjectId = projectName;
     localStorage.setItem("cbt_active_project", projectName);
-    document.getElementById('currentProjectBadge').innerText = activeProjectId;
     loadSidebarProjects();
+    loadMapelOptionsAdmin();
     loadPesertaAdmin();
     updateDashboardMetrics();
   };
 
   window.hapusProject = async function(docId, projName) {
-    if (confirm(`Hapus wilayah/sekolah [${projName}]?`)) {
+    if (confirm(`Hapus wilayah/sesi [${projName}]?`)) {
       await deleteDoc(doc(db, "projects", docId));
     }
   };
@@ -1790,67 +1828,119 @@
     activeListeners.forEach(unsub => unsub());
     activeListeners = [];
     loadSidebarProjects();
+    loadMapelOptionsAdmin();
     loadPesertaAdmin();
     loadAdminList();
     initMonitoringListener();
     updateDashboardMetrics();
-    renderCustomMapelDropdownMenu();
 
     const isSuper = localStorage.getItem("cbt_super_admin") === "true";
     if (!isSuper) {
-      document.getElementById('navItemDaftarGuru').classList.add('hidden');
+      document.getElementById('navTabAdminList').classList.add('hidden');
     } else {
-      document.getElementById('navItemDaftarGuru').classList.remove('hidden');
+      document.getElementById('navTabAdminList').classList.remove('hidden');
     }
-  }
-
-  function renderCustomMapelDropdownMenu() {
-    const customMenu = document.getElementById('customMapelMenu');
-    const hiddenInput = document.getElementById('adminMapelFilter');
-    const selectedLabel = document.getElementById('selectedMapelLabel');
-
-    const mapels = ["MATEMATIKA", "BAHASA INDONESIA"];
-    if (!hiddenInput.value) hiddenInput.value = "MATEMATIKA";
-    selectedLabel.innerText = hiddenInput.value;
-
-    customMenu.innerHTML = '';
-    mapels.forEach(m => {
-      const isActive = hiddenInput.value === m;
-      customMenu.innerHTML += `
-        <div class="custom-mapel-item ${isActive ? 'active' : ''}" onclick="window.selectCustomMapel('${m}')">
-          <span><i class="bi bi-journal-text me-2"></i>${m}</span>
-          ${isActive ? '<i class="bi bi-check-lg"></i>' : ''}
-        </div>`;
-    });
   }
 
   async function updateDashboardMetrics() {
     const qSiswa = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
     const qAdmin = await getDocs(collection(db, "admins"));
-    const qSoal = await getDocs(collection(db, "master_soal"));
+    const qMapel = await getDocs(query(collection(db, "mapel"), where("project", "==", activeProjectId)));
+    const qSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     const qSelesai = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
 
     document.getElementById('statTotalSiswa').innerText = qSiswa.size;
     document.getElementById('statTotalAdmin').innerText = qAdmin.size + 1;
+    document.getElementById('statTotalUjian').innerText = qMapel.size;
     document.getElementById('statTotalSoal').innerText = qSoal.size;
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
-  // --- RENDER BANK SOAL TERPUSAT (MASTER 2 MAPEL & 5 PAKET) ---
-  window.renderMasterBankSoal = async function() {
-    const mapel = document.getElementById('masterMapelFilter')?.value || "MATEMATIKA";
-    const paket = document.getElementById('masterPaketFilter')?.value || "Paket A";
-    const tblBody = document.querySelector('#tblMasterBankSoal tbody');
-    if (!tblBody) return;
+  function loadMapelOptionsAdmin() {
+    const qMapel = query(collection(db, "mapel"), where("project", "==", activeProjectId));
+    const unsub = onSnapshot(qMapel, (snap) => {
+      const sTarget = document.getElementById('m_target_mapel');
+      const tblMapelBody = document.querySelector('#tblMapelAdmin tbody');
+      const customMenu = document.getElementById('customMapelMenu');
+      const hiddenInput = document.getElementById('adminMapelFilter');
+      const selectedLabel = document.getElementById('selectedMapelLabel');
 
+      sTarget.innerHTML = '';
+      customMenu.innerHTML = '';
+      
+      let mapelList = [];
+      snap.forEach(d => {
+        mapelList.push({ idDoc: d.id, ...d.data() });
+      });
+
+      let firstMapel = "";
+      mapelList.forEach(m => {
+        if (!firstMapel) firstMapel = m.nama_mapel;
+        sTarget.innerHTML += `<option value="${m.nama_mapel}">${m.nama_mapel}</option>`;
+        
+        const isActive = (hiddenInput.value && hiddenInput.value.toLowerCase() === m.nama_mapel.toLowerCase());
+        customMenu.innerHTML += `
+          <div class="custom-mapel-item ${isActive ? 'active' : ''}" onclick="window.selectCustomMapel('${m.nama_mapel}')">
+            <span><i class="bi bi-journal-text me-2"></i>${m.nama_mapel.toUpperCase()}</span>
+            ${isActive ? '<i class="bi bi-check-lg"></i>' : ''}
+          </div>`;
+      });
+
+      if (!hiddenInput.value && firstMapel) {
+        hiddenInput.value = firstMapel;
+        selectedLabel.innerText = firstMapel.toUpperCase();
+      } else if (hiddenInput.value) {
+        selectedLabel.innerText = hiddenInput.value.toUpperCase();
+      }
+
+      const start = (pageState.mapel - 1) * PAGE_SIZE;
+      const paginatedMapel = mapelList.slice(start, start + PAGE_SIZE);
+
+      let mapelRows = '';
+      paginatedMapel.forEach(m => {
+        mapelRows += `<tr>
+          <td><strong>${m.nama_mapel}</strong></td>
+          <td><span class="badge bg-info text-dark fs-6">${m.durasi} Menit</span></td>
+          <td><button class="btn btn-sm btn-outline-primary" onclick="window.editDurasiMapel('${m.idDoc}', '${m.nama_mapel}', ${m.durasi})"><i class="bi bi-clock"></i> Edit Durasi</button></td>
+        </tr>`;
+      });
+      tblMapelBody.innerHTML = mapelRows || '<tr><td colspan="3" class="text-center text-muted">Belum ada mata pelajaran.</td></tr>';
+      renderPaginationControls('paginationMapel', mapelList.length, pageState.mapel, 'window.setPageMapel');
+
+      if (mapelList.length > 0) renderBankSoalAdmin();
+      updateDashboardMetrics();
+    });
+    activeListeners.push(unsub);
+  }
+
+  window.handleAdminPaketFilterChange = function() {
+    pageState.bankSoal = 1;
+    renderBankSoalAdmin();
+  };
+
+  window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
+    const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
+    if (baru && !isNaN(baru)) {
+      await updateDoc(doc(db, "mapel", mapelId), { durasi: parseInt(baru) });
+      alert("Durasi waktu ujian berhasil diperbarui!");
+    }
+  };
+
+  // --- RENDER BANK SOAL PER PAKET SOAL ---
+  window.renderBankSoalAdmin = async function() {
+    const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
+    const tblBody = document.querySelector('#tblBankSoal tbody');
+    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
+    
     window.cacheBankSoal = window.cacheBankSoal || {};
-    const snap = await getDocs(collection(db, "master_soal"));
+    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     
     let soalArray = [];
     snap.forEach(docSnap => {
       const dataSoal = docSnap.data();
-      const matchMapel = String(dataSoal.mapel).trim().toUpperCase() === String(mapel).trim().toUpperCase();
-      const matchPaket = String(dataSoal.paket || "Paket A").trim().toUpperCase() === String(paket).trim().toUpperCase();
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
       if (matchMapel && matchPaket) {
         soalArray.push({ idDoc: docSnap.id, ...dataSoal });
       }
@@ -1877,6 +1967,7 @@
           <div>${d.pertanyaan}</div>
           ${formattedImg ? '<img src="'+formattedImg+'" style="max-height:45px;" class="rounded border mt-1">' : ''}
         </td>
+        <td><span class="badge bg-primary">${d.paket || 'Paket A'}</span></td>
         <td><span class="badge bg-secondary">${labelTipe}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td>
@@ -1886,7 +1977,7 @@
         </td>
       </tr>`;
     });
-    tblBody.innerHTML = rows || `<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada ${paket} mata ujian ${mapel}.</td></tr>`;
+    tblBody.innerHTML = rows || `<tr><td colspan="6" class="text-center text-muted">Belum ada butir soal pada ${paket} mapel ini.</td></tr>`;
     renderPaginationControls('paginationBankSoal', soalArray.length, pageState.bankSoal, 'window.setPageBankSoal');
     updateDashboardMetrics();
   };
@@ -1992,7 +2083,7 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di sesi kawedanan ini.</td></tr>';
       renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
@@ -2068,7 +2159,7 @@
   }
 
   window.hapusAdmin = async function(id) {
-    if (confirm("Hapus akun guru admin ini?")) { await deleteDoc(doc(db, "admins", id)); }
+    if (confirm("Hapus akun admin ini?")) { await deleteDoc(doc(db, "admins", id)); }
   };
 
   window.toggleBlockSiswa = async function(docId, currentStatus) {
@@ -2084,6 +2175,14 @@
     const qMon = query(collection(db, "monitoring"), where("project", "==", activeProjectId));
     const unsubMon = onSnapshot(qMon, async (snap) => {
       let monList = [];
+      const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+      let soalCountMap = {};
+      soalSnap.forEach(s => {
+        const d = s.data();
+        const key = `${String(d.mapel).trim().toLowerCase()}_${d.paket || 'Paket A'}`;
+        soalCountMap[key] = (soalCountMap[key] || 0) + 1;
+      });
+
       snap.forEach(docSnap => {
         monList.push({ idDoc: docSnap.id, ...docSnap.data() });
       });
@@ -2094,8 +2193,10 @@
       let rows = '';
       paginatedMon.forEach(d => {
         let badge = d.status === 'Melanggar' ? 'bg-warning text-dark' : (d.status === 'Diskualifikasi' ? 'bg-danger' : 'bg-primary');
+        const mapelKey = `${String(d.mapel).trim().toLowerCase()}_${d.paket || 'Paket A'}`;
+        const totalSoalMapel = soalCountMap[mapelKey] || 0;
         const dikerjakan = d.jawaban ? Object.keys(d.jawaban).length : 0;
-        const progressFormat = `${dikerjakan} / 30 Soal`;
+        const progressFormat = `${dikerjakan}/${totalSoalMapel}`;
 
         rows += `<tr>
           <td><strong>${d.username}</strong></td>
@@ -2107,7 +2208,7 @@
           <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${d.idDoc}')">Reset</button></td>
         </tr>`;
       });
-      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada aktivitas ujian siswa.</td></tr>';
+      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
       renderPaginationControls('paginationMonitoring', monList.length, pageState.monitoring, 'window.setPageNilai');
     });
     activeListeners.push(unsubMon);
@@ -2154,6 +2255,7 @@
     activeListeners.push(unsubHasil);
   }
 
+  // --- REVIEW JAWABAN LENGKAP SEMUA SOAL ---
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
@@ -2163,12 +2265,12 @@
     document.getElementById('revPaket').innerText = dataHasil.paket || "Paket A";
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
-    const snapMaster = await getDocs(collection(db, "master_soal"));
+    const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project)));
     let soalListReview = [];
-    snapMaster.forEach(s => {
+    soalSnap.forEach(s => {
       const dataSoal = s.data();
-      const matchMapel = String(dataSoal.mapel).trim().toUpperCase() === String(dataHasil.mapel).trim().toUpperCase();
-      const matchPaket = String(dataSoal.paket || "Paket A").trim().toUpperCase() === String(dataHasil.paket || "Paket A").trim().toUpperCase();
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(dataHasil.mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(dataHasil.paket || "Paket A").trim().toLowerCase();
       if (matchMapel && matchPaket) {
         soalListReview.push(dataSoal);
       }
@@ -2217,7 +2319,7 @@
   };
 
   window.delSoal = async (id) => {
-    if (confirm("Hapus butir soal master ini?")) { await deleteDoc(doc(db, "master_soal", id)); renderMasterBankSoal(); }
+    if (confirm("Hapus soal ini?")) { await deleteDoc(doc(db, "soal", id)); renderBankSoalAdmin(); }
   };
 
   window.resetCheat = async (id) => {
@@ -2252,7 +2354,7 @@
           });
         }
       });
-      alert(`Berhasil mengimpor ${json.length} data peserta ke project [${activeProjectId}]!`);
+      alert(`Berhasil mengimpor ${json.length} data peserta!`);
       const modalEl = document.getElementById('modalSiswaImport');
       const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
       modalInst.hide();
@@ -2260,12 +2362,14 @@
     reader.readAsArrayBuffer(file);
   }
 
+  // --- PARSER WORD FIX DENGAN PILIHAN TARGET PAKET SOAL ---
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    const targetMapel = document.getElementById('import_target_mapel').value;
+    const targetMapel = document.getElementById('adminMapelFilter').value;
     const targetPaket = document.getElementById('import_target_paket').value;
+    if (!targetMapel) { alert("Pilih mata pelajaran terlebih dahulu di dashboard!"); return; }
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -2282,12 +2386,12 @@
         const docHTML = parser.parseFromString(result.value, 'text/html');
         const rows = docHTML.querySelectorAll('tr');
 
-        const existingSnap = await getDocs(collection(db, "master_soal"));
+        const existingSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
         let maxExistingNo = 0;
         existingSnap.forEach(d => {
           const dataSoal = d.data();
-          const matchMapel = String(dataSoal.mapel).trim().toUpperCase() === String(targetMapel).trim().toUpperCase();
-          const matchPaket = String(dataSoal.paket || "Paket A").trim().toUpperCase() === String(targetPaket).trim().toUpperCase();
+          const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase();
+          const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(targetPaket).trim().toLowerCase();
           if (matchMapel && matchPaket) {
             let num = parseInt(dataSoal.id_soal) || 0;
             if (num > maxExistingNo) maxExistingNo = num;
@@ -2326,6 +2430,7 @@
             }
 
             cur = {
+              project: activeProjectId,
               id_soal: assignedNo,
               mapel: targetMapel,
               paket: targetPaket,
@@ -2365,14 +2470,14 @@
         if (cur) list.push(cur);
 
         for (const item of list) {
-          await addDoc(collection(db, "master_soal"), item);
+          await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir master soal ke ${targetPaket} [${targetMapel}]!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal ke ${targetPaket} [${targetMapel}]!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
-        renderMasterBankSoal();
+        renderBankSoalAdmin();
       });
     };
     reader.readAsArrayBuffer(file);
@@ -2394,6 +2499,7 @@
     }
 
     let payload = {
+      project: activeProjectId,
       id_soal: no,
       mapel: targetMapel,
       paket: targetPaket,
@@ -2437,22 +2543,26 @@
     }
 
     if (editId) {
-      await updateDoc(doc(db, "master_soal", editId), payload);
+      await updateDoc(doc(db, "soal", editId), payload);
       alert("Soal berhasil diperbarui!");
     } else {
-      await addDoc(collection(db, "master_soal"), payload);
-      alert("Soal master baru berhasil disimpan!");
+      await addDoc(collection(db, "soal"), payload);
+      alert("Soal baru berhasil disimpan!");
     }
 
     const modalEl = document.getElementById('modalManualSoal');
     const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
     modalInst.hide();
-    renderMasterBankSoal();
+    renderBankSoalAdmin();
   }
 
-  // --- EXPORT REKAP EXCEL MENARIK SESUAI MAPEL AKTIF ---
+  // --- EXPORT REKAP EXCEL DISESUAIKAN PER MAPEL & PAKET ---
   async function downloadHasilExcel() {
-    const targetMapel = document.getElementById('adminMapelFilter').value || "MATEMATIKA";
+    const targetMapel = document.getElementById('adminMapelFilter').value;
+    if (!targetMapel) {
+      alert("Pilih mata pelajaran terlebih dahulu untuk mendownload rekap nilai!");
+      return;
+    }
 
     const snap = await getDocs(query(collection(db, "hasil"), where("project", "==", activeProjectId)));
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId)));
@@ -2463,13 +2573,13 @@
     let hasilFiltered = [];
     snap.forEach(d => {
       const data = d.data();
-      if (String(data.mapel).trim().toUpperCase() === String(targetMapel).trim().toUpperCase()) {
+      if (String(data.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase()) {
         hasilFiltered.push(data);
       }
     });
 
     if (hasilFiltered.length === 0) {
-      alert(`Belum ada siswa yang menyelesaikan ujian pada mata ujian [${targetMapel}] di project [${activeProjectId}]!`);
+      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di sesi [${activeProjectId}]!`);
       return;
     }
 
@@ -2481,7 +2591,7 @@
 
     let exportData = [
       ["REKAPITULASI HASIL SIMULASI TKA KABUPATEN KLATEN"],
-      [`KAWEDANAN - SEKOLAH: ${activeProjectId.toUpperCase()}`],
+      [`KAWEDANAN / SESI: ${activeProjectId.toUpperCase()}`],
       [`MATA PELAJARAN: ${targetMapel.toUpperCase()}`],
       [`WAKTU EXPORT: ${new Date().toLocaleString('id-ID')} WIB`],
       [],
@@ -2526,7 +2636,7 @@
     const rataRata = (totalSkorKumulatif / hasilFiltered.length).toFixed(2);
 
     exportData.push([]);
-    exportData.push(["--- RINGKASAN STATISTIK UJIAN ---"]);
+    exportData.push(["--- RINGKASAN STATISTIK UJIAN KAWEDANAN ---"]);
     exportData.push(["TOTAL PESERTA UJIAN", `${hasilFiltered.length} Siswa`]);
     exportData.push(["RATA-RATA NILAI", rataRata]);
     exportData.push(["NILAI TERTINGGI", skorTertinggi]);
@@ -2535,16 +2645,16 @@
     const ws = XLSX.utils.aoa_to_sheet(exportData);
 
     ws['!cols'] = [
-      { wch: 12 },
-      { wch: 18 },
-      { wch: 30 },
-      { wch: 15 },
-      { wch: 12 },
-      { wch: 14 },
-      { wch: 16 },
-      { wch: 16 },
-      { wch: 14 },
-      { wch: 22 }
+      { wch: 12 }, // Peringkat
+      { wch: 18 }, // Username
+      { wch: 30 }, // Nama
+      { wch: 15 }, // Gender
+      { wch: 12 }, // Kelas
+      { wch: 14 }, // Paket
+      { wch: 16 }, // Benar
+      { wch: 16 }, // Salah
+      { wch: 14 }, // Skor
+      { wch: 22 }  // Waktu
     ];
 
     const wb = XLSX.utils.book_new();
