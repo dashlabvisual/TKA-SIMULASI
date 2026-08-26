@@ -143,7 +143,7 @@
         <hr class="my-4">
 
         <div class="text-start mb-4">
-          <label class="form-label fw-bold">Pilih Project / Sesi Ujian</label>
+          <label class="form-label fw-bold">Pilih Wilayah / Kawedanan & Kloter Ujian</label>
           <select id="p1_project_select" class="form-select form-select-lg mb-3"></select>
           
           <label class="form-label fw-bold">Pilih Mata Pelajaran</label>
@@ -259,7 +259,7 @@
         </div>
 
         <div class="alert alert-info small mb-4">
-          <i class="bi bi-info-circle-fill me-1"></i> Setelah tombol <strong>MULAI</strong> diklik, layar akan terkunci otomatis (Fullscreen) dan waktu ujian akan langsung berjalan.
+          <i class="bi bi-info-circle-fill me-1"></i> Setelah tombol <strong>MULAI</strong> diklik, paket soal acak Anda akan dibuka secara otomatis (Fullscreen) dan waktu ujian akan langsung berjalan.
         </div>
 
         <button id="btnPage4StartExam" class="btn btn-danger btn-lg w-100 py-3 fw-bold">
@@ -275,7 +275,7 @@
   <div class="cbt-card p-3 mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
     <div>
       <h5 class="fw-bold mb-0" id="examMapelTitle">Mata Pelajaran</h5>
-      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong></small>
+      <small class="text-muted">Peserta: <strong id="examStudentUser"></strong> | Sesi: <span class="badge bg-secondary" id="examAssignedPaketBadge">Paket A</span></small>
     </div>
     <div class="d-flex align-items-center gap-2">
       <div class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 rounded-pill fw-bold">
@@ -329,15 +329,15 @@
     <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
       <div class="d-flex align-items-center gap-2">
         <button id="btnHideSidebarTop" class="btn btn-sm btn-light border" title="Sembunyikan Sidebar"><i class="bi bi-list fs-6"></i></button>
-        <span class="fw-bold text-primary small">PROJECT UJIAN</span>
+        <span class="fw-bold text-primary small">KAWEDANAN / SESI</span>
       </div>
-      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Project Baru"><i class="bi bi-plus"></i></button>
+      <button id="btnAddProject" class="btn btn-sm btn-primary rounded-circle" title="Buat Sesi/Kawedanan Baru"><i class="bi bi-plus"></i></button>
     </div>
     
-    <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH PROJECT AKTIF:</small>
+    <small class="text-muted mb-2 fw-bold" style="font-size: 11px;">PILIH KAWEDANAN / KLOTER AKTIF:</small>
     <div id="sidebarProjectList" class="flex-grow-1 overflow-auto mb-3"></div>
 
-    <button id="btnAdminLogout" class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2">
+    <button id="btnTriggerAdminLogout" class="btn btn-danger btn-sm w-100 mt-auto fw-bold py-2">
       <i class="bi bi-box-arrow-left me-1"></i> Keluar Dashboard
     </button>
   </div>
@@ -345,14 +345,14 @@
   <div class="admin-content">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
       <div class="d-flex align-items-center gap-3">
-        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu Project"><i class="bi bi-list fs-5"></i></button>
+        <button id="btnShowSidebarTop" class="btn btn-outline-primary btn-sm hidden" title="Tampilkan Menu"><i class="bi bi-list fs-5"></i></button>
         <div>
-          <h4 class="fw-bold mb-1">Project: <span id="currentProjectBadge" class="text-primary">-</span></h4>
-          <p class="text-muted small mb-0">Kelola bank soal 1 Stimulus, peserta ujian, serta monitor nilai.</p>
+          <h4 class="fw-bold mb-1">Wilayah / Sesi: <span id="currentProjectBadge" class="text-primary">-</span></h4>
+          <p class="text-muted small mb-0">Manajemen bank soal multi-paket, kloter sekolah, dan live monitoring.</p>
         </div>
       </div>
       
-      <!-- Custom Pill-Badge Dropdown Mapel Baru -->
+      <!-- Selector Mapel Modern -->
       <div class="d-flex align-items-center gap-2">
         <div class="custom-mapel-selector">
           <button type="button" class="mapel-select-btn" id="btnMapelDropdown" onclick="window.toggleCustomMapelDropdown()">
@@ -363,7 +363,7 @@
           <div class="custom-mapel-dropdown" id="customMapelMenu"></div>
           <input type="hidden" id="adminMapelFilter" value="">
         </div>
-        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai (Mapel Terpilih)</button>
+        <button id="btnExportExcel" class="btn btn-success"><i class="bi bi-file-earmark-excel me-1"></i> Export Nilai</button>
       </div>
     </div>
 
@@ -375,7 +375,7 @@
             <i class="bi bi-people fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalSiswa">0</h3>
-              <small class="opacity-75">Total Data Siswa</small>
+              <small class="opacity-75">Total Siswa Terdaftar</small>
             </div>
           </div>
         </div>
@@ -386,7 +386,7 @@
             <i class="bi bi-person-badge fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalAdmin">0</h3>
-              <small class="opacity-75">Total Data Admin / Guru</small>
+              <small class="opacity-75">Total Proktor / Pengawas</small>
             </div>
           </div>
         </div>
@@ -408,7 +408,7 @@
             <i class="bi bi-journal-text fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalUjian">0</h3>
-              <small class="opacity-75">Total Ujian / Mapel</small>
+              <small class="opacity-75">Total Mata Pelajaran</small>
             </div>
           </div>
         </div>
@@ -419,7 +419,7 @@
             <i class="bi bi-file-earmark-check fs-1"></i>
             <div>
               <h3 class="fw-bold mb-0" id="statTotalSoal">0</h3>
-              <small class="opacity-75">Total Bank Soal</small>
+              <small class="opacity-75">Total Bank Soal (Semua Paket)</small>
             </div>
           </div>
         </div>
@@ -443,21 +443,21 @@
         <div class="action-card" onclick="window.bukaModalTambahSoal()">
           <div class="action-icon bg-primary-subtle text-primary"><i class="bi bi-pencil-square"></i></div>
           <h6 class="fw-bold mb-1">Tambah Soal Manual</h6>
-          <small class="text-muted">Editor Stimulus & 3 Jenis Soal.</small>
+          <small class="text-muted">Pilih paket & jenis soal.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalWordImport">
           <div class="action-icon bg-info-subtle text-info"><i class="bi bi-file-earmark-word"></i></div>
           <h6 class="fw-bold mb-1">Import Soal Word</h6>
-          <small class="text-muted">Upload .docx (Template 1 Stimulus).</small>
+          <small class="text-muted">Upload .docx per Paket Soal.</small>
         </div>
       </div>
       <div class="col-md-3">
         <div class="action-card" data-bs-toggle="modal" data-bs-target="#modalSiswaImport">
           <div class="action-icon bg-success-subtle text-success"><i class="bi bi-people"></i></div>
           <h6 class="fw-bold mb-1">Kelola & Import Siswa</h6>
-          <small class="text-muted">Upload Excel + Gender & Tgl Lahir.</small>
+          <small class="text-muted">Upload Excel per sekolah/kloter.</small>
         </div>
       </div>
       <div class="col-md-3">
@@ -471,7 +471,7 @@
 
     <!-- Navigasi Tab Admin -->
     <ul class="nav nav-pills mb-3 gap-2" id="adminNavTabs">
-      <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal</button></li>
+      <li class="nav-item"><button class="nav-link active rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-bank-soal">Bank Soal & Paket</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-mapel-list">Kelola Durasi Mapel</button></li>
       <li class="nav-item"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-peserta-list">Data Siswa Terdaftar</button></li>
       <li class="nav-item" id="navTabAdminList"><button class="nav-link rounded-3 px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#tab-admin-list">Manajemen Admin / Guru</button></li>
@@ -480,16 +480,25 @@
     </ul>
 
     <div class="tab-content">
-      <!-- Tab 1: Bank Soal -->
+      <!-- Tab 1: Bank Soal & Filter Paket -->
       <div class="tab-pane fade show active" id="tab-bank-soal">
         <div class="cbt-card p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0">Daftar Bank Soal</h6>
-            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSoalMapel()"><i class="bi bi-trash me-1"></i> Hapus Semua Soal Mapel Ini</button>
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <label class="form-label small fw-bold mb-0">PILIH PAKET SOAL:</label>
+              <select id="adminPaketFilter" class="form-select form-select-sm w-auto fw-bold" onchange="window.handleAdminPaketFilterChange()">
+                <option value="Paket A">Paket A</option>
+                <option value="Paket B">Paket B</option>
+                <option value="Paket C">Paket C</option>
+                <option value="Paket D">Paket D</option>
+                <option value="Paket E">Paket E</option>
+              </select>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" onclick="window.hapusSemuaSoalMapel()"><i class="bi bi-trash me-1"></i> Hapus Paket Soal Ini</button>
           </div>
           <div class="table-responsive">
             <table class="table align-middle" id="tblBankSoal">
-              <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
+              <thead class="table-light"><tr><th>NO</th><th>PERTANYAAN / STIMULUS</th><th>PAKET</th><th>TIPE</th><th>KUNCI</th><th>AKSI</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
@@ -551,14 +560,14 @@
         </div>
       </div>
 
-      <!-- Tab 5: Monitoring -->
+      <!-- Tab 5: Monitoring (Dilengkapi Penugasan Paket) -->
       <div class="tab-pane fade" id="tab-monitoring">
         <div class="cbt-card p-4">
           <h6 class="fw-bold mb-3">Status Pengerjaan & Progress Siswa (X / Y Soal)</h6>
           <div class="table-responsive">
             <table class="table table-hover align-middle" id="tblMonitoring">
               <thead class="table-light">
-                <tr><th>Username</th><th>Mata Pelajaran</th><th>Status</th><th>Progress (Dikerjakan/Total)</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
+                <tr><th>Username</th><th>Mata Pelajaran</th><th>Paket</th><th>Status</th><th>Progress</th><th>Pelanggaran Tab</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -576,11 +585,28 @@
           </div>
           <div class="table-responsive">
             <table class="table align-middle" id="tblHasilNilai">
-              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Skor</th><th>Benar / Total</th><th>Aksi</th></tr></thead>
+              <thead class="table-light"><tr><th>Username</th><th>Nama Siswa</th><th>Mata Pelajaran</th><th>Paket</th><th>Skor</th><th>Benar / Total</th><th>Aksi</th></tr></thead>
               <tbody></tbody>
             </table>
           </div>
           <div class="d-flex justify-content-between align-items-center mt-3" id="paginationNilai"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL PERINGATAN LOGOUT PROKTOR ================= -->
+<div class="modal fade" id="modalConfirmLogout" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content" style="border-radius: 16px;">
+      <div class="modal-body p-4 text-center">
+        <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-2"></i>
+        <h6 class="fw-bold mb-2">Konfirmasi Keluar</h6>
+        <p class="text-muted small mb-4">Apakah Anda yakin ingin mengakhiri sesi proktor dan keluar dari dashboard ujian?</p>
+        <div class="d-grid gap-2">
+          <button id="btnConfirmLogoutYes" class="btn btn-danger fw-bold">Ya, Keluar Sesi</button>
+          <button class="btn btn-light btn-sm text-muted" data-bs-dismiss="modal">Batalkan</button>
         </div>
       </div>
     </div>
@@ -600,7 +626,7 @@
   </div>
 </div>
 
-<!-- MODAL REVIEW JAWABAN (SEMUA SOAL) -->
+<!-- MODAL REVIEW JAWABAN -->
 <div class="modal fade" id="modalReviewSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content" style="border-radius: 16px;">
@@ -610,7 +636,7 @@
       </div>
       <div class="modal-body p-4">
         <div class="mb-3 p-3 bg-light rounded-3 d-flex justify-content-between">
-          <span>Mapel: <strong id="revMapel"></strong></span>
+          <span>Mapel: <strong id="revMapel"></strong> (<span id="revPaket"></span>)</span>
           <span>Skor: <strong id="revSkor" class="text-success"></strong></span>
         </div>
         <div id="revContainerSoal"></div>
@@ -619,7 +645,7 @@
   </div>
 </div>
 
-<!-- MODAL EDIT DATA SISWA (GENDER & TANGGAL LAHIR) -->
+<!-- MODAL EDIT DATA SISWA -->
 <div class="modal fade" id="modalEditSiswa" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="border-radius: 16px;">
@@ -701,6 +727,18 @@
           </div>
           <button id="btnDownloadWordTpl" class="btn btn-outline-primary btn-sm fw-semibold"><i class="bi bi-download me-1"></i> Download .doc</button>
         </div>
+        
+        <div class="mb-3">
+          <label class="form-label small fw-bold">Target Paket Soal Import:</label>
+          <select id="import_target_paket" class="form-select fw-bold">
+            <option value="Paket A">Paket A</option>
+            <option value="Paket B">Paket B</option>
+            <option value="Paket C">Paket C</option>
+            <option value="Paket D">Paket D</option>
+            <option value="Paket E">Paket E</option>
+          </select>
+        </div>
+
         <div id="dropZoneWord" class="drop-zone">
           <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-2"></i>
           <h6 class="fw-bold mb-1">2. Drag & Drop File Dokumen Word (.docx) Di Sini</h6>
@@ -743,7 +781,7 @@
   </div>
 </div>
 
-<!-- MODAL MANUAL SOAL -->
+<!-- MODAL MANUAL SOAL (DENGAN PILIHAN PAKET) -->
 <div class="modal fade" id="modalManualSoal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="border-radius: 16px;">
@@ -754,12 +792,22 @@
       <div class="modal-body p-4">
         <input type="hidden" id="edit_doc_id" value="">
         <div class="row g-3 mb-3">
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label small fw-bold">Mata Pelajaran Target</label>
             <select id="m_target_mapel" class="form-select"></select>
           </div>
           <div class="col-md-3">
-            <label class="form-label small fw-bold">Nomor Urut Soal</label>
+            <label class="form-label small fw-bold">Paket Soal</label>
+            <select id="m_target_paket" class="form-select fw-bold">
+              <option value="Paket A">Paket A</option>
+              <option value="Paket B">Paket B</option>
+              <option value="Paket C">Paket C</option>
+              <option value="Paket D">Paket D</option>
+              <option value="Paket E">Paket E</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small fw-bold">Nomor Urut</label>
             <input id="m_no" type="number" class="form-control" placeholder="1, 2, 3...">
           </div>
           <div class="col-md-3">
@@ -820,12 +868,13 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let activeProjectId = localStorage.getItem("cbt_active_project") || "Simulasi Ujian Utama";
+  let activeProjectId = localStorage.getItem("cbt_active_project") || "Kawedanan Klaten Kota - Gelombang 1";
   let currentStudent = "";
   let currentStudentObj = {};
   let currentMapel = "";
   let currentDurasi = 60;
   let activeSoalList = [];
+  let currentAssignedPaket = "Paket A";
   let currentSoalIndex = 0;
   let userAnswers = {};
   let cheatCount = 0;
@@ -999,15 +1048,19 @@
     document.getElementById('m_tanya').value = "";
 
     const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
     if (!mapel) { alert("Pilih mata pelajaran terlebih dahulu!"); return; }
 
     document.getElementById('m_target_mapel').value = mapel;
+    document.getElementById('m_target_paket').value = paket;
 
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
     let maxNo = 0;
     snap.forEach(d => {
       const dataSoal = d.data();
-      if (String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
+      if (matchMapel && matchPaket) {
         let num = parseInt(dataSoal.id_soal) || 0;
         if (num > maxNo) maxNo = num;
       }
@@ -1093,8 +1146,8 @@
     const snap = await getDocs(collection(db, "projects"));
     
     if (snap.empty) {
-      pSelect.innerHTML = '<option value="Simulasi Ujian Utama">Simulasi Ujian Utama</option>';
-      loadPage1Mapel("Simulasi Ujian Utama");
+      pSelect.innerHTML = '<option value="Kawedanan Klaten Kota - Gelombang 1">Kawedanan Klaten Kota - Gelombang 1</option>';
+      loadPage1Mapel("Kawedanan Klaten Kota - Gelombang 1");
     } else {
       snap.forEach(d => {
         const pName = d.data().nama_project;
@@ -1127,7 +1180,7 @@
     currentMapel = mSelect.value;
     
     if (!activeProjectId || !currentMapel) {
-      alert("Pilih project dan mata pelajaran terlebih dahulu!");
+      alert("Pilih wilayah/kawedanan dan mata pelajaran terlebih dahulu!");
       return;
     }
 
@@ -1147,7 +1200,7 @@
     if (!u || !p) { alert("Masukkan Username dan Password!"); return; }
 
     const userSnap = await getDocs(query(collection(db, "users"), where("project", "==", activeProjectId), where("username", "==", u), where("password", "==", p)));
-    if (userSnap.empty) { alert("Akun peserta tidak ditemukan!"); return; }
+    if (userSnap.empty) { alert("Akun peserta tidak ditemukan pada sesi kawedanan ini!"); return; }
 
     const userData = userSnap.docs[0].data();
     if (userData.status === "Diblokir") { alert("AKUN ANDA DIBLOKIR!"); return; }
@@ -1165,18 +1218,16 @@
     showView('page-3');
   });
 
-  // Validasi Page 3: Case-Insensitive Nama, Gender, dan Tanggal Lahir Ketat
   document.getElementById('btnPage3Submit').addEventListener('click', () => {
     const genderInput = document.getElementById('p3_jenis_kelamin').value;
     const namaInput = document.getElementById('p3_nama_input').value.trim();
-    const tglLahirInput = document.getElementById('p3_tgl_lahir').value; // YYYY-MM-DD
+    const tglLahirInput = document.getElementById('p3_tgl_lahir').value;
 
     if (!genderInput || !namaInput || !tglLahirInput) {
       alert("Lengkapi konfirmasi Jenis Kelamin, Nama Lengkap, dan Tanggal Lahir Anda!");
       return;
     }
 
-    // 1. Validasi Jenis Kelamin
     const dbGender = normalizeGender(currentStudentObj.jenis_kelamin || "");
     const inputGender = normalizeGender(genderInput);
 
@@ -1185,21 +1236,19 @@
       return;
     }
 
-    // 2. Validasi Nama Case-Insensitive
     const dbNama = String(currentStudentObj.nama || currentStudent).trim().toLowerCase();
     const userInputNama = namaInput.toLowerCase();
 
     if (dbNama !== userInputNama) {
-      alert("NAMA LENGKAP YANG ANDA MASUKKAN TIDAK COCOK DENGAN DATA PESERTA! Silakan periksa kembali penulisan nama Anda.");
+      alert("NAMA LENGKAP TIDAK COCOK DENGAN DATA PESERTA! Periksa kembali penulisan nama Anda.");
       return;
     }
 
-    // 3. Validasi Tanggal Lahir (Format DD-MM-YYYY)
     const normInputTgl = normalizeDateStr(tglLahirInput);
     const normDbTgl = normalizeDateStr(currentStudentObj.tgl_lahir || "");
 
     if (normDbTgl && normDbTgl !== normInputTgl) {
-      alert(`TANGGAL LAHIR TIDAK COCOK DENGAN DATABASE PESERTA!\nFormat Tanggal Lahir Anda harus sesuai: DD-MM-YYYY.`);
+      alert(`TANGGAL LAHIR TIDAK COCOK DENGAN DATABASE PESERTA!\nFormat Tanggal Lahir: DD-MM-YYYY.`);
       return;
     }
 
@@ -1217,22 +1266,37 @@
     startSecureExam();
   });
 
+  // --- LOGIKA PENGACAKAN PAKET SOAL OTOMATIS & EFISIEN ---
   async function startSecureExam() {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(() => {});
     }
 
-    const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
-    activeSoalList = [];
-    snap.forEach(d => {
+    // Ambil daftar paket yang tersedia di database mapel ini
+    const snapMapelSoal = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
+    let availablePakets = new Set();
+    let allMapelSoal = [];
+
+    snapMapelSoal.forEach(d => {
       const dataSoal = d.data();
       if (String(dataSoal.mapel).trim().toLowerCase() === String(currentMapel).trim().toLowerCase()) {
-        activeSoalList.push(dataSoal);
+        allMapelSoal.push(dataSoal);
+        availablePakets.add(dataSoal.paket || "Paket A");
       }
     });
 
-    if (activeSoalList.length === 0) { alert("Belum ada bank soal untuk mata pelajaran ini!"); return; }
+    if (allMapelSoal.length === 0) {
+      alert("Belum ada butir soal pada mata pelajaran ini!");
+      return;
+    }
 
+    const paketArr = Array.from(availablePakets);
+    // Algoritma deterministik/acak penugasan paket per siswa
+    const charSum = currentStudent.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    currentAssignedPaket = paketArr[charSum % paketArr.length] || "Paket A";
+
+    // Filter hanya butir soal milik paket yang didapat siswa (Isi urutan tetap sama)
+    activeSoalList = allMapelSoal.filter(s => (s.paket || "Paket A") === currentAssignedPaket);
     activeSoalList.sort((a, b) => (parseInt(a.id_soal) || 0) - (parseInt(b.id_soal) || 0));
 
     currentSoalIndex = 0;
@@ -1244,6 +1308,7 @@
       project: activeProjectId,
       username: currentStudent,
       mapel: currentMapel,
+      paket: currentAssignedPaket,
       status: "Mengerjakan",
       pelanggaran: 0,
       jawaban: userAnswers
@@ -1252,6 +1317,7 @@
     showView('view-exam');
     document.getElementById('examMapelTitle').innerText = currentMapel;
     document.getElementById('examStudentUser').innerText = `${currentStudent} - ${currentStudentObj.nama || currentStudent}`;
+    document.getElementById('examAssignedPaketBadge').innerText = currentAssignedPaket;
 
     renderGridNumbers();
     renderSoalByIndex(0);
@@ -1378,11 +1444,7 @@
     document.getElementById('soalContainer').innerHTML = html;
   }
 
-  window.pickAnsSingle = (id, val) => {
-    userAnswers[id] = val;
-    saveAndSyncAnswer();
-  };
-
+  window.pickAnsSingle = (id, val) => { userAnswers[id] = val; saveAndSyncAnswer(); };
   window.pickAnsKompleks = (id, val) => {
     let arr = Array.isArray(userAnswers[id]) ? userAnswers[id] : [];
     if (arr.includes(val)) arr = arr.filter(x => x !== val);
@@ -1434,20 +1496,13 @@
         const kunciArr = (s.kunci || "").split(',').map(x => x.trim().toUpperCase());
         const userObj = (typeof userAns === 'object' && userAns !== null && !Array.isArray(userAns)) ? userAns : {};
         const userKombinasi = [userObj[1] || '', userObj[2] || '', userObj[3] || ''];
-
-        if (kunciArr.length === 3 && JSON.stringify(kunciArr) === JSON.stringify(userKombinasi)) {
-          benar++;
-        }
+        if (kunciArr.length === 3 && JSON.stringify(kunciArr) === JSON.stringify(userKombinasi)) benar++;
       } else if (tipeStr === '2') {
         const kunciArr = (s.kunci || "").split(',').map(x => x.trim().toUpperCase()).sort();
         const userArr = (Array.isArray(userAns) ? userAns : []).map(x => x.trim().toUpperCase()).sort();
-        if (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr)) {
-          benar++;
-        }
+        if (kunciArr.length > 0 && JSON.stringify(kunciArr) === JSON.stringify(userArr)) benar++;
       } else {
-        if (String(userAns).trim().toUpperCase() === String(s.kunci).trim().toUpperCase()) {
-          benar++;
-        }
+        if (String(userAns).trim().toUpperCase() === String(s.kunci).trim().toUpperCase()) benar++;
       }
     });
 
@@ -1457,6 +1512,7 @@
       project: activeProjectId,
       username: currentStudent,
       mapel: currentMapel,
+      paket: currentAssignedPaket,
       skor: skor,
       benar: benar,
       total: activeSoalList.length,
@@ -1551,7 +1607,13 @@
   document.getElementById('btnSubmitAdminLogin').addEventListener('click', executeAdminLogin);
   document.getElementById('admSecretPin').addEventListener('keyup', (e) => { if (e.key === 'Enter') executeAdminLogin(); });
 
-  document.getElementById('btnAdminLogout').addEventListener('click', () => {
+  // Peringatan Keluar Dashboard yang Baik & Santun
+  document.getElementById('btnTriggerAdminLogout').addEventListener('click', () => {
+    new bootstrap.Modal(document.getElementById('modalConfirmLogout')).show();
+  });
+
+  document.getElementById('btnConfirmLogoutYes').addEventListener('click', () => {
+    bootstrap.Modal.getInstance(document.getElementById('modalConfirmLogout'))?.hide();
     activeListeners.forEach(unsub => unsub());
     activeListeners = [];
     localStorage.removeItem("cbt_admin_logged");
@@ -1577,10 +1639,10 @@
   };
 
   document.getElementById('btnAddProject').addEventListener('click', async () => {
-    const name = prompt("Masukkan Nama Project / Sesi Ujian Baru:");
+    const name = prompt("Masukkan Nama Wilayah Kawedanan & Sesi Baru (Contoh: Kawedanan Delanggu - Gelombang 1):");
     if (name && name.trim()) {
       await addDoc(collection(db, "projects"), { nama_project: name.trim(), created_at: new Date().toISOString() });
-      alert("Project baru berhasil dibuat!");
+      alert("Kawedanan/Sesi baru berhasil dibuat!");
     }
   });
 
@@ -1607,15 +1669,19 @@
 
   window.hapusSemuaSoalMapel = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
     if (!mapel) { alert("Pilih mapel terlebih dahulu!"); return; }
-    if (confirm(`Yakin ingin menghapus SELURUH butir soal pada mata pelajaran [${mapel}]?`)) {
+    if (confirm(`Yakin ingin menghapus seluruh butir soal pada [${paket}] mata pelajaran [${mapel}]?`)) {
       const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
       snap.forEach(async (d) => {
-        if (String(d.data().mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+        const dataSoal = d.data();
+        const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+        const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
+        if (matchMapel && matchPaket) {
           await deleteDoc(doc(db, "soal", d.id));
         }
       });
-      alert("Semua soal pada mapel ini berhasil dihapus!");
+      alert(`Semua butir soal pada ${paket} berhasil dihapus!`);
       renderBankSoalAdmin();
     }
   };
@@ -1724,7 +1790,7 @@
       const listContainer = document.getElementById('sidebarProjectList');
       listContainer.innerHTML = '';
       if (snap.empty) {
-        setDoc(doc(db, "projects", "default"), { nama_project: "Simulasi Ujian Utama" });
+        setDoc(doc(db, "projects", "default"), { nama_project: "Kawedanan Klaten Kota - Gelombang 1" });
         return;
       }
       snap.forEach(d => {
@@ -1733,9 +1799,9 @@
         listContainer.innerHTML += `
           <div class="project-item-box ${isActive ? 'border-primary bg-primary-subtle' : ''}">
             <span class="fw-semibold text-truncate" style="cursor:pointer; max-width:140px;" onclick="window.selectProject('${proj}')" title="${proj}">
-              <i class="bi bi-folder2-open me-1"></i>${proj}
+              <i class="bi bi-geo-alt-fill text-primary me-1"></i>${proj}
             </span>
-            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Project" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
+            <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Hapus Sesi" onclick="window.hapusProject('${d.id}', '${proj}')"><i class="bi bi-box-arrow-right"></i></button>
           </div>`;
       });
       document.getElementById('currentProjectBadge').innerText = activeProjectId;
@@ -1753,7 +1819,7 @@
   };
 
   window.hapusProject = async function(docId, projName) {
-    if (confirm(`Hapus project [${projName}]?`)) {
+    if (confirm(`Hapus wilayah/sesi [${projName}]?`)) {
       await deleteDoc(doc(db, "projects", docId));
     }
   };
@@ -1790,7 +1856,6 @@
     document.getElementById('statTotalSelesai').innerText = qSelesai.size;
   }
 
-  // --- RENDER MAPEL ADMIN DENGAN CUSTOM SELECTOR MENU ---
   function loadMapelOptionsAdmin() {
     const qMapel = query(collection(db, "mapel"), where("project", "==", activeProjectId));
     const unsub = onSnapshot(qMapel, (snap) => {
@@ -1848,6 +1913,11 @@
     activeListeners.push(unsub);
   }
 
+  window.handleAdminPaketFilterChange = function() {
+    pageState.bankSoal = 1;
+    renderBankSoalAdmin();
+  };
+
   window.editDurasiMapel = async function(mapelId, namaMapel, durasiLama) {
     const baru = prompt(`Ubah durasi ujian (Menit) untuk mapel [${namaMapel}]:`, durasiLama);
     if (baru && !isNaN(baru)) {
@@ -1856,11 +1926,12 @@
     }
   };
 
-  // --- RENDER BANK SOAL FIX CASE-INSENSITIVE ---
+  // --- RENDER BANK SOAL PER PAKET SOAL ---
   window.renderBankSoalAdmin = async function() {
     const mapel = document.getElementById('adminMapelFilter').value;
+    const paket = document.getElementById('adminPaketFilter').value;
     const tblBody = document.querySelector('#tblBankSoal tbody');
-    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
+    if (!mapel) { tblBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Pilih mapel terlebih dahulu.</td></tr>'; return; }
     
     window.cacheBankSoal = window.cacheBankSoal || {};
     const snap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
@@ -1868,7 +1939,9 @@
     let soalArray = [];
     snap.forEach(docSnap => {
       const dataSoal = docSnap.data();
-      if (String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase()) {
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(paket).trim().toLowerCase();
+      if (matchMapel && matchPaket) {
         soalArray.push({ idDoc: docSnap.id, ...dataSoal });
       }
     });
@@ -1894,6 +1967,7 @@
           <div>${d.pertanyaan}</div>
           ${formattedImg ? '<img src="'+formattedImg+'" style="max-height:45px;" class="rounded border mt-1">' : ''}
         </td>
+        <td><span class="badge bg-primary">${d.paket || 'Paket A'}</span></td>
         <td><span class="badge bg-secondary">${labelTipe}</span></td>
         <td><span class="badge bg-success">${d.kunci}</span></td>
         <td>
@@ -1903,7 +1977,7 @@
         </td>
       </tr>`;
     });
-    tblBody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted">Belum ada butir soal pada mapel ini.</td></tr>';
+    tblBody.innerHTML = rows || `<tr><td colspan="6" class="text-center text-muted">Belum ada butir soal pada ${paket} mapel ini.</td></tr>`;
     renderPaginationControls('paginationBankSoal', soalArray.length, pageState.bankSoal, 'window.setPageBankSoal');
     updateDashboardMetrics();
   };
@@ -1918,7 +1992,7 @@
     if (tipeStr === '2') tipeLabel = 'PG Kompleks MCMA (2)';
     if (tipeStr === '3') tipeLabel = 'PG Kompleks Kategori B/S (3)';
 
-    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal}</span> <span class="badge bg-secondary">${tipeLabel}</span></div>`;
+    let html = `<div class="mb-3"><span class="badge bg-primary">Nomor ${s.id_soal} (${s.paket || 'Paket A'})</span> <span class="badge bg-secondary">${tipeLabel}</span></div>`;
     if (s.stimulus) html += `<div class="stimulus-box mb-3"><strong>WACANA / STIMULUS:</strong><p class="mb-0 mt-1">${s.stimulus}</p></div>`;
     if (formattedImg) html += `<div class="text-center mb-3"><img src="${formattedImg}" class="img-fluid rounded border" style="max-height:200px;"></div>`;
     html += `<p class="fw-bold mb-3">${s.pertanyaan}</p>`;
@@ -1962,6 +2036,7 @@
     document.getElementById('edit_doc_id').value = docId;
     document.getElementById('modalSoalTitle').innerText = "Edit Butir Soal";
     document.getElementById('m_target_mapel').value = s.mapel;
+    document.getElementById('m_target_paket').value = s.paket || "Paket A";
     document.getElementById('m_no').value = s.id_soal;
     document.getElementById('m_tipe').value = s.tipe_soal || '1';
     document.getElementById('m_stimulus').value = s.stimulus || '';
@@ -1972,7 +2047,6 @@
     new bootstrap.Modal(document.getElementById('modalManualSoal')).show();
   };
 
-  // --- MANAJEMEN SISWA (DILENGKAPI GENDER & EDIT LENGKAP) ---
   function loadPesertaAdmin() {
     const qUsers = query(collection(db, "users"), where("project", "==", activeProjectId));
     const unsub = onSnapshot(qUsers, (snap) => {
@@ -2009,7 +2083,7 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di project ini.</td></tr>';
+      document.querySelector('#tblPesertaAdmin tbody').innerHTML = rows || '<tr><td colspan="8" class="text-center text-muted">Belum ada siswa di sesi kawedanan ini.</td></tr>';
       renderPaginationControls('paginationSiswa', userList.length, pageState.siswa, 'window.setPageSiswa');
       updateDashboardMetrics();
     });
@@ -2104,8 +2178,9 @@
       const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", activeProjectId)));
       let soalCountMap = {};
       soalSnap.forEach(s => {
-        const m = String(s.data().mapel).trim().toLowerCase();
-        soalCountMap[m] = (soalCountMap[m] || 0) + 1;
+        const d = s.data();
+        const key = `${String(d.mapel).trim().toLowerCase()}_${d.paket || 'Paket A'}`;
+        soalCountMap[key] = (soalCountMap[key] || 0) + 1;
       });
 
       snap.forEach(docSnap => {
@@ -2118,7 +2193,7 @@
       let rows = '';
       paginatedMon.forEach(d => {
         let badge = d.status === 'Melanggar' ? 'bg-warning text-dark' : (d.status === 'Diskualifikasi' ? 'bg-danger' : 'bg-primary');
-        const mapelKey = String(d.mapel).trim().toLowerCase();
+        const mapelKey = `${String(d.mapel).trim().toLowerCase()}_${d.paket || 'Paket A'}`;
         const totalSoalMapel = soalCountMap[mapelKey] || 0;
         const dikerjakan = d.jawaban ? Object.keys(d.jawaban).length : 0;
         const progressFormat = `${dikerjakan}/${totalSoalMapel}`;
@@ -2126,13 +2201,14 @@
         rows += `<tr>
           <td><strong>${d.username}</strong></td>
           <td>${d.mapel}</td>
+          <td><span class="badge bg-info text-dark">${d.paket || 'Paket A'}</span></td>
           <td><span class="badge ${badge}">${d.status}</span></td>
           <td><span class="fw-bold text-primary">${progressFormat}</span></td>
           <td><strong class="text-danger">${d.pelanggaran || 0}</strong> Kali</td>
           <td><button class="btn btn-outline-warning btn-sm" onclick="window.resetCheat('${d.idDoc}')">Reset</button></td>
         </tr>`;
       });
-      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
+      document.querySelector('#tblMonitoring tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada aktivitas siswa.</td></tr>';
       renderPaginationControls('paginationMonitoring', monList.length, pageState.monitoring, 'window.setPageNilai');
     });
     activeListeners.push(unsubMon);
@@ -2163,6 +2239,7 @@
           <td><strong>${data.username}</strong></td>
           <td>${namaLengkap}</td>
           <td>${data.mapel}</td>
+          <td><span class="badge bg-secondary">${data.paket || 'Paket A'}</span></td>
           <td><span class="badge bg-primary fs-6">${data.skor}</span></td>
           <td>${data.benar} / ${data.total}</td>
           <td>
@@ -2171,26 +2248,30 @@
           </td>
         </tr>`;
       });
-      document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="6" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
+      document.querySelector('#tblHasilNilai tbody').innerHTML = rows || '<tr><td colspan="7" class="text-center text-muted">Belum ada hasil ujian.</td></tr>';
       renderPaginationControls('paginationNilai', hasilList.length, pageState.nilai, 'window.setPageNilai');
       updateDashboardMetrics();
     });
     activeListeners.push(unsubHasil);
   }
 
+  // --- REVIEW JAWABAN LENGKAP SEMUA SOAL ---
   window.bukaModalReview = async function(hasilId, namaSiswa) {
     const dataHasil = window.allHasilCache[hasilId];
     if (!dataHasil) return;
 
     document.getElementById('revNamaSiswa').innerText = `${namaSiswa} (${dataHasil.username})`;
     document.getElementById('revMapel').innerText = dataHasil.mapel;
+    document.getElementById('revPaket').innerText = dataHasil.paket || "Paket A";
     document.getElementById('revSkor').innerText = `${dataHasil.skor} (Benar ${dataHasil.benar} dari ${dataHasil.total})`;
 
     const soalSnap = await getDocs(query(collection(db, "soal"), where("project", "==", dataHasil.project)));
     let soalListReview = [];
     soalSnap.forEach(s => {
       const dataSoal = s.data();
-      if (String(dataSoal.mapel).trim().toLowerCase() === String(dataHasil.mapel).trim().toLowerCase()) {
+      const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(dataHasil.mapel).trim().toLowerCase();
+      const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(dataHasil.paket || "Paket A").trim().toLowerCase();
+      if (matchMapel && matchPaket) {
         soalListReview.push(dataSoal);
       }
     });
@@ -2281,11 +2362,13 @@
     reader.readAsArrayBuffer(file);
   }
 
+  // --- PARSER WORD FIX DENGAN PILIHAN TARGET PAKET SOAL ---
   function processWordFile(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const targetMapel = document.getElementById('adminMapelFilter').value;
+    const targetPaket = document.getElementById('import_target_paket').value;
     if (!targetMapel) { alert("Pilih mata pelajaran terlebih dahulu di dashboard!"); return; }
 
     const reader = new FileReader();
@@ -2307,7 +2390,9 @@
         let maxExistingNo = 0;
         existingSnap.forEach(d => {
           const dataSoal = d.data();
-          if (String(dataSoal.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase()) {
+          const matchMapel = String(dataSoal.mapel).trim().toLowerCase() === String(targetMapel).trim().toLowerCase();
+          const matchPaket = String(dataSoal.paket || "Paket A").trim().toLowerCase() === String(targetPaket).trim().toLowerCase();
+          if (matchMapel && matchPaket) {
             let num = parseInt(dataSoal.id_soal) || 0;
             if (num > maxExistingNo) maxExistingNo = num;
           }
@@ -2348,6 +2433,7 @@
               project: activeProjectId,
               id_soal: assignedNo,
               mapel: targetMapel,
+              paket: targetPaket,
               tipe_soal: String(detectedJenis),
               stimulus: stimulusText || lastStimulus,
               pertanyaan: soalText,
@@ -2387,7 +2473,7 @@
           await addDoc(collection(db, "soal"), item);
         }
 
-        alert(`Berhasil mengimpor ${list.length} butir soal ke mapel [${targetMapel}]!`);
+        alert(`Berhasil mengimpor ${list.length} butir soal ke ${targetPaket} [${targetMapel}]!`);
         const modalEl = document.getElementById('modalWordImport');
         const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
         modalInst.hide();
@@ -2400,6 +2486,7 @@
   async function saveManualSoalAction() {
     const editId = document.getElementById('edit_doc_id').value;
     const targetMapel = document.getElementById('m_target_mapel').value;
+    const targetPaket = document.getElementById('m_target_paket').value;
     const no = parseInt(document.getElementById('m_no').value);
     const tipe = String(document.getElementById('m_tipe').value);
     const stimulus = document.getElementById('m_stimulus').value.trim();
@@ -2415,6 +2502,7 @@
       project: activeProjectId,
       id_soal: no,
       mapel: targetMapel,
+      paket: targetPaket,
       tipe_soal: tipe,
       stimulus: stimulus,
       pertanyaan: tanya,
@@ -2468,7 +2556,7 @@
     renderBankSoalAdmin();
   }
 
-  // --- EXPORT REKAP EXCEL MENARIK & SESUAI FILTER MAPEL AKTIF ---
+  // --- EXPORT REKAP EXCEL DISESUAIKAN PER MAPEL & PAKET ---
   async function downloadHasilExcel() {
     const targetMapel = document.getElementById('adminMapelFilter').value;
     if (!targetMapel) {
@@ -2491,30 +2579,29 @@
     });
 
     if (hasilFiltered.length === 0) {
-      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di project [${activeProjectId}]! Tidak ada data yang bisa diexport.`);
+      alert(`Belum ada siswa yang menyelesaikan ujian pada mata pelajaran [${targetMapel.toUpperCase()}] di sesi [${activeProjectId}]!`);
       return;
     }
 
-    // Urutkan ranking dari skor tertinggi ke terendah
     hasilFiltered.sort((a, b) => (b.skor || 0) - (a.skor || 0));
 
     let totalSkorKumulatif = 0;
     let skorTertinggi = hasilFiltered[0].skor || 0;
     let skorTerendah = hasilFiltered[hasilFiltered.length - 1].skor || 0;
 
-    // Header Laporan Formal
     let exportData = [
       ["REKAPITULASI HASIL SIMULASI TKA KABUPATEN KLATEN"],
-      [`PROJECT / SESI: ${activeProjectId.toUpperCase()}`],
+      [`KAWEDANAN / SESI: ${activeProjectId.toUpperCase()}`],
       [`MATA PELAJARAN: ${targetMapel.toUpperCase()}`],
       [`WAKTU EXPORT: ${new Date().toLocaleString('id-ID')} WIB`],
-      [], // Baris Kosong
+      [],
       [
         "PERINGKAT",
         "USERNAME / NISN",
         "NAMA LENGKAP SISWA",
         "JENIS KELAMIN",
         "KELAS",
+        "PAKET SOAL",
         "JAWABAN BENAR",
         "JAWABAN SALAH",
         "SKOR (NILAI)",
@@ -2538,6 +2625,7 @@
         infoSiswa.nama || "Siswa",
         gender,
         infoSiswa.kelas || "-",
+        d.paket || "Paket A",
         benar,
         salah,
         skor,
@@ -2547,9 +2635,8 @@
 
     const rataRata = (totalSkorKumulatif / hasilFiltered.length).toFixed(2);
 
-    // Baris Ringkasan Statistik di Bagian Bawah
     exportData.push([]);
-    exportData.push(["--- RINGKASAN STATISTIK KELAS / UJIAN ---"]);
+    exportData.push(["--- RINGKASAN STATISTIK UJIAN KAWEDANAN ---"]);
     exportData.push(["TOTAL PESERTA UJIAN", `${hasilFiltered.length} Siswa`]);
     exportData.push(["RATA-RATA NILAI", rataRata]);
     exportData.push(["NILAI TERTINGGI", skorTertinggi]);
@@ -2557,13 +2644,13 @@
 
     const ws = XLSX.utils.aoa_to_sheet(exportData);
 
-    // Styling Kolom Lebar agar Rapi di Excel / Google Spreadsheet
     ws['!cols'] = [
       { wch: 12 }, // Peringkat
       { wch: 18 }, // Username
       { wch: 30 }, // Nama
       { wch: 15 }, // Gender
       { wch: 12 }, // Kelas
+      { wch: 14 }, // Paket
       { wch: 16 }, // Benar
       { wch: 16 }, // Salah
       { wch: 14 }, // Skor
